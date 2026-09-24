@@ -11,9 +11,9 @@ type CategoryFormProps = {
 };
 
 const inputClassName =
-  "h-12 w-full rounded-lg border border-zinc-700 bg-zinc-900 px-3 text-base text-zinc-50 outline-none placeholder:text-zinc-500 focus:border-zinc-500 disabled:opacity-60";
+  "h-12 w-full rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-3 text-base text-zinc-900 dark:text-zinc-50 outline-none placeholder:text-zinc-400 dark:placeholder:text-zinc-500 focus:border-zinc-500 disabled:opacity-60";
 
-const labelClassName = "text-sm font-medium text-zinc-300";
+const labelClassName = "text-sm font-medium text-zinc-600 dark:text-zinc-300";
 
 export function CategoryForm({ mode, category }: CategoryFormProps) {
   const { values, updateField, fieldErrors, formError, loading, submit } =
@@ -40,7 +40,7 @@ export function CategoryForm({ mode, category }: CategoryFormProps) {
           className={inputClassName}
         />
         {fieldErrors.name ? (
-          <p className="text-sm text-red-400">{fieldErrors.name}</p>
+          <p className="text-sm text-red-600 dark:text-red-400">{fieldErrors.name}</p>
         ) : null}
       </div>
 
@@ -59,7 +59,7 @@ export function CategoryForm({ mode, category }: CategoryFormProps) {
           placeholder="Opcional, ej. 🍔"
         />
         {fieldErrors.icon ? (
-          <p className="text-sm text-red-400">{fieldErrors.icon}</p>
+          <p className="text-sm text-red-600 dark:text-red-400">{fieldErrors.icon}</p>
         ) : null}
       </div>
 
@@ -72,8 +72,8 @@ export function CategoryForm({ mode, category }: CategoryFormProps) {
             onClick={() => updateField("type", "EXPENSE")}
             className={`h-12 rounded-lg border text-base font-medium ${
               values.type === "EXPENSE"
-                ? "border-zinc-100 bg-zinc-100 text-zinc-900"
-                : "border-zinc-700 bg-zinc-900 text-zinc-100"
+                ? "border-zinc-900 dark:border-zinc-100 bg-zinc-900 dark:bg-zinc-100 text-zinc-50 dark:text-zinc-900"
+                : "border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-800 dark:text-zinc-100"
             }`}
           >
             Gasto
@@ -84,20 +84,20 @@ export function CategoryForm({ mode, category }: CategoryFormProps) {
             onClick={() => updateField("type", "INCOME")}
             className={`h-12 rounded-lg border text-base font-medium ${
               values.type === "INCOME"
-                ? "border-zinc-100 bg-zinc-100 text-zinc-900"
-                : "border-zinc-700 bg-zinc-900 text-zinc-100"
+                ? "border-zinc-900 dark:border-zinc-100 bg-zinc-900 dark:bg-zinc-100 text-zinc-50 dark:text-zinc-900"
+                : "border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-800 dark:text-zinc-100"
             }`}
           >
             Ingreso
           </button>
         </div>
         {fieldErrors.type ? (
-          <p className="text-sm text-red-400">{fieldErrors.type}</p>
+          <p className="text-sm text-red-600 dark:text-red-400">{fieldErrors.type}</p>
         ) : null}
       </div>
 
       {formError ? (
-        <p className="text-sm text-red-400" role="alert">
+        <p className="text-sm text-red-600 dark:text-red-400" role="alert">
           {formError}
         </p>
       ) : null}
@@ -105,7 +105,7 @@ export function CategoryForm({ mode, category }: CategoryFormProps) {
       <button
         type="submit"
         disabled={loading}
-        className="h-12 w-full rounded-lg bg-zinc-100 text-base font-medium text-zinc-900 disabled:opacity-60"
+        className="h-12 w-full rounded-lg bg-zinc-900 dark:bg-zinc-100 text-base font-medium text-zinc-50 dark:text-zinc-900 disabled:opacity-60"
       >
         {loading
           ? mode === "create"
@@ -118,7 +118,7 @@ export function CategoryForm({ mode, category }: CategoryFormProps) {
 
       <Link
         href="/settings/categories"
-        className="text-center text-sm font-medium text-zinc-400 underline"
+        className="text-center text-sm font-medium text-zinc-500 dark:text-zinc-400 underline"
       >
         Cancelar
       </Link>

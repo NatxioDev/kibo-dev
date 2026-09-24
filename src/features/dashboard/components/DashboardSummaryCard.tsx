@@ -13,10 +13,10 @@ const accentClass: Record<
   NonNullable<DashboardSummaryCardProps["accent"]>,
   string
 > = {
-  default: "text-zinc-50",
-  income: "text-green-400",
-  expense: "text-red-400",
-  balance: "text-zinc-50",
+  default: "text-zinc-900 dark:text-zinc-50",
+  income: "text-green-600 dark:text-green-400",
+  expense: "text-red-600 dark:text-red-400",
+  balance: "text-zinc-900 dark:text-zinc-50",
 };
 
 export function DashboardSummaryCard({
@@ -27,8 +27,8 @@ export function DashboardSummaryCard({
   accent = "default",
 }: DashboardSummaryCardProps) {
   return (
-    <div className="rounded-xl border border-zinc-800 bg-zinc-900/60 px-4 py-4">
-      <p className="text-sm text-zinc-400">
+    <div className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/60 px-4 py-4">
+      <p className="text-sm text-zinc-500 dark:text-zinc-400">
         {emoji} {label}
       </p>
       <p className={`mt-2 text-xl font-semibold ${accentClass[accent]}`}>

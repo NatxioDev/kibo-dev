@@ -12,13 +12,13 @@ export function CategoryList({ categories }: CategoryListProps) {
 
   if (categories.length === 0) {
     return (
-      <div className="rounded-xl border border-dashed border-zinc-700 px-4 py-10 text-center">
-        <p className="text-base text-zinc-300">
+      <div className="rounded-xl border border-dashed border-zinc-300 dark:border-zinc-700 px-4 py-10 text-center">
+        <p className="text-base text-zinc-600 dark:text-zinc-300">
           No tienes categorías todavía.
         </p>
         <Link
           href="/settings/categories/new"
-          className="mt-4 inline-flex h-11 items-center justify-center rounded-lg bg-zinc-100 px-4 text-sm font-medium text-zinc-900"
+          className="mt-4 inline-flex h-11 items-center justify-center rounded-lg bg-zinc-900 dark:bg-zinc-100 px-4 text-sm font-medium text-zinc-50 dark:text-zinc-900"
         >
           + Nueva categoría
         </Link>
@@ -29,11 +29,11 @@ export function CategoryList({ categories }: CategoryListProps) {
   return (
     <div className="flex flex-col gap-8">
       <section>
-        <h2 className="mb-2 text-sm font-medium uppercase tracking-wide text-zinc-500">
+        <h2 className="mb-2 text-sm font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
           Gastos
         </h2>
         {expenses.length === 0 ? (
-          <p className="py-3 text-sm text-zinc-500">Sin categorías de gasto.</p>
+          <p className="py-3 text-sm text-zinc-500 dark:text-zinc-400">Sin categorías de gasto.</p>
         ) : (
           expenses.map((category) => (
             <CategoryListItem key={category.id} category={category} />
@@ -42,11 +42,11 @@ export function CategoryList({ categories }: CategoryListProps) {
       </section>
 
       <section>
-        <h2 className="mb-2 text-sm font-medium uppercase tracking-wide text-zinc-500">
+        <h2 className="mb-2 text-sm font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
           Ingresos
         </h2>
         {incomes.length === 0 ? (
-          <p className="py-3 text-sm text-zinc-500">
+          <p className="py-3 text-sm text-zinc-500 dark:text-zinc-400">
             Sin categorías de ingreso.
           </p>
         ) : (

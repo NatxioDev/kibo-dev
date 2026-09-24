@@ -11,7 +11,7 @@ type DashboardFiltersProps = {
 };
 
 const selectClassName =
-  "h-11 w-full rounded-lg border border-zinc-700 bg-zinc-900 px-3 text-sm text-zinc-50 outline-none focus:border-zinc-500";
+  "h-11 w-full rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-3 text-sm text-zinc-900 dark:text-zinc-50 outline-none focus:border-zinc-500";
 
 export function DashboardFilters({ period, currency }: DashboardFiltersProps) {
   const router = useRouter();
@@ -26,7 +26,7 @@ export function DashboardFilters({ period, currency }: DashboardFiltersProps) {
   return (
     <div className="grid grid-cols-2 gap-3">
       <label className="flex flex-col gap-1.5">
-        <span className="text-xs font-medium text-zinc-500">Período</span>
+        <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">Período</span>
         <select
           className={selectClassName}
           value={period}
@@ -42,7 +42,7 @@ export function DashboardFilters({ period, currency }: DashboardFiltersProps) {
       </label>
 
       <label className="flex flex-col gap-1.5">
-        <span className="text-xs font-medium text-zinc-500">Moneda</span>
+        <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">Moneda</span>
         <select
           className={selectClassName}
           value={currency}

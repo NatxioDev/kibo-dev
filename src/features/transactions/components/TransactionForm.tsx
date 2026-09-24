@@ -11,9 +11,9 @@ type TransactionFormProps = {
 };
 
 const inputClassName =
-  "h-12 w-full rounded-lg border border-zinc-700 bg-zinc-900 px-3 text-base text-zinc-50 outline-none placeholder:text-zinc-500 focus:border-zinc-500 disabled:opacity-60";
+  "h-12 w-full rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-3 text-base text-zinc-900 dark:text-zinc-50 outline-none placeholder:text-zinc-400 dark:placeholder:text-zinc-500 focus:border-zinc-500 disabled:opacity-60";
 
-const labelClassName = "text-sm font-medium text-zinc-300";
+const labelClassName = "text-sm font-medium text-zinc-600 dark:text-zinc-300";
 
 export function TransactionForm({ mode, transaction }: TransactionFormProps) {
   const {
@@ -46,8 +46,8 @@ export function TransactionForm({ mode, transaction }: TransactionFormProps) {
             disabled={disabled}
             onClick={() => updateField("type", "EXPENSE")}
             className={`h-12 rounded-lg border text-base font-medium ${values.type === "EXPENSE"
-                ? "border-zinc-100 bg-zinc-100 text-zinc-900"
-                : "border-zinc-700 bg-zinc-900 text-zinc-100"
+                ? "border-zinc-900 dark:border-zinc-100 bg-zinc-900 dark:bg-zinc-100 text-zinc-50 dark:text-zinc-900"
+                : "border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-800 dark:text-zinc-100"
               }`}
           >
             Gasto
@@ -57,15 +57,15 @@ export function TransactionForm({ mode, transaction }: TransactionFormProps) {
             disabled={disabled}
             onClick={() => updateField("type", "INCOME")}
             className={`h-12 rounded-lg border text-base font-medium ${values.type === "INCOME"
-                ? "border-zinc-100 bg-zinc-100 text-zinc-900"
-                : "border-zinc-700 bg-zinc-900 text-zinc-100"
+                ? "border-zinc-900 dark:border-zinc-100 bg-zinc-900 dark:bg-zinc-100 text-zinc-50 dark:text-zinc-900"
+                : "border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-800 dark:text-zinc-100"
               }`}
           >
             Ingreso
           </button>
         </div>
         {fieldErrors.type ? (
-          <p className="text-sm text-red-400">{fieldErrors.type}</p>
+          <p className="text-sm text-red-600 dark:text-red-400">{fieldErrors.type}</p>
         ) : null}
       </div>
 
@@ -88,7 +88,7 @@ export function TransactionForm({ mode, transaction }: TransactionFormProps) {
             className={inputClassName}
           />
           {fieldErrors.amount ? (
-            <p className="text-sm text-red-400">{fieldErrors.amount}</p>
+            <p className="text-sm text-red-600 dark:text-red-400">{fieldErrors.amount}</p>
           ) : null}
         </div>
 
@@ -110,7 +110,7 @@ export function TransactionForm({ mode, transaction }: TransactionFormProps) {
             <option value="USD">USD</option>
           </select>
           {fieldErrors.currency ? (
-            <p className="text-sm text-red-400">{fieldErrors.currency}</p>
+            <p className="text-sm text-red-600 dark:text-red-400">{fieldErrors.currency}</p>
           ) : null}
         </div>
 
@@ -129,7 +129,7 @@ export function TransactionForm({ mode, transaction }: TransactionFormProps) {
           className={inputClassName}
         />
         {fieldErrors.date ? (
-          <p className="text-sm text-red-400">{fieldErrors.date}</p>
+          <p className="text-sm text-red-600 dark:text-red-400">{fieldErrors.date}</p>
         ) : null}
       </div>
 
@@ -142,8 +142,8 @@ export function TransactionForm({ mode, transaction }: TransactionFormProps) {
             onClick={() => updateField("category_id", "")}
             className={`flex h-20 w-24 shrink-0 flex-col items-center justify-center gap-1 rounded-lg border px-2 text-center text-xs font-medium ${
               values.category_id === ""
-                ? "border-zinc-100 bg-zinc-100 text-zinc-900"
-                : "border-zinc-700 bg-zinc-900 text-zinc-100"
+                ? "border-zinc-900 dark:border-zinc-100 bg-zinc-900 dark:bg-zinc-100 text-zinc-50 dark:text-zinc-900"
+                : "border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-800 dark:text-zinc-100"
             }`}
           >
             <span className="text-xl" aria-hidden>
@@ -163,8 +163,8 @@ export function TransactionForm({ mode, transaction }: TransactionFormProps) {
                 onClick={() => updateField("category_id", category.id)}
                 className={`flex h-20 w-24 shrink-0 flex-col items-center justify-center gap-1 rounded-lg border px-2 text-center text-xs font-medium ${
                   selected
-                    ? "border-zinc-100 bg-zinc-100 text-zinc-900"
-                    : "border-zinc-700 bg-zinc-900 text-zinc-100"
+                    ? "border-zinc-900 dark:border-zinc-100 bg-zinc-900 dark:bg-zinc-100 text-zinc-50 dark:text-zinc-900"
+                    : "border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-800 dark:text-zinc-100"
                 }`}
               >
                 <span className="text-xl" aria-hidden>
@@ -176,7 +176,7 @@ export function TransactionForm({ mode, transaction }: TransactionFormProps) {
           })}
         </div>
         {fieldErrors.category_id ? (
-          <p className="text-sm text-red-400">{fieldErrors.category_id}</p>
+          <p className="text-sm text-red-600 dark:text-red-400">{fieldErrors.category_id}</p>
         ) : null}
       </div>
 
@@ -189,8 +189,8 @@ export function TransactionForm({ mode, transaction }: TransactionFormProps) {
             onClick={() => updateField("payment_method_id", "")}
             className={`flex h-14 w-32 shrink-0 items-center justify-center rounded-lg border px-3 text-center text-sm font-medium ${
               values.payment_method_id === ""
-                ? "border-zinc-100 bg-zinc-100 text-zinc-900"
-                : "border-zinc-700 bg-zinc-900 text-zinc-100"
+                ? "border-zinc-900 dark:border-zinc-100 bg-zinc-900 dark:bg-zinc-100 text-zinc-50 dark:text-zinc-900"
+                : "border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-800 dark:text-zinc-100"
             }`}
           >
             Sin método
@@ -206,8 +206,8 @@ export function TransactionForm({ mode, transaction }: TransactionFormProps) {
                 onClick={() => updateField("payment_method_id", method.id)}
                 className={`flex h-14 w-32 shrink-0 items-center justify-center rounded-lg border px-3 text-center text-sm font-medium ${
                   selected
-                    ? "border-zinc-100 bg-zinc-100 text-zinc-900"
-                    : "border-zinc-700 bg-zinc-900 text-zinc-100"
+                    ? "border-zinc-900 dark:border-zinc-100 bg-zinc-900 dark:bg-zinc-100 text-zinc-50 dark:text-zinc-900"
+                    : "border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-800 dark:text-zinc-100"
                 }`}
               >
                 <span className="line-clamp-2 leading-tight">{method.name}</span>
@@ -216,7 +216,7 @@ export function TransactionForm({ mode, transaction }: TransactionFormProps) {
           })}
         </div>
         {fieldErrors.payment_method_id ? (
-          <p className="text-sm text-red-400">{fieldErrors.payment_method_id}</p>
+          <p className="text-sm text-red-600 dark:text-red-400">{fieldErrors.payment_method_id}</p>
         ) : null}
       </div>
 
@@ -235,7 +235,7 @@ export function TransactionForm({ mode, transaction }: TransactionFormProps) {
           placeholder="Opcional"
         />
         {fieldErrors.merchant ? (
-          <p className="text-sm text-red-400">{fieldErrors.merchant}</p>
+          <p className="text-sm text-red-600 dark:text-red-400">{fieldErrors.merchant}</p>
         ) : null}
       </div>
 
@@ -250,22 +250,22 @@ export function TransactionForm({ mode, transaction }: TransactionFormProps) {
           value={values.description}
           disabled={disabled}
           onChange={(event) => updateField("description", event.target.value)}
-          className="w-full rounded-lg border border-zinc-700 bg-zinc-900 px-3 py-3 text-base text-zinc-50 outline-none placeholder:text-zinc-500 focus:border-zinc-500 disabled:opacity-60"
+          className="w-full rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-3 py-3 text-base text-zinc-900 dark:text-zinc-50 outline-none placeholder:text-zinc-400 dark:placeholder:text-zinc-500 focus:border-zinc-500 disabled:opacity-60"
           placeholder="Opcional"
         />
         {fieldErrors.description ? (
-          <p className="text-sm text-red-400">{fieldErrors.description}</p>
+          <p className="text-sm text-red-600 dark:text-red-400">{fieldErrors.description}</p>
         ) : null}
       </div>
 
       {optionsError ? (
-        <p className="text-sm text-red-400" role="alert">
+        <p className="text-sm text-red-600 dark:text-red-400" role="alert">
           {optionsError}
         </p>
       ) : null}
 
       {formError ? (
-        <p className="text-sm text-red-400" role="alert">
+        <p className="text-sm text-red-600 dark:text-red-400" role="alert">
           {formError}
         </p>
       ) : null}
@@ -273,7 +273,7 @@ export function TransactionForm({ mode, transaction }: TransactionFormProps) {
       <button
         type="submit"
         disabled={disabled}
-        className="h-12 w-full rounded-lg bg-zinc-100 text-base font-medium text-zinc-900 disabled:opacity-60"
+        className="h-12 w-full rounded-lg bg-zinc-900 dark:bg-zinc-100 text-base font-medium text-zinc-50 dark:text-zinc-900 disabled:opacity-60"
       >
         {loading
           ? mode === "create"
@@ -286,7 +286,7 @@ export function TransactionForm({ mode, transaction }: TransactionFormProps) {
 
       <Link
         href="/"
-        className="text-center text-sm font-medium text-zinc-400 underline"
+        className="text-center text-sm font-medium text-zinc-500 dark:text-zinc-400 underline"
       >
         Cancelar
       </Link>

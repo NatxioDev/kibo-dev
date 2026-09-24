@@ -21,13 +21,13 @@ export function PaymentMethodListItem({
   return (
     <>
       <article
-        className={`flex flex-col gap-3 border-b border-zinc-800 py-4 last:border-b-0 ${inactiveClass}`}
+        className={`flex flex-col gap-3 border-b border-zinc-200 dark:border-zinc-800 py-4 last:border-b-0 ${inactiveClass}`}
       >
         <div className="min-w-0 flex-1">
-          <p className="truncate text-base font-medium text-zinc-50">
+          <p className="truncate text-base font-medium text-zinc-900 dark:text-zinc-50">
             {paymentMethod.name}
           </p>
-          <p className="mt-1 text-xs text-zinc-500">
+          <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
             {paymentMethod.is_active ? "Activo" : "Inactivo"}
           </p>
         </div>
@@ -35,7 +35,7 @@ export function PaymentMethodListItem({
         <div className="flex gap-2">
           <Link
             href={`/settings/payment-methods/${paymentMethod.id}/edit`}
-            className="inline-flex h-10 flex-1 items-center justify-center rounded-lg border border-zinc-700 bg-zinc-900 text-sm font-medium text-zinc-100"
+            className="inline-flex h-10 flex-1 items-center justify-center rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-sm font-medium text-zinc-800 dark:text-zinc-100"
           >
             Editar
           </Link>
@@ -43,7 +43,7 @@ export function PaymentMethodListItem({
             <button
               type="button"
               onClick={() => setDeactivateOpen(true)}
-              className="inline-flex h-10 flex-1 items-center justify-center rounded-lg border border-zinc-700 bg-zinc-900 text-sm font-medium text-red-400"
+              className="inline-flex h-10 flex-1 items-center justify-center rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-sm font-medium text-red-600 dark:text-red-400"
             >
               Desactivar
             </button>
@@ -52,7 +52,7 @@ export function PaymentMethodListItem({
               type="button"
               onClick={() => toggle(paymentMethod.id, true)}
               disabled={loading}
-              className="inline-flex h-10 flex-1 items-center justify-center rounded-lg border border-zinc-700 bg-zinc-900 text-sm font-medium text-zinc-100 disabled:opacity-60"
+              className="inline-flex h-10 flex-1 items-center justify-center rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-sm font-medium text-zinc-800 dark:text-zinc-100 disabled:opacity-60"
             >
               {loading ? "Activando…" : "Activar"}
             </button>
@@ -60,7 +60,7 @@ export function PaymentMethodListItem({
         </div>
 
         {error && !deactivateOpen ? (
-          <p className="text-sm text-red-400" role="alert">
+          <p className="text-sm text-red-600 dark:text-red-400" role="alert">
             {error}
           </p>
         ) : null}

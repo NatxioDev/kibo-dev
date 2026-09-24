@@ -18,7 +18,7 @@ export function RegisterForm() {
   return (
     <form onSubmit={handleSubmit} className="flex w-full flex-col gap-5">
       <div className="flex flex-col gap-1.5">
-        <label htmlFor="email" className="text-sm font-medium text-zinc-300">
+        <label htmlFor="email" className="text-sm font-medium text-zinc-600 dark:text-zinc-300">
           Email
         </label>
         <input
@@ -29,13 +29,13 @@ export function RegisterForm() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           disabled={loading}
-          className="h-12 w-full rounded-lg border border-zinc-700 bg-zinc-900 px-3 text-base text-zinc-50 outline-none placeholder:text-zinc-500 focus:border-zinc-500"
+          className="h-12 w-full rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-3 text-base text-zinc-900 dark:text-zinc-50 outline-none placeholder:text-zinc-400 dark:placeholder:text-zinc-500 focus:border-zinc-500"
           required
         />
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <label htmlFor="password" className="text-sm font-medium text-zinc-300">
+        <label htmlFor="password" className="text-sm font-medium text-zinc-600 dark:text-zinc-300">
           Password
         </label>
         <input
@@ -46,7 +46,7 @@ export function RegisterForm() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           disabled={loading}
-          className="h-12 w-full rounded-lg border border-zinc-700 bg-zinc-900 px-3 text-base text-zinc-50 outline-none placeholder:text-zinc-500 focus:border-zinc-500"
+          className="h-12 w-full rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-3 text-base text-zinc-900 dark:text-zinc-50 outline-none placeholder:text-zinc-400 dark:placeholder:text-zinc-500 focus:border-zinc-500"
           required
         />
       </div>
@@ -54,7 +54,7 @@ export function RegisterForm() {
       <div className="flex flex-col gap-1.5">
         <label
           htmlFor="confirmPassword"
-          className="text-sm font-medium text-zinc-300"
+          className="text-sm font-medium text-zinc-600 dark:text-zinc-300"
         >
           Confirmar password
         </label>
@@ -66,19 +66,19 @@ export function RegisterForm() {
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
           disabled={loading}
-          className="h-12 w-full rounded-lg border border-zinc-700 bg-zinc-900 px-3 text-base text-zinc-50 outline-none placeholder:text-zinc-500 focus:border-zinc-500"
+          className="h-12 w-full rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-3 text-base text-zinc-900 dark:text-zinc-50 outline-none placeholder:text-zinc-400 dark:placeholder:text-zinc-500 focus:border-zinc-500"
           required
         />
       </div>
 
       {error ? (
-        <p className="text-sm text-red-400" role="alert">
+        <p className="text-sm text-red-600 dark:text-red-400" role="alert">
           {error}
         </p>
       ) : null}
 
       {successMessage ? (
-        <p className="text-sm text-green-400" role="status">
+        <p className="text-sm text-green-600 dark:text-green-400" role="status">
           {successMessage}
         </p>
       ) : null}
@@ -86,15 +86,15 @@ export function RegisterForm() {
       <button
         type="submit"
         disabled={loading}
-        className="h-12 w-full rounded-lg bg-zinc-100 text-base font-medium text-zinc-900 disabled:opacity-60"
+        className="h-12 w-full rounded-lg bg-zinc-900 dark:bg-zinc-100 text-base font-medium text-zinc-50 dark:text-zinc-900 disabled:opacity-60"
       >
         {loading ? "Creando cuenta…" : "Crear cuenta"}
       </button>
 
-      <p className="text-center text-sm text-zinc-400">
+      <p className="text-center text-sm text-zinc-500 dark:text-zinc-400">
         ¿Ya tienes cuenta?
         <br />
-        <Link href="/login" className="font-medium text-zinc-100 underline">
+        <Link href="/login" className="font-medium text-zinc-800 dark:text-zinc-100 underline">
           Iniciar sesión
         </Link>
       </p>

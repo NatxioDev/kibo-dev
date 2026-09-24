@@ -8,11 +8,11 @@ type TransactionListProps = {
 export function TransactionList({ transactions }: TransactionListProps) {
   if (transactions.length === 0) {
     return (
-      <div className="rounded-xl border border-dashed border-zinc-700 px-4 py-10 text-center">
-        <p className="text-base text-zinc-300">
+      <div className="rounded-xl border border-dashed border-zinc-300 dark:border-zinc-700 px-4 py-10 text-center">
+        <p className="text-base text-zinc-600 dark:text-zinc-300">
           Todavía no tienes transacciones.
         </p>
-        <p className="mt-2 text-sm text-zinc-500">
+        <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">
           Registra tu primer gasto o ingreso.
         </p>
       </div>

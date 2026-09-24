@@ -36,19 +36,19 @@ export default async function HomePage({ searchParams }: HomePageProps) {
           <div className="flex shrink-0 flex-wrap gap-2">
             <Link
               href="/transactions/new"
-              className="inline-flex h-11 items-center justify-center rounded-lg bg-zinc-100 px-4 text-sm font-medium text-zinc-900"
+              className="inline-flex h-11 items-center justify-center rounded-lg bg-zinc-900 dark:bg-zinc-100 px-4 text-sm font-medium text-zinc-50 dark:text-zinc-900"
             >
               + Registrar transacción
             </Link>
             <Link
               href="/transactions"
-              className="inline-flex h-11 items-center justify-center rounded-lg border border-zinc-700 bg-zinc-900 px-4 text-sm font-medium text-zinc-100"
+              className="inline-flex h-11 items-center justify-center rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-4 text-sm font-medium text-zinc-800 dark:text-zinc-100"
             >
               Transacciones
             </Link>
             <Link
               href="/settings"
-              className="inline-flex h-11 items-center justify-center rounded-lg border border-zinc-700 bg-zinc-900 px-4 text-sm font-medium text-zinc-100"
+              className="inline-flex h-11 items-center justify-center rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-4 text-sm font-medium text-zinc-800 dark:text-zinc-100"
             >
               Configuración
             </Link>
@@ -58,8 +58,8 @@ export default async function HomePage({ searchParams }: HomePageProps) {
         <Suspense
           fallback={
             <div className="grid grid-cols-2 gap-3">
-              <div className="h-11 animate-pulse rounded-lg bg-zinc-800" />
-              <div className="h-11 animate-pulse rounded-lg bg-zinc-800" />
+              <div className="h-11 animate-pulse rounded-lg bg-zinc-200 dark:bg-zinc-800" />
+              <div className="h-11 animate-pulse rounded-lg bg-zinc-200 dark:bg-zinc-800" />
             </div>
           }
         >

@@ -23,11 +23,11 @@ export default async function EditPaymentMethodPage({
         <header>
           <Link
             href="/settings/payment-methods"
-            className="text-sm text-zinc-500 underline"
+            className="text-sm text-zinc-500 dark:text-zinc-400 underline"
           >
             Volver
           </Link>
-          <h1 className="mt-2 text-2xl font-semibold tracking-tight text-zinc-50">
+          <h1 className="mt-2 text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
             Editar método de pago
           </h1>
         </header>
