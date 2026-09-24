@@ -1,12 +1,15 @@
 {
   "name": "kibo-dev",
-  "version": "0.1.0",
+  "version": "0.0.4",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "prepare": "husky",
+    "release:dry": "semantic-release --dry-run",
+    "release:local": "bumpp --commit \"chore(release): v%s\" --tag"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",
@@ -17,12 +20,21 @@
     "zod": "^4.6.5"
   },
   "devDependencies": {
+    "@commitlint/cli": "^21.2.3",
+    "@commitlint/config-conventional": "^21.2.3",
+    "@semantic-release/changelog": "^7.0.0",
+    "@semantic-release/exec": "^7.1.0",
+    "@semantic-release/git": "^11.0.1",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "bumpp": "^12.3.0",
+    "conventional-changelog-conventionalcommits": "^10.4.0",
     "eslint": "^9",
     "eslint-config-next": "16.3.6",
+    "husky": "^9.1.7",
+    "semantic-release": "^25.0.9",
     "tailwindcss": "^4",
     "typescript": "^5"
   },
