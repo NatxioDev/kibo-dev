@@ -41,7 +41,7 @@ export type Transaction = {
 };
 
 export type TransactionWithRelations = Transaction & {
-  category: Pick<Category, "id" | "name"> | null;
+  category: Pick<Category, "id" | "name" | "icon"> | null;
   payment_method: Pick<PaymentMethod, "id" | "name"> | null;
 };
 

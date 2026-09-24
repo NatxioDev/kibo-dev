@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { formatCategoryLabel } from "@/features/categories/components/formatCategoryLabel";
 import { DeleteTransactionDialog } from "@/features/transactions/components/DeleteTransactionDialog";
 import {
   formatTransactionAmount,
@@ -17,7 +18,7 @@ export function TransactionListItem({ transaction }: TransactionListItemProps) {
   const [deleteOpen, setDeleteOpen] = useState(false);
 
   const merchantLabel = transaction.merchant?.trim() || "Sin comercio";
-  const categoryLabel = transaction.category?.name ?? "Sin categoría";
+  const categoryLabel = formatCategoryLabel(transaction.category);
   const paymentLabel = transaction.payment_method?.name ?? "Sin método";
   const amountClass =
     transaction.type === "INCOME" ? "text-green-400" : "text-zinc-50";

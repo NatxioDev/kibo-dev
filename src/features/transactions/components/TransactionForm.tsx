@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { type FormEvent } from "react";
+import { formatCategoryLabel } from "@/features/categories/components/formatCategoryLabel";
 import { useTransactionForm } from "@/features/transactions/hooks/useTransactionForm";
 import type { Transaction } from "@/features/transactions/types";
 
@@ -147,7 +148,7 @@ export function TransactionForm({ mode, transaction }: TransactionFormProps) {
           <option value="">Sin categoría</option>
           {categories.map((category) => (
             <option key={category.id} value={category.id}>
-              {category.name}
+              {formatCategoryLabel(category)}
             </option>
           ))}
         </select>

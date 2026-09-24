@@ -40,7 +40,7 @@ export async function listTransactions(): Promise<
     .select(
       `
       *,
-      category:categories(id, name),
+      category:categories(id, name, icon),
       payment_method:payment_methods(id, name)
     `,
     )

@@ -16,12 +16,20 @@ export default async function HomePage() {
             </h1>
             <p className="mt-1 text-sm text-zinc-500">Transacciones</p>
           </div>
-          <Link
-            href="/transactions/new"
-            className="inline-flex h-11 shrink-0 items-center justify-center rounded-lg bg-zinc-100 px-4 text-sm font-medium text-zinc-900"
-          >
-            + Nueva transacción
-          </Link>
+          <div className="flex shrink-0 flex-col gap-2">
+            <Link
+              href="/transactions/new"
+              className="inline-flex h-11 items-center justify-center rounded-lg bg-zinc-100 px-4 text-sm font-medium text-zinc-900"
+            >
+              + Nueva transacción
+            </Link>
+            <Link
+              href="/settings"
+              className="inline-flex h-10 items-center justify-center rounded-lg border border-zinc-700 bg-zinc-900 px-4 text-sm font-medium text-zinc-100"
+            >
+              Configuración
+            </Link>
+          </div>
         </header>
 
         {!result.success ? (
