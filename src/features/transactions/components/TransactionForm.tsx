@@ -65,7 +65,7 @@ export function TransactionForm({ mode, transaction }: TransactionFormProps) {
           </button>
         </div>
         {fieldErrors.type ? (
-          <p className="text-sm text-red-600 dark:text-red-400">{fieldErrors.type}</p>
+          <p className="text-sm text-expense">{fieldErrors.type}</p>
         ) : null}
       </div>
 
@@ -88,7 +88,7 @@ export function TransactionForm({ mode, transaction }: TransactionFormProps) {
             className={inputClassName}
           />
           {fieldErrors.amount ? (
-            <p className="text-sm text-red-600 dark:text-red-400">{fieldErrors.amount}</p>
+            <p className="text-sm text-expense">{fieldErrors.amount}</p>
           ) : null}
         </div>
 
@@ -110,7 +110,7 @@ export function TransactionForm({ mode, transaction }: TransactionFormProps) {
             <option value="USD">USD</option>
           </select>
           {fieldErrors.currency ? (
-            <p className="text-sm text-red-600 dark:text-red-400">{fieldErrors.currency}</p>
+            <p className="text-sm text-expense">{fieldErrors.currency}</p>
           ) : null}
         </div>
 
@@ -129,7 +129,7 @@ export function TransactionForm({ mode, transaction }: TransactionFormProps) {
           className={inputClassName}
         />
         {fieldErrors.date ? (
-          <p className="text-sm text-red-600 dark:text-red-400">{fieldErrors.date}</p>
+          <p className="text-sm text-expense">{fieldErrors.date}</p>
         ) : null}
       </div>
 
@@ -176,7 +176,7 @@ export function TransactionForm({ mode, transaction }: TransactionFormProps) {
           })}
         </div>
         {fieldErrors.category_id ? (
-          <p className="text-sm text-red-600 dark:text-red-400">{fieldErrors.category_id}</p>
+          <p className="text-sm text-expense">{fieldErrors.category_id}</p>
         ) : null}
       </div>
 
@@ -216,7 +216,7 @@ export function TransactionForm({ mode, transaction }: TransactionFormProps) {
           })}
         </div>
         {fieldErrors.payment_method_id ? (
-          <p className="text-sm text-red-600 dark:text-red-400">{fieldErrors.payment_method_id}</p>
+          <p className="text-sm text-expense">{fieldErrors.payment_method_id}</p>
         ) : null}
       </div>
 
@@ -235,7 +235,7 @@ export function TransactionForm({ mode, transaction }: TransactionFormProps) {
           placeholder="Opcional"
         />
         {fieldErrors.merchant ? (
-          <p className="text-sm text-red-600 dark:text-red-400">{fieldErrors.merchant}</p>
+          <p className="text-sm text-expense">{fieldErrors.merchant}</p>
         ) : null}
       </div>
 
@@ -254,18 +254,18 @@ export function TransactionForm({ mode, transaction }: TransactionFormProps) {
           placeholder="Opcional"
         />
         {fieldErrors.description ? (
-          <p className="text-sm text-red-600 dark:text-red-400">{fieldErrors.description}</p>
+          <p className="text-sm text-expense">{fieldErrors.description}</p>
         ) : null}
       </div>
 
       {optionsError ? (
-        <p className="text-sm text-red-600 dark:text-red-400" role="alert">
+        <p className="text-sm text-expense" role="alert">
           {optionsError}
         </p>
       ) : null}
 
       {formError ? (
-        <p className="text-sm text-red-600 dark:text-red-400" role="alert">
+        <p className="text-sm text-expense" role="alert">
           {formError}
         </p>
       ) : null}

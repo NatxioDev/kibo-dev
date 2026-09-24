@@ -51,7 +51,7 @@ export function LoginForm() {
       </div>
 
       {error ? (
-        <p className="text-sm text-red-600 dark:text-red-400" role="alert">
+        <p className="text-sm text-expense" role="alert">
           {error}
         </p>
       ) : null}

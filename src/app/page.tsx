@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { Suspense } from "react";
-import { LogoutButton } from "@/features/auth/components/LogoutButton";
 import { DashboardEmptyState } from "@/features/dashboard/components/DashboardEmptyState";
 import { DashboardErrorState } from "@/features/dashboard/components/DashboardErrorState";
 import { DashboardFilters } from "@/features/dashboard/components/DashboardFilters";
@@ -84,8 +83,6 @@ export default async function HomePage({ searchParams }: HomePageProps) {
             )}
           </>
         )}
-
-        <LogoutButton />
       </div>
     </main>
   );

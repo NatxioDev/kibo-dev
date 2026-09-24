@@ -72,13 +72,13 @@ export function RegisterForm() {
       </div>
 
       {error ? (
-        <p className="text-sm text-red-600 dark:text-red-400" role="alert">
+        <p className="text-sm text-expense" role="alert">
           {error}
         </p>
       ) : null}
 
       {successMessage ? (
-        <p className="text-sm text-green-600 dark:text-green-400" role="status">
+        <p className="text-sm text-income" role="status">
           {successMessage}
         </p>
       ) : null}

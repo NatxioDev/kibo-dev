@@ -1,5 +1,5 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
+import { PageHeader } from "@/components/PageHeader";
 import { CategoryForm } from "@/features/categories/components/CategoryForm";
 import { getCategory } from "@/features/categories/services/categories.server";
 
@@ -20,17 +20,15 @@ export default async function EditCategoryPage({
   return (
     <main className="flex min-h-full flex-1 flex-col px-4 py-8">
       <div className="mx-auto flex w-full max-w-md flex-col gap-6">
-        <header>
-          <Link
-            href="/settings/categories"
-            className="text-sm text-zinc-500 dark:text-zinc-400 underline"
-          >
-            Volver
-          </Link>
-          <h1 className="mt-2 text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
-            Editar categoría
-          </h1>
-        </header>
+        <PageHeader
+          breadcrumbs={[
+            { href: "/", label: "Inicio" },
+            { href: "/settings", label: "Perfil" },
+            { href: "/settings/categories", label: "Categorías" },
+          ]}
+          fallbackHref="/settings/categories"
+          title="Editar categoría"
+        />
         <CategoryForm mode="edit" category={result.data} />
       </div>
     </main>

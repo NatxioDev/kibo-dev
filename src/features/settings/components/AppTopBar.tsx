@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { SettingsGearLink } from "@/features/settings/components/SettingsGearLink";
+import { ProfileLink } from "@/features/settings/components/ProfileLink";
 
 export function AppTopBar() {
   const pathname = usePathname();
@@ -17,7 +17,7 @@ export function AppTopBar() {
   return (
     <div className="sticky top-0 z-40 border-b border-zinc-200 bg-background/90 backdrop-blur dark:border-zinc-800">
       <div className="mx-auto flex h-12 w-full max-w-3xl items-center justify-end px-4">
-        <SettingsGearLink />
+        <ProfileLink />
       </div>
     </div>
   );

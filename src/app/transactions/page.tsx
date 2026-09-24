@@ -1,42 +1,59 @@
 import Link from "next/link";
-import { LogoutButton } from "@/features/auth/components/LogoutButton";
+import { Suspense } from "react";
+import { PageHeader } from "@/components/PageHeader";
 import { TransactionList } from "@/features/transactions/components/TransactionList";
+import { TransactionListFilters } from "@/features/transactions/components/TransactionListFilters";
 import { listTransactions } from "@/features/transactions/services/transactions.server";
+import { parseTransactionTypeFilter } from "@/features/transactions/utils/listFilters";
 
-export default async function TransactionsPage() {
-  const result = await listTransactions();
+type TransactionsPageProps = {
+  searchParams: Promise<{ type?: string }>;
+};
+
+export default async function TransactionsPage({
+  searchParams,
+}: TransactionsPageProps) {
+  const params = await searchParams;
+  const type = parseTransactionTypeFilter(params.type);
+  const filtersActive = type !== "all";
+  const result = await listTransactions({ type });
 
   return (
     <main className="flex min-h-full flex-1 flex-col px-4 py-8">
       <div className="mx-auto flex w-full max-w-md flex-col gap-6">
-        <header className="flex items-start justify-between gap-3">
-          <div>
-            <Link href="/" className="text-sm text-zinc-500 dark:text-zinc-400 underline">
-              Dashboard
-            </Link>
-            <h1 className="mt-2 text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
-              Transacciones
-            </h1>
-          </div>
-          <div className="flex shrink-0 flex-col gap-2">
+        <PageHeader
+          breadcrumbs={[{ href: "/", label: "Inicio" }]}
+          fallbackHref="/"
+          title="Transacciones"
+          actions={
             <Link
               href="/transactions/new"
               className="inline-flex h-11 items-center justify-center rounded-lg bg-zinc-900 px-4 text-sm font-medium text-zinc-50 dark:bg-zinc-100 dark:text-zinc-900"
             >
-              + Nueva transacción
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+              <span className="hidden md:inline">Nueva transacción</span>
             </Link>
-          </div>
-        </header>
+          }
+        />
+
+        <Suspense
+          fallback={
+            <div className="h-9 animate-pulse rounded-lg bg-zinc-200 dark:bg-zinc-800" />
+          }
+        >
+          <TransactionListFilters type={type} />
+        </Suspense>
 
         {!result.success ? (
-          <p className="rounded-lg border border-red-200 dark:border-red-900/50 bg-red-50 dark:bg-red-950/40 px-4 py-3 text-sm text-red-600 dark:text-red-400">
+          <p className="rounded-lg border border-expense-border bg-expense-soft px-4 py-3 text-sm text-expense">
             {result.error}
           </p>
         ) : (
-          <TransactionList transactions={result.data} />
+          <TransactionList
+            transactions={result.data}
+            filtersActive={filtersActive}
+          />
         )}
-
-        <LogoutButton />
       </div>
     </main>
   );

@@ -1,21 +1,26 @@
 import { notFound } from "next/navigation";
 import { PageHeader } from "@/components/PageHeader";
-import { TransactionForm } from "@/features/transactions/components/TransactionForm";
-import { getTransaction } from "@/features/transactions/services/transactions.server";
+import { TransactionDetail } from "@/features/transactions/components/TransactionDetail";
+import { getTransactionWithRelations } from "@/features/transactions/services/transactions.server";
 
-type EditTransactionPageProps = {
+type TransactionDetailPageProps = {
   params: Promise<{ id: string }>;
 };
 
-export default async function EditTransactionPage({
+export default async function TransactionDetailPage({
   params,
-}: EditTransactionPageProps) {
+}: TransactionDetailPageProps) {
   const { id } = await params;
-  const result = await getTransaction(id);
+  const result = await getTransactionWithRelations(id);
 
   if (!result.success) {
     notFound();
   }
+
+  const title =
+    result.data.merchant?.trim() ||
+    result.data.category?.name ||
+    "Detalle";
 
   return (
     <main className="flex min-h-full flex-1 flex-col px-4 py-8">
@@ -26,9 +31,9 @@ export default async function EditTransactionPage({
             { href: "/transactions", label: "Transacciones" },
           ]}
           fallbackHref="/transactions"
-          title="Editar transacción"
+          title={title}
         />
-        <TransactionForm mode="edit" transaction={result.data} />
+        <TransactionDetail transaction={result.data} />
       </div>
     </main>
   );

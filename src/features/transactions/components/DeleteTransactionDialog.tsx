@@ -6,12 +6,14 @@ type DeleteTransactionDialogProps = {
   open: boolean;
   onClose: () => void;
   transactionId: string;
+  onDeleted?: () => void;
 };
 
 export function DeleteTransactionDialog({
   open,
   onClose,
   transactionId,
+  onDeleted,
 }: DeleteTransactionDialogProps) {
   const { remove, error, loading, setError } = useDeleteTransaction();
 
@@ -27,6 +29,7 @@ export function DeleteTransactionDialog({
     remove(transactionId, () => {
       setError(null);
       onClose();
+      onDeleted?.();
     });
   }
 
@@ -49,7 +52,7 @@ export function DeleteTransactionDialog({
         </p>
 
         {error ? (
-          <p className="mt-3 text-sm text-red-600 dark:text-red-400" role="alert">
+          <p className="mt-3 text-sm text-expense" role="alert">
             {error}
           </p>
         ) : null}
@@ -59,7 +62,7 @@ export function DeleteTransactionDialog({
             type="button"
             onClick={handleConfirm}
             disabled={loading}
-            className="h-12 w-full rounded-lg bg-red-500 text-base font-medium text-white disabled:opacity-60"
+            className="h-12 w-full rounded-lg bg-expense-solid text-base font-medium text-white disabled:opacity-60"
           >
             {loading ? "Eliminando…" : "Eliminar"}
           </button>

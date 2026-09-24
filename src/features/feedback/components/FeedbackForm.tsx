@@ -53,7 +53,7 @@ export function FeedbackForm() {
           })}
         </div>
         {fieldErrors.type ? (
-          <p className="text-sm text-red-600 dark:text-red-400">
+          <p className="text-sm text-expense">
             {fieldErrors.type}
           </p>
         ) : null}
@@ -74,20 +74,20 @@ export function FeedbackForm() {
           placeholder="Cuéntanos qué pasó o qué te gustaría mejorar…"
         />
         {fieldErrors.message ? (
-          <p className="text-sm text-red-600 dark:text-red-400">
+          <p className="text-sm text-expense">
             {fieldErrors.message}
           </p>
         ) : null}
       </div>
 
       {formError ? (
-        <p className="text-sm text-red-600 dark:text-red-400" role="alert">
+        <p className="text-sm text-expense" role="alert">
           {formError}
         </p>
       ) : null}
 
       {success ? (
-        <p className="text-sm text-green-600 dark:text-green-400" role="status">
+        <p className="text-sm text-income" role="status">
           Gracias, recibimos tu feedback.
         </p>
       ) : null}

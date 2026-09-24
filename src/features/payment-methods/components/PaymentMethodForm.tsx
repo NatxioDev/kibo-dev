@@ -43,12 +43,12 @@ export function PaymentMethodForm({
           className={inputClassName}
         />
         {fieldErrors.name ? (
-          <p className="text-sm text-red-600 dark:text-red-400">{fieldErrors.name}</p>
+          <p className="text-sm text-expense">{fieldErrors.name}</p>
         ) : null}
       </div>
 
       {formError ? (
-        <p className="text-sm text-red-600 dark:text-red-400" role="alert">
+        <p className="text-sm text-expense" role="alert">
           {formError}
         </p>
       ) : null}

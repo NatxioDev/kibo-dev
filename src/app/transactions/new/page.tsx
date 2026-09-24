@@ -1,18 +1,18 @@
-import Link from "next/link";
+import { PageHeader } from "@/components/PageHeader";
 import { TransactionForm } from "@/features/transactions/components/TransactionForm";
 
 export default function NewTransactionPage() {
   return (
     <main className="flex min-h-full flex-1 flex-col px-4 py-8">
       <div className="mx-auto flex w-full max-w-md flex-col gap-6">
-        <header>
-          <Link href="/" className="text-sm text-zinc-500 dark:text-zinc-400 underline">
-            Volver
-          </Link>
-          <h1 className="mt-2 text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
-            Nueva transacción
-          </h1>
-        </header>
+        <PageHeader
+          breadcrumbs={[
+            { href: "/", label: "Inicio" },
+            { href: "/transactions", label: "Transacciones" },
+          ]}
+          fallbackHref="/transactions"
+          title="Nueva transacción"
+        />
         <TransactionForm mode="create" />
       </div>
     </main>

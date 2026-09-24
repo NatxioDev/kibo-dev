@@ -14,8 +14,8 @@ const accentClass: Record<
   string
 > = {
   default: "text-zinc-900 dark:text-zinc-50",
-  income: "text-green-600 dark:text-green-400",
-  expense: "text-red-600 dark:text-red-400",
+  income: "text-income",
+  expense: "text-expense",
   balance: "text-zinc-900 dark:text-zinc-50",
 };
 

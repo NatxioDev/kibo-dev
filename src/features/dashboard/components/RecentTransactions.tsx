@@ -37,7 +37,7 @@ export function RecentTransactions({ transactions }: RecentTransactionsProps) {
               formatCategoryLabel(transaction.category);
             const categoryLabel = formatCategoryLabel(transaction.category);
             const amountClass =
-              transaction.type === "INCOME" ? "text-green-600 dark:text-green-400" : "text-zinc-900 dark:text-zinc-50";
+              transaction.type === "INCOME" ? "text-income" : "text-zinc-900 dark:text-zinc-50";
 
             return (
               <li

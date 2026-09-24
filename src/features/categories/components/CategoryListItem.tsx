@@ -45,7 +45,7 @@ export function CategoryListItem({ category }: CategoryListItemProps) {
             <button
               type="button"
               onClick={() => setDeactivateOpen(true)}
-              className="inline-flex h-10 flex-1 items-center justify-center rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-sm font-medium text-red-600 dark:text-red-400"
+              className="inline-flex h-10 flex-1 items-center justify-center rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-sm font-medium text-expense"
             >
               Desactivar
             </button>
@@ -62,7 +62,7 @@ export function CategoryListItem({ category }: CategoryListItemProps) {
         </div>
 
         {error && !deactivateOpen ? (
-          <p className="text-sm text-red-600 dark:text-red-400" role="alert">
+          <p className="text-sm text-expense" role="alert">
             {error}
           </p>
         ) : null}
