@@ -3,6 +3,7 @@ import { formatCategoryLabel } from "@/features/categories/components/formatCate
 import {
   formatTransactionAmount,
   formatTransactionDate,
+  formatTransactionTime,
 } from "@/features/transactions/components/formatters";
 import type { TransactionWithRelations } from "@/features/transactions/types";
 
@@ -38,6 +39,10 @@ export function RecentTransactions({ transactions }: RecentTransactionsProps) {
             const categoryLabel = formatCategoryLabel(transaction.category);
             const amountClass =
               transaction.type === "INCOME" ? "text-income" : "text-zinc-900 dark:text-zinc-50";
+            const timeLabel = formatTransactionTime(transaction.created_at);
+            const dateLabel = timeLabel
+              ? `${formatTransactionDate(transaction.date)} · ${timeLabel}`
+              : formatTransactionDate(transaction.date);
 
             return (
               <li
@@ -46,7 +51,7 @@ export function RecentTransactions({ transactions }: RecentTransactionsProps) {
               >
                 <div className="min-w-0 flex-1">
                   <p className="text-xs text-zinc-500 dark:text-zinc-400">
-                    {formatTransactionDate(transaction.date)}
+                    {dateLabel}
                   </p>
                   <p className="mt-1 truncate text-sm font-medium text-zinc-900 dark:text-zinc-50">
                     {merchant}
@@ -70,3 +75,4 @@ export function RecentTransactions({ transactions }: RecentTransactionsProps) {
     </section>
   );
 }
+

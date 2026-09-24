@@ -78,6 +78,7 @@ bunx tsc --noEmit  # typecheck
 | `/register` | Crear cuenta |
 | `/transactions` | Listado de transacciones |
 | `/transactions/new` | Nueva transacción |
+| `/transactions/[id]` | Detalle de transacción |
 | `/transactions/[id]/edit` | Editar transacción |
 | `/settings` | Configuración |
 | `/settings/categories` | Categorías |
@@ -113,3 +114,32 @@ Cada feature agrupa `components/`, `hooks/`, `services/` y, si aplica, `schemas/
 - El dashboard no mezcla monedas: filtra por BOB o USD
 - Las transacciones en borrador (`DRAFT`) no entran en el resumen
 - Una categoría o método desactivado no aparece al crear transacciones, pero sigue visible en el historial
+
+## Tasks futuras
+
+Ideas pendientes (sin orden fijo):
+
+- [ ] Inicio de sesión con proveedores externos (OAuth: Google, Apple, etc.)
+- [ ] Passkeys (WebAuthn) para login sin contraseña
+- [ ] Paginación / infinite scroll en el listado de transacciones
+- [ ] Búsqueda por texto (comercio, descripción)
+- [ ] Filtro por moneda y por rango de fechas en `/transactions`
+- [ ] Captura no manual: imagen, texto o audio (`source = IMAGE | TEXT | AUDIO`)
+- [ ] Flujo de borradores (`status = DRAFT`) y confirmación
+- [ ] Presupuestos por categoría / mes y alertas de límite
+- [ ] Conversión o vista unificada multi-moneda en el dashboard
+- [ ] Gráficos de tendencia (ingresos vs gastos en el tiempo)
+- [ ] Exportar transacciones (CSV / PDF)
+- [ ] Recurrencias (suscripciones, sueldo, etc.)
+- [ ] PWA / instalación en móvil
+- [ ] Edición de perfil (nombre, avatar) más allá del tema
+- [ ] Panel interno para revisar feedback de usuarios
+
+## Deuda técnica
+
+- [ ] Desacoplar Supabase detrás de repositorios/adapters (hoy los services hablan directo al cliente)
+- [ ] Generar tipos de DB con Supabase CLI (`Database`) en lugar de tipos manuales
+- [ ] Unificar lecturas activas de categorías/métodos (hay helpers en `transactions/` y en `categories/` / `payment-methods/`)
+- [ ] Añadir tests (al menos unitarios de utils/schemas y smoke de páginas críticas)
+- [ ] Versionar migraciones SQL / schema en el repo (hoy el esquema vive solo en Supabase)
+- [ ] Revisar mutaciones client-side vs server actions donde convenga (auth, feedback, CRUD)
