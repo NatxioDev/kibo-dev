@@ -1,0 +1,2 @@
+# Lint rápido antes de commit (opcional; quita esta línea si molesta en local)
+bun run lint

@@ -62,11 +62,53 @@ Abre [http://localhost:3000](http://localhost:3000).
 ## Scripts
 
 ```bash
-bun run dev      # desarrollo
-bun run build    # build de producción
-bun run start    # servir build
-bun run lint     # ESLint
-bunx tsc --noEmit  # typecheck
+bun run dev           # desarrollo
+bun run build         # build de producción
+bun run start         # servir build
+bun run lint          # ESLint
+bunx tsc --noEmit     # typecheck
+bun run release:dry   # simular el próximo release (sin publicar)
+bun run release:local # bump manual local (solo si CI no aplica)
+```
+
+## Versionado
+
+- La versión vive en `package.json` y se muestra en `/settings` (`Kibo vX.Y.Z`).
+- Opcional: override con `NEXT_PUBLIC_APP_VERSION` en el entorno de deploy.
+- **Husky** exige Conventional Commits (`feat:`, `fix:`, `chore:`, …).
+
+### Automático en GitHub (recomendado)
+
+Al hacer **push / merge a `main`**, el workflow [`.github/workflows/release.yml`](.github/workflows/release.yml) corre **semantic-release**:
+
+| Tipo de commit | Versión |
+|----------------|---------|
+| `fix:` / `perf:` / `refactor:` | patch (`0.0.x`) |
+| `feat:` | minor (`0.x.0`) |
+| `BREAKING CHANGE` / `!` | major (`x.0.0`) |
+| `docs:` / `chore:` / `ci:` / `test:` | sin release |
+
+El bot actualiza `package.json`, `CHANGELOG.md`, crea tag `vX.Y.Z` y un GitHub Release.
+
+**Primera vez** (si aún no hay tags), ancla la versión actual para no saltar de más:
+
+```bash
+git tag v0.0.4
+git push origin v0.0.4
+```
+
+Flujo diario:
+
+1. PR con commits `feat:` / `fix:` …
+2. Merge a `main`
+3. GitHub Actions publica la versión
+4. Tras el deploy, Settings muestra la nueva versión
+
+### Manual (opcional)
+
+```bash
+bun run release:local   # interactive con bumpp
+git push --follow-tags
 ```
 
 ## Rutas principales
@@ -120,6 +162,7 @@ Cada feature agrupa `components/`, `hooks/`, `services/` y, si aplica, `schemas/
 Ideas pendientes (sin orden fijo):
 
 - [ ] Inicio de sesión con proveedores externos (OAuth: Google, Apple, etc.)
+- [ ] Creacion de cuenta con datos personales, onboarding completo.
 - [ ] Passkeys (WebAuthn) para login sin contraseña
 - [ ] Paginación / infinite scroll en el listado de transacciones
 - [ ] Búsqueda por texto (comercio, descripción)

@@ -3,6 +3,7 @@ import { LogoutButton } from "@/features/auth/components/LogoutButton";
 import { PageHeader } from "@/components/PageHeader";
 import { ThemeToggle } from "@/features/theme/ThemeToggle";
 import { createClient } from "@/lib/supabase/server";
+import { APP_NAME, APP_VERSION } from "@/lib/version";
 
 export default async function SettingsPage() {
   const supabase = await createClient();
@@ -54,6 +55,10 @@ export default async function SettingsPage() {
             <span className="text-zinc-500 dark:text-zinc-400">→</span>
           </Link>
         </nav>
+
+        <p className="text-center text-xs text-zinc-500 dark:text-zinc-400">
+          {APP_NAME} v{APP_VERSION}
+        </p>
       </div>
     </main>
   );
