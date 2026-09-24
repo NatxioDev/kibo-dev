@@ -21,15 +21,9 @@ export default async function TransactionsPage() {
           <div className="flex shrink-0 flex-col gap-2">
             <Link
               href="/transactions/new"
-              className="inline-flex h-11 items-center justify-center rounded-lg bg-zinc-900 dark:bg-zinc-100 px-4 text-sm font-medium text-zinc-50 dark:text-zinc-900"
+              className="inline-flex h-11 items-center justify-center rounded-lg bg-zinc-900 px-4 text-sm font-medium text-zinc-50 dark:bg-zinc-100 dark:text-zinc-900"
             >
               + Nueva transacción
-            </Link>
-            <Link
-              href="/settings"
-              className="inline-flex h-10 items-center justify-center rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-4 text-sm font-medium text-zinc-800 dark:text-zinc-100"
-            >
-              Configuración
             </Link>
           </div>
         </header>

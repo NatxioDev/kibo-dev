@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { AppTopBar } from "@/features/settings/components/AppTopBar";
 import { ThemeProvider } from "@/features/theme/ThemeProvider";
 import { ThemeScript } from "@/features/theme/ThemeScript";
-import { ThemeToggle } from "@/features/theme/ThemeToggle";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -32,11 +32,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       </head>
       <body className="flex min-h-full flex-col font-sans">
         <ThemeProvider>
-          <div className="sticky top-0 z-40 border-b border-zinc-200 bg-background/90 backdrop-blur dark:border-zinc-800">
-            <div className="mx-auto flex h-12 w-full max-w-3xl items-center justify-end px-4">
-              <ThemeToggle />
-            </div>
-          </div>
+          <AppTopBar />
           {children}
         </ThemeProvider>
       </body>
