@@ -32,13 +32,20 @@ export function formatTransactionAmount(
   type: TransactionType,
 ): string {
   const sign = type === "INCOME" ? "+" : "-";
+  return `${sign}${formatMoneyAmount(amount, currency)}`;
+}
+
+export function formatMoneyAmount(
+  amount: number,
+  currency: TransactionCurrency,
+): string {
   const prefix = currency === "BOB" ? "Bs " : "$";
   const formatted = amount.toLocaleString("es-BO", {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   });
 
-  return `${sign}${prefix}${formatted}`;
+  return `${prefix}${formatted}`;
 }
 
 export function todayDateInputValue(): string {

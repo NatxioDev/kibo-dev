@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { type FormEvent } from "react";
-import { formatCategoryLabel } from "@/features/categories/components/formatCategoryLabel";
 import { useTransactionForm } from "@/features/transactions/hooks/useTransactionForm";
 import type { Transaction } from "@/features/transactions/types";
 
@@ -46,11 +45,10 @@ export function TransactionForm({ mode, transaction }: TransactionFormProps) {
             type="button"
             disabled={disabled}
             onClick={() => updateField("type", "EXPENSE")}
-            className={`h-12 rounded-lg border text-base font-medium ${
-              values.type === "EXPENSE"
+            className={`h-12 rounded-lg border text-base font-medium ${values.type === "EXPENSE"
                 ? "border-zinc-100 bg-zinc-100 text-zinc-900"
                 : "border-zinc-700 bg-zinc-900 text-zinc-100"
-            }`}
+              }`}
           >
             Gasto
           </button>
@@ -58,11 +56,10 @@ export function TransactionForm({ mode, transaction }: TransactionFormProps) {
             type="button"
             disabled={disabled}
             onClick={() => updateField("type", "INCOME")}
-            className={`h-12 rounded-lg border text-base font-medium ${
-              values.type === "INCOME"
+            className={`h-12 rounded-lg border text-base font-medium ${values.type === "INCOME"
                 ? "border-zinc-100 bg-zinc-100 text-zinc-900"
                 : "border-zinc-700 bg-zinc-900 text-zinc-100"
-            }`}
+              }`}
           >
             Ingreso
           </button>
@@ -72,49 +69,52 @@ export function TransactionForm({ mode, transaction }: TransactionFormProps) {
         ) : null}
       </div>
 
-      <div className="flex flex-col gap-1.5">
-        <label htmlFor="amount" className={labelClassName}>
-          Monto
-        </label>
-        <input
-          id="amount"
-          name="amount"
-          type="number"
-          inputMode="decimal"
-          min="0"
-          step="0.01"
-          value={values.amount}
-          disabled={disabled}
-          onChange={(event) => updateField("amount", event.target.value)}
-          className={inputClassName}
-        />
-        {fieldErrors.amount ? (
-          <p className="text-sm text-red-400">{fieldErrors.amount}</p>
-        ) : null}
-      </div>
+      <div className="flex flex-row gap-2">
 
-      <div className="flex flex-col gap-1.5">
-        <label htmlFor="currency" className={labelClassName}>
-          Moneda
-        </label>
-        <select
-          id="currency"
-          name="currency"
-          value={values.currency}
-          disabled={disabled}
-          onChange={(event) =>
-            updateField("currency", event.target.value as "BOB" | "USD")
-          }
-          className={inputClassName}
-        >
-          <option value="BOB">BOB</option>
-          <option value="USD">USD</option>
-        </select>
-        {fieldErrors.currency ? (
-          <p className="text-sm text-red-400">{fieldErrors.currency}</p>
-        ) : null}
-      </div>
+        <div className="flex flex-col w-full gap-1.5">
+          <label htmlFor="amount" className={labelClassName}>
+            Monto
+          </label>
+          <input
+            id="amount"
+            name="amount"
+            type="number"
+            inputMode="decimal"
+            min="0"
+            step="0.01"
+            value={values.amount}
+            disabled={disabled}
+            onChange={(event) => updateField("amount", event.target.value)}
+            className={inputClassName}
+          />
+          {fieldErrors.amount ? (
+            <p className="text-sm text-red-400">{fieldErrors.amount}</p>
+          ) : null}
+        </div>
 
+        <div className="flex flex-col w-[40%] gap-1.5">
+          <label htmlFor="currency" className={labelClassName}>
+            Moneda
+          </label>
+          <select
+            id="currency"
+            name="currency"
+            value={values.currency}
+            disabled={disabled}
+            onChange={(event) =>
+              updateField("currency", event.target.value as "BOB" | "USD")
+            }
+            className={inputClassName}
+          >
+            <option value="BOB">BOB</option>
+            <option value="USD">USD</option>
+          </select>
+          {fieldErrors.currency ? (
+            <p className="text-sm text-red-400">{fieldErrors.currency}</p>
+          ) : null}
+        </div>
+
+      </div>
       <div className="flex flex-col gap-1.5">
         <label htmlFor="date" className={labelClassName}>
           Fecha
@@ -134,50 +134,87 @@ export function TransactionForm({ mode, transaction }: TransactionFormProps) {
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <label htmlFor="category_id" className={labelClassName}>
-          Categoría
-        </label>
-        <select
-          id="category_id"
-          name="category_id"
-          value={values.category_id}
-          disabled={disabled}
-          onChange={(event) => updateField("category_id", event.target.value)}
-          className={inputClassName}
-        >
-          <option value="">Sin categoría</option>
-          {categories.map((category) => (
-            <option key={category.id} value={category.id}>
-              {formatCategoryLabel(category)}
-            </option>
-          ))}
-        </select>
+        <span className={labelClassName}>Categoría</span>
+        <div className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <button
+            type="button"
+            disabled={disabled}
+            onClick={() => updateField("category_id", "")}
+            className={`flex h-20 w-24 shrink-0 flex-col items-center justify-center gap-1 rounded-lg border px-2 text-center text-xs font-medium ${
+              values.category_id === ""
+                ? "border-zinc-100 bg-zinc-100 text-zinc-900"
+                : "border-zinc-700 bg-zinc-900 text-zinc-100"
+            }`}
+          >
+            <span className="text-xl" aria-hidden>
+              📦
+            </span>
+            <span className="line-clamp-2 leading-tight">Sin categoría</span>
+          </button>
+          {categories.map((category) => {
+            const selected = values.category_id === category.id;
+            const icon = category.icon?.trim() || "📦";
+
+            return (
+              <button
+                key={category.id}
+                type="button"
+                disabled={disabled}
+                onClick={() => updateField("category_id", category.id)}
+                className={`flex h-20 w-24 shrink-0 flex-col items-center justify-center gap-1 rounded-lg border px-2 text-center text-xs font-medium ${
+                  selected
+                    ? "border-zinc-100 bg-zinc-100 text-zinc-900"
+                    : "border-zinc-700 bg-zinc-900 text-zinc-100"
+                }`}
+              >
+                <span className="text-xl" aria-hidden>
+                  {icon}
+                </span>
+                <span className="line-clamp-2 leading-tight">{category.name}</span>
+              </button>
+            );
+          })}
+        </div>
         {fieldErrors.category_id ? (
           <p className="text-sm text-red-400">{fieldErrors.category_id}</p>
         ) : null}
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <label htmlFor="payment_method_id" className={labelClassName}>
-          Método de pago
-        </label>
-        <select
-          id="payment_method_id"
-          name="payment_method_id"
-          value={values.payment_method_id}
-          disabled={disabled}
-          onChange={(event) =>
-            updateField("payment_method_id", event.target.value)
-          }
-          className={inputClassName}
-        >
-          <option value="">Sin método</option>
-          {paymentMethods.map((method) => (
-            <option key={method.id} value={method.id}>
-              {method.name}
-            </option>
-          ))}
-        </select>
+        <span className={labelClassName}>Método de pago</span>
+        <div className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <button
+            type="button"
+            disabled={disabled}
+            onClick={() => updateField("payment_method_id", "")}
+            className={`flex h-14 w-32 shrink-0 items-center justify-center rounded-lg border px-3 text-center text-sm font-medium ${
+              values.payment_method_id === ""
+                ? "border-zinc-100 bg-zinc-100 text-zinc-900"
+                : "border-zinc-700 bg-zinc-900 text-zinc-100"
+            }`}
+          >
+            Sin método
+          </button>
+          {paymentMethods.map((method) => {
+            const selected = values.payment_method_id === method.id;
+
+            return (
+              <button
+                key={method.id}
+                type="button"
+                disabled={disabled}
+                onClick={() => updateField("payment_method_id", method.id)}
+                className={`flex h-14 w-32 shrink-0 items-center justify-center rounded-lg border px-3 text-center text-sm font-medium ${
+                  selected
+                    ? "border-zinc-100 bg-zinc-100 text-zinc-900"
+                    : "border-zinc-700 bg-zinc-900 text-zinc-100"
+                }`}
+              >
+                <span className="line-clamp-2 leading-tight">{method.name}</span>
+              </button>
+            );
+          })}
+        </div>
         {fieldErrors.payment_method_id ? (
           <p className="text-sm text-red-400">{fieldErrors.payment_method_id}</p>
         ) : null}
