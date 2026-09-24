@@ -28,6 +28,13 @@ export default function SettingsPage() {
             Métodos de pago
             <span className="text-zinc-500 dark:text-zinc-400">→</span>
           </Link>
+          <Link
+            href="/settings/feedback"
+            className="flex h-14 items-center justify-between rounded-xl border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-4 text-base font-medium text-zinc-900 dark:text-zinc-50"
+          >
+            Enviar feedback
+            <span className="text-zinc-500 dark:text-zinc-400">→</span>
+          </Link>
         </nav>
       </div>
     </main>

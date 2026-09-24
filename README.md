@@ -20,6 +20,7 @@ Gestor personal de ingresos y gastos.
 - CRUD de transacciones (`source = MANUAL`, `status = CONFIRMED`)
 - Configuración de categorías (con emoji) y métodos de pago
 - Activar / desactivar categorías y métodos (sin borrado físico)
+- Feedback de usuarios (bug / idea / otro) persistido en Supabase
 - Defaults de categorías y métodos de pago al registrarse (trigger en Supabase)
 
 ## Requisitos
@@ -81,6 +82,7 @@ bunx tsc --noEmit  # typecheck
 | `/settings` | Configuración |
 | `/settings/categories` | Categorías |
 | `/settings/payment-methods` | Métodos de pago |
+| `/settings/feedback` | Enviar feedback |
 
 ## Estructura
 
@@ -92,7 +94,8 @@ src/
 │   ├── dashboard/
 │   ├── transactions/
 │   ├── categories/
-│   └── payment-methods/
+│   ├── payment-methods/
+│   └── feedback/
 ├── lib/supabase/        # clientes browser, server y proxy
 └── types/
 ```
