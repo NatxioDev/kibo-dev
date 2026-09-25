@@ -2,10 +2,12 @@
 
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
-import { signOut } from "@/features/auth/services/auth";
+import { useDependencyContext } from "@/core/context/dependency/useDependencyContext";
+import { SignOut } from "@/features/auth/application/SignOut.application";
 
 export function useLogout() {
   const router = useRouter();
+  const { authRepository } = useDependencyContext();
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
@@ -13,7 +15,7 @@ export function useLogout() {
     setError(null);
 
     startTransition(async () => {
-      const result = await signOut();
+      const result = await new SignOut(authRepository).execute();
 
       if (!result.success) {
         setError(result.error);

@@ -1,5 +1,10 @@
 import Link from "next/link";
 import { Suspense } from "react";
+import { createServerDependencies } from "@/core/infrastructure/factories/createServerDependencies";
+import {
+  GetDashboardData,
+  parseDashboardCurrency,
+} from "@/features/dashboard/application/GetDashboardData.application";
 import { DashboardEmptyState } from "@/features/dashboard/components/DashboardEmptyState";
 import { DashboardErrorState } from "@/features/dashboard/components/DashboardErrorState";
 import { DashboardFilters } from "@/features/dashboard/components/DashboardFilters";
@@ -7,10 +12,6 @@ import { DashboardHeader } from "@/features/dashboard/components/DashboardHeader
 import { DashboardSummary } from "@/features/dashboard/components/DashboardSummary";
 import { ExpensesByCategory } from "@/features/dashboard/components/ExpensesByCategory";
 import { RecentTransactions } from "@/features/dashboard/components/RecentTransactions";
-import {
-  getDashboardData,
-  parseDashboardCurrency,
-} from "@/features/dashboard/services/dashboard.server";
 import { parseDashboardPeriod } from "@/features/dashboard/utils/period";
 
 type HomePageProps = {
@@ -21,7 +22,11 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   const params = await searchParams;
   const period = parseDashboardPeriod(params.period);
   const currency = parseDashboardCurrency(params.currency);
-  const result = await getDashboardData({ period, currency });
+  const { dashboardRepository } = await createServerDependencies();
+  const result = await new GetDashboardData(dashboardRepository).execute({
+    period,
+    currency,
+  });
 
   return (
     <main className="flex min-h-full flex-1 flex-col px-4 py-8">

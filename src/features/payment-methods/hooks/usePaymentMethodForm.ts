@@ -2,12 +2,11 @@
 
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
+import { useDependencyContext } from "@/core/context/dependency/useDependencyContext";
+import { CreatePaymentMethod } from "@/features/payment-methods/application/CreatePaymentMethod.application";
+import { UpdatePaymentMethod } from "@/features/payment-methods/application/UpdatePaymentMethod.application";
 import { paymentMethodFormSchema } from "@/features/payment-methods/schemas/paymentMethodSchema";
-import {
-  createPaymentMethod,
-  updatePaymentMethod,
-} from "@/features/payment-methods/services/paymentMethods";
-import type { PaymentMethod } from "@/features/transactions/types";
+import type { PaymentMethod } from "@/features/transactions/domain/models";
 
 type FormState = {
   name: string;
@@ -33,6 +32,7 @@ export function usePaymentMethodForm({
   paymentMethod,
 }: UsePaymentMethodFormOptions) {
   const router = useRouter();
+  const { paymentMethodRepository } = useDependencyContext();
   const [values, setValues] = useState<FormState>(() =>
     toFormState(paymentMethod),
   );
@@ -67,8 +67,13 @@ export function usePaymentMethodForm({
     startTransition(async () => {
       const result =
         mode === "create"
-          ? await createPaymentMethod(parsed.data)
-          : await updatePaymentMethod(paymentMethod!.id, parsed.data);
+          ? await new CreatePaymentMethod(paymentMethodRepository).execute(
+              parsed.data,
+            )
+          : await new UpdatePaymentMethod(paymentMethodRepository).execute(
+              paymentMethod!.id,
+              parsed.data,
+            );
 
       if (!result.success) {
         setFormError(result.error);

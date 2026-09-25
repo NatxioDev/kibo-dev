@@ -1,7 +1,8 @@
 import { notFound } from "next/navigation";
 import { PageHeader } from "@/components/PageHeader";
+import { createServerDependencies } from "@/core/infrastructure/factories/createServerDependencies";
+import { GetCategory } from "@/features/categories/application/GetCategory.application";
 import { CategoryForm } from "@/features/categories/components/CategoryForm";
-import { getCategory } from "@/features/categories/services/categories.server";
 
 type EditCategoryPageProps = {
   params: Promise<{ id: string }>;
@@ -11,7 +12,8 @@ export default async function EditCategoryPage({
   params,
 }: EditCategoryPageProps) {
   const { id } = await params;
-  const result = await getCategory(id);
+  const { categoryRepository } = await createServerDependencies();
+  const result = await new GetCategory(categoryRepository).execute(id);
 
   if (!result.success) {
     notFound();

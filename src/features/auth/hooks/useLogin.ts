@@ -2,7 +2,8 @@
 
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
-import { signIn } from "@/features/auth/services/auth";
+import { useDependencyContext } from "@/core/context/dependency/useDependencyContext";
+import { SignIn } from "@/features/auth/application/SignIn.application";
 import type { LoginCredentials } from "@/types/auth";
 
 function isValidEmail(email: string): boolean {
@@ -11,6 +12,7 @@ function isValidEmail(email: string): boolean {
 
 export function useLogin() {
   const router = useRouter();
+  const { authRepository } = useDependencyContext();
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
@@ -36,7 +38,10 @@ export function useLogin() {
     }
 
     startTransition(async () => {
-      const result = await signIn({ email, password });
+      const result = await new SignIn(authRepository).execute({
+        email,
+        password,
+      });
 
       if (!result.success) {
         setError(result.error);

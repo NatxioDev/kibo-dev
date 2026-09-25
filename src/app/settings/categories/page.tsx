@@ -1,10 +1,12 @@
 import Link from "next/link";
 import { PageHeader } from "@/components/PageHeader";
+import { createServerDependencies } from "@/core/infrastructure/factories/createServerDependencies";
+import { ListCategories } from "@/features/categories/application/ListCategories.application";
 import { CategoryList } from "@/features/categories/components/CategoryList";
-import { listCategories } from "@/features/categories/services/categories.server";
 
 export default async function CategoriesSettingsPage() {
-  const result = await listCategories();
+  const { categoryRepository } = await createServerDependencies();
+  const result = await new ListCategories(categoryRepository).execute();
 
   return (
     <main className="flex min-h-full flex-1 flex-col px-4 py-8">

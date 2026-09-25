@@ -2,14 +2,12 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
+import { useDependencyContext } from "@/core/context/dependency/useDependencyContext";
+import { ListActiveCategoriesByType } from "@/features/categories/application/ListActiveCategoriesByType.application";
+import { ListActivePaymentMethods } from "@/features/payment-methods/application/ListActivePaymentMethods.application";
+import { CreateTransaction } from "@/features/transactions/application/CreateTransaction.application";
+import { UpdateTransaction } from "@/features/transactions/application/UpdateTransaction.application";
 import { todayDateInputValue } from "@/features/transactions/components/formatters";
-import { transactionFormSchema } from "@/features/transactions/schemas/transactionSchema";
-import { listActiveCategoriesByType } from "@/features/transactions/services/categories";
-import { listActivePaymentMethods } from "@/features/transactions/services/paymentMethods";
-import {
-  createTransaction,
-  updateTransaction,
-} from "@/features/transactions/services/transactions";
 import type {
   Category,
   PaymentMethod,
@@ -17,7 +15,8 @@ import type {
   TransactionCurrency,
   TransactionFormValues,
   TransactionType,
-} from "@/features/transactions/types";
+} from "@/features/transactions/domain/models";
+import { transactionFormSchema } from "@/features/transactions/schemas/transactionSchema";
 
 type FormState = {
   type: TransactionType;
@@ -68,6 +67,11 @@ export function useTransactionForm({
   transaction,
 }: UseTransactionFormOptions) {
   const router = useRouter();
+  const {
+    transactionRepository,
+    categoryRepository,
+    paymentMethodRepository,
+  } = useDependencyContext();
   const [values, setValues] = useState<FormState>(() =>
     toFormState(transaction),
   );
@@ -86,9 +90,14 @@ export function useTransactionForm({
       setLoadingOptions(true);
       setOptionsError(null);
 
+      const listCategories = new ListActiveCategoriesByType(categoryRepository);
+      const listPaymentMethods = new ListActivePaymentMethods(
+        paymentMethodRepository,
+      );
+
       const [categoriesResult, paymentMethodsResult] = await Promise.all([
-        listActiveCategoriesByType(values.type),
-        listActivePaymentMethods(),
+        listCategories.execute(values.type),
+        listPaymentMethods.execute(),
       ]);
 
       if (cancelled) return;
@@ -115,7 +124,7 @@ export function useTransactionForm({
     return () => {
       cancelled = true;
     };
-  }, [values.type]);
+  }, [values.type, categoryRepository, paymentMethodRepository]);
 
   function updateField<K extends keyof FormState>(key: K, value: FormState[K]) {
     setValues((prev) => {
@@ -155,8 +164,11 @@ export function useTransactionForm({
     startTransition(async () => {
       const result =
         mode === "create"
-          ? await createTransaction(payload)
-          : await updateTransaction(transaction!.id, payload);
+          ? await new CreateTransaction(transactionRepository).execute(payload)
+          : await new UpdateTransaction(transactionRepository).execute(
+              transaction!.id,
+              payload,
+            );
 
       if (!result.success) {
         setFormError(result.error);

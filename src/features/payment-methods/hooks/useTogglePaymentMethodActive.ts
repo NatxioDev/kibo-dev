@@ -2,10 +2,12 @@
 
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
-import { setPaymentMethodActive } from "@/features/payment-methods/services/paymentMethods";
+import { useDependencyContext } from "@/core/context/dependency/useDependencyContext";
+import { SetPaymentMethodActive } from "@/features/payment-methods/application/SetPaymentMethodActive.application";
 
 export function useTogglePaymentMethodActive() {
   const router = useRouter();
+  const { paymentMethodRepository } = useDependencyContext();
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
@@ -13,7 +15,9 @@ export function useTogglePaymentMethodActive() {
     setError(null);
 
     startTransition(async () => {
-      const result = await setPaymentMethodActive(id, isActive);
+      const result = await new SetPaymentMethodActive(
+        paymentMethodRepository,
+      ).execute(id, isActive);
 
       if (!result.success) {
         setError(result.error);

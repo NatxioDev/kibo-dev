@@ -2,10 +2,12 @@
 
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
-import { setCategoryActive } from "@/features/categories/services/categories";
+import { useDependencyContext } from "@/core/context/dependency/useDependencyContext";
+import { SetCategoryActive } from "@/features/categories/application/SetCategoryActive.application";
 
 export function useToggleCategoryActive() {
   const router = useRouter();
+  const { categoryRepository } = useDependencyContext();
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
@@ -13,7 +15,10 @@ export function useToggleCategoryActive() {
     setError(null);
 
     startTransition(async () => {
-      const result = await setCategoryActive(id, isActive);
+      const result = await new SetCategoryActive(categoryRepository).execute(
+        id,
+        isActive,
+      );
 
       if (!result.success) {
         setError(result.error);

@@ -132,18 +132,21 @@ git push --follow-tags
 ```text
 src/
 ├── app/                 # App Router (páginas)
+├── core/                # DI (DependencyProvider, DependencyFactory)
 ├── features/
-│   ├── auth/
-│   ├── dashboard/
-│   ├── transactions/
-│   ├── categories/
-│   ├── payment-methods/
-│   └── feedback/
+│   ├── auth/            # Clean Arch
+│   ├── dashboard/       # Clean Arch (GetDashboardData)
+│   ├── transactions/    # Clean Arch
+│   ├── categories/      # Clean Arch
+│   ├── payment-methods/ # Clean Arch
+│   └── feedback/        # Clean Arch
 ├── lib/supabase/        # clientes browser, server y proxy
 └── types/
 ```
 
-Cada feature agrupa `components/`, `hooks/`, `services/` y, si aplica, `schemas/`.
+Cada feature usa `domain/` → `application/` → `infrastructure/supabase/` (+ `hooks/`, `components/`, `schemas/` según aplique).
+
+**Clean Arch (Solnet-style):** UI/hooks → use cases → interfaces ← adaptadores `Supabase*`. Composition root en `core/`. Todos los features de datos/auth están migrados.
 
 ## Seguridad
 
@@ -180,9 +183,9 @@ Ideas pendientes (sin orden fijo):
 
 ## Deuda técnica
 
-- [ ] Desacoplar Supabase detrás de repositorios/adapters (hoy los services hablan directo al cliente)
+- [x] Desacoplar Supabase detrás de repositorios/adapters — **features migrados: transactions, categories, payment-methods, dashboard, auth, feedback**
 - [ ] Generar tipos de DB con Supabase CLI (`Database`) en lugar de tipos manuales
-- [ ] Unificar lecturas activas de categorías/métodos (hay helpers en `transactions/` y en `categories/` / `payment-methods/`)
+- [x] Unificar lecturas activas de categorías/métodos en el mismo repository del feature
 - [ ] Añadir tests (al menos unitarios de utils/schemas y smoke de páginas críticas)
 - [ ] Versionar migraciones SQL / schema en el repo (hoy el esquema vive solo en Supabase)
 - [ ] Revisar mutaciones client-side vs server actions donde convenga (auth, feedback, CRUD)

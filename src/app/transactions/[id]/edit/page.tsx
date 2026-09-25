@@ -1,7 +1,8 @@
 import { notFound } from "next/navigation";
 import { PageHeader } from "@/components/PageHeader";
+import { createServerDependencies } from "@/core/infrastructure/factories/createServerDependencies";
+import { GetTransaction } from "@/features/transactions/application/GetTransaction.application";
 import { TransactionForm } from "@/features/transactions/components/TransactionForm";
-import { getTransaction } from "@/features/transactions/services/transactions.server";
 
 type EditTransactionPageProps = {
   params: Promise<{ id: string }>;
@@ -11,7 +12,8 @@ export default async function EditTransactionPage({
   params,
 }: EditTransactionPageProps) {
   const { id } = await params;
-  const result = await getTransaction(id);
+  const { transactionRepository } = await createServerDependencies();
+  const result = await new GetTransaction(transactionRepository).execute(id);
 
   if (!result.success) {
     notFound();

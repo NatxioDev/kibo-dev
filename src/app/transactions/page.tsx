@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import { PageHeader } from "@/components/PageHeader";
+import { createServerDependencies } from "@/core/infrastructure/factories/createServerDependencies";
+import { ListTransactions } from "@/features/transactions/application/ListTransactions.application";
 import { TransactionList } from "@/features/transactions/components/TransactionList";
 import { TransactionListFilters } from "@/features/transactions/components/TransactionListFilters";
-import { listTransactions } from "@/features/transactions/services/transactions.server";
 import { parseTransactionTypeFilter } from "@/features/transactions/utils/listFilters";
 
 type TransactionsPageProps = {
@@ -16,7 +17,10 @@ export default async function TransactionsPage({
   const params = await searchParams;
   const type = parseTransactionTypeFilter(params.type);
   const filtersActive = type !== "all";
-  const result = await listTransactions({ type });
+  const { transactionRepository } = await createServerDependencies();
+  const result = await new ListTransactions(transactionRepository).execute({
+    type,
+  });
 
   return (
     <main className="flex min-h-full flex-1 flex-col px-4 py-8">
