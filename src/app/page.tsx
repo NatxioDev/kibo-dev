@@ -13,6 +13,7 @@ import { DashboardSummary } from "@/features/dashboard/components/DashboardSumma
 import { ExpensesByCategory } from "@/features/dashboard/components/ExpensesByCategory";
 import { RecentTransactions } from "@/features/dashboard/components/RecentTransactions";
 import { parseDashboardPeriod } from "@/features/dashboard/utils/period";
+import { GetCurrentProfile } from "@/features/profile/application/GetCurrentProfile.application";
 
 type HomePageProps = {
   searchParams: Promise<{ period?: string; currency?: string }>;
@@ -22,17 +23,22 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   const params = await searchParams;
   const period = parseDashboardPeriod(params.period);
   const currency = parseDashboardCurrency(params.currency);
-  const { dashboardRepository } = await createServerDependencies();
-  const result = await new GetDashboardData(dashboardRepository).execute({
-    period,
-    currency,
-  });
+  const { dashboardRepository, profileRepository } =
+    await createServerDependencies();
+  const [result, profileResult] = await Promise.all([
+    new GetDashboardData(dashboardRepository).execute({ period, currency }),
+    new GetCurrentProfile(profileRepository).execute(),
+  ]);
+  const displayName = profileResult.success
+    ? profileResult.data.display_name
+    : null;
 
   return (
     <main className="flex min-h-full flex-1 flex-col px-4 py-8">
       <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
         <header className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <DashboardHeader
+            displayName={displayName}
             periodLabel={
               result.success ? result.data.periodLabel : "Tu resumen"
             }

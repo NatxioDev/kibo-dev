@@ -1,13 +1,6 @@
-import type {
-  AuthResult,
-  LoginCredentials,
-  RegisterCredentials,
-} from "@/types/auth";
+import type { AuthResult } from "@/types/auth";
 
 export interface AuthRepository {
-  signIn(credentials: LoginCredentials): Promise<AuthResult>;
-  signUp(
-    credentials: Omit<RegisterCredentials, "confirmPassword">,
-  ): Promise<AuthResult>;
+  signInWithGoogle(redirectTo: string): Promise<AuthResult>;
   signOut(): Promise<AuthResult>;
 }
