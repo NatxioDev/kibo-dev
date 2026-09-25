@@ -1,7 +1,8 @@
 import { notFound } from "next/navigation";
 import { PageHeader } from "@/components/PageHeader";
+import { createServerDependencies } from "@/core/infrastructure/factories/createServerDependencies";
+import { GetTransactionWithRelations } from "@/features/transactions/application/GetTransaction.application";
 import { TransactionDetail } from "@/features/transactions/components/TransactionDetail";
-import { getTransactionWithRelations } from "@/features/transactions/services/transactions.server";
 
 type TransactionDetailPageProps = {
   params: Promise<{ id: string }>;
@@ -11,7 +12,10 @@ export default async function TransactionDetailPage({
   params,
 }: TransactionDetailPageProps) {
   const { id } = await params;
-  const result = await getTransactionWithRelations(id);
+  const { transactionRepository } = await createServerDependencies();
+  const result = await new GetTransactionWithRelations(
+    transactionRepository,
+  ).execute(id);
 
   if (!result.success) {
     notFound();

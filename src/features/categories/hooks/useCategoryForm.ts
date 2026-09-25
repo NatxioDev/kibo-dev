@@ -2,12 +2,11 @@
 
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
+import { useDependencyContext } from "@/core/context/dependency/useDependencyContext";
+import { CreateCategory } from "@/features/categories/application/CreateCategory.application";
+import { UpdateCategory } from "@/features/categories/application/UpdateCategory.application";
 import { categoryFormSchema } from "@/features/categories/schemas/categorySchema";
-import {
-  createCategory,
-  updateCategory,
-} from "@/features/categories/services/categories";
-import type { Category, TransactionType } from "@/features/transactions/types";
+import type { Category, TransactionType } from "@/features/transactions/domain/models";
 
 type FormState = {
   name: string;
@@ -36,6 +35,7 @@ function toFormState(category?: Category): FormState {
 
 export function useCategoryForm({ mode, category }: UseCategoryFormOptions) {
   const router = useRouter();
+  const { categoryRepository } = useDependencyContext();
   const [values, setValues] = useState<FormState>(() => toFormState(category));
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [formError, setFormError] = useState<string | null>(null);
@@ -68,8 +68,11 @@ export function useCategoryForm({ mode, category }: UseCategoryFormOptions) {
     startTransition(async () => {
       const result =
         mode === "create"
-          ? await createCategory(parsed.data)
-          : await updateCategory(category!.id, parsed.data);
+          ? await new CreateCategory(categoryRepository).execute(parsed.data)
+          : await new UpdateCategory(categoryRepository).execute(
+              category!.id,
+              parsed.data,
+            );
 
       if (!result.success) {
         setFormError(result.error);

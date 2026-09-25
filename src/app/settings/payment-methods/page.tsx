@@ -1,10 +1,12 @@
 import Link from "next/link";
 import { PageHeader } from "@/components/PageHeader";
+import { createServerDependencies } from "@/core/infrastructure/factories/createServerDependencies";
+import { ListPaymentMethods } from "@/features/payment-methods/application/ListPaymentMethods.application";
 import { PaymentMethodList } from "@/features/payment-methods/components/PaymentMethodList";
-import { listPaymentMethods } from "@/features/payment-methods/services/paymentMethods.server";
 
 export default async function PaymentMethodsSettingsPage() {
-  const result = await listPaymentMethods();
+  const { paymentMethodRepository } = await createServerDependencies();
+  const result = await new ListPaymentMethods(paymentMethodRepository).execute();
 
   return (
     <main className="flex min-h-full flex-1 flex-col px-4 py-8">

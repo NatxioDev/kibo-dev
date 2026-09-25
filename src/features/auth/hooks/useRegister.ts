@@ -2,7 +2,8 @@
 
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
-import { signUp } from "@/features/auth/services/auth";
+import { useDependencyContext } from "@/core/context/dependency/useDependencyContext";
+import { SignUp } from "@/features/auth/application/SignUp.application";
 import type { RegisterCredentials } from "@/types/auth";
 
 function isValidEmail(email: string): boolean {
@@ -11,6 +12,7 @@ function isValidEmail(email: string): boolean {
 
 export function useRegister() {
   const router = useRouter();
+  const { authRepository } = useDependencyContext();
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
@@ -43,7 +45,10 @@ export function useRegister() {
     }
 
     startTransition(async () => {
-      const result = await signUp({ email, password });
+      const result = await new SignUp(authRepository).execute({
+        email,
+        password,
+      });
 
       if (!result.success) {
         setError(result.error);

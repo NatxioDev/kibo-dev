@@ -2,8 +2,9 @@
 
 import { usePathname } from "next/navigation";
 import { useState, useTransition } from "react";
+import { useDependencyContext } from "@/core/context/dependency/useDependencyContext";
+import { CreateFeedback } from "@/features/feedback/application/CreateFeedback.application";
 import { feedbackFormSchema } from "@/features/feedback/schemas/feedbackSchema";
-import { createFeedback } from "@/features/feedback/services/feedback";
 import type { FeedbackType } from "@/features/feedback/types";
 
 type FormState = {
@@ -15,6 +16,7 @@ type FieldErrors = Partial<Record<keyof FormState, string>>;
 
 export function useFeedbackForm() {
   const pathname = usePathname();
+  const { feedbackRepository } = useDependencyContext();
   const [values, setValues] = useState<FormState>({
     type: "IDEA",
     message: "",
@@ -54,7 +56,9 @@ export function useFeedbackForm() {
     }
 
     startTransition(async () => {
-      const result = await createFeedback(parsed.data);
+      const result = await new CreateFeedback(feedbackRepository).execute(
+        parsed.data,
+      );
 
       if (!result.success) {
         setFormError(result.error);
