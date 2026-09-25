@@ -13,8 +13,9 @@ Gestor personal de ingresos y gastos.
 
 ## Funcionalidades
 
-- Autenticación: registro, login, logout y sesión con cookies
-- Protección de rutas privadas (`proxy.ts`)
+- Autenticación solo con Google (Supabase OAuth), logout y sesión con cookies
+- Perfil con `@username` único (elegido en onboarding y editable con límite de días), nombre visible editable y avatar de Google
+- Protección de rutas privadas y gate de onboarding (`proxy.ts`)
 - Dashboard: ingresos, gastos, balance, gastos por categoría y últimas transacciones
 - Filtros de período (este mes / mes pasado / últimos 3 meses) y moneda (BOB / USD)
 - CRUD de transacciones (`source = MANUAL`, `status = CONFIRMED`)
@@ -26,7 +27,8 @@ Gestor personal de ingresos y gastos.
 ## Requisitos
 
 - Bun ≥ 1.2
-- Proyecto Supabase con las tablas `categories`, `payment_methods` y `transactions`, Auth y RLS configurados
+- Proyecto Supabase con las tablas `categories`, `payment_methods`, `transactions`, `feedback` y `profiles`, Auth y RLS configurados
+- Proveedor Google configurado en Supabase (ver [Autenticación con Google](#autenticación-con-google))
 
 ## Setup
 
@@ -47,9 +49,13 @@ cp .env.local.example .env.local
 ```env
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=
+SUPABASE_SECRET_KEY=
+# USERNAME_CHANGE_COOLDOWN_DAYS=30
 ```
 
-Las obtienes en el dashboard de Supabase → **Connect** o **Project Settings → API Keys** (usa la **publishable key**, nunca `service_role`).
+Las obtienes en el dashboard de Supabase → **Connect** o **Project Settings → API Keys**. En el navegador solo se usa la **publishable key**. `SUPABASE_SECRET_KEY` (sección **Secret keys**) es solo de servidor: nunca le pongas prefijo `NEXT_PUBLIC_`. Se usa únicamente en la Server Action que cambia el `@username`.
+
+`USERNAME_CHANGE_COOLDOWN_DAYS` define cuántos días deben pasar entre cambios de `@username` (por defecto 30; `0` = sin límite). Configura ambas variables también en Vercel.
 
 4. Arrancar en desarrollo:
 
@@ -58,6 +64,34 @@ bun run dev
 ```
 
 Abre [http://localhost:3000](http://localhost:3000).
+
+## Autenticación con Google
+
+El login usa el proveedor Google nativo de Supabase Auth. No hay registro ni login por email.
+
+1. **Google Cloud Console** → Google Auth Platform:
+   - Crea un OAuth client de tipo **Web application**.
+   - En **Authorized redirect URIs** agrega `https://<project-ref>.supabase.co/auth/v1/callback`.
+   - En **Audience**, el tipo de público es **External**. Mientras la app esté en modo **Testing**, solo pueden entrar las cuentas agregadas en **Test users** (máximo 100). Para abrirla a cualquiera, pulsa **Publish app**. Con los scopes básicos (`openid`, `email`, `profile`) no se requiere revisión de Google, salvo que agregues logo o dominios (verificación de marca).
+2. **Supabase** → Authentication → **Sign In / Providers**:
+   - Activa **Google** con el Client ID y Client Secret del paso anterior.
+   - Desactiva **Email**.
+3. **Supabase** → Authentication → **URL Configuration**:
+   - **Site URL**: la URL de producción.
+   - **Redirect URLs**: `http://localhost:3000/auth/callback` y `https://<tu-dominio>/auth/callback`.
+
+Flujo: `/login` → Google → `/auth/callback` (canjea el código por la sesión) → si el perfil no tiene `username`, `/onboarding`; si ya lo tiene, `/`.
+
+Un usuario antiguo de email que entre con Google usando el mismo correo (ya verificado) se vincula automáticamente a su cuenta y conserva sus datos.
+
+## Base de datos
+
+Las migraciones nuevas se versionan en [`supabase/migrations/`](supabase/migrations/). La tabla `profiles`:
+
+- `username` (`citext`, único, `^[a-z0-9_]{3,20}$`, no reservado). Se elige en el onboarding; después solo se puede cambiar desde Ajustes, una vez cada `USERNAME_CHANGE_COOLDOWN_DAYS` días.
+- El cambio pasa por una Server Action con la secret key; un trigger bloquea cualquier cambio de `username` hecho con la sesión del usuario y registra `username_changed_at`.
+- `display_name` y `avatar_url` se completan desde Google al crear el usuario (trigger en `auth.users`).
+- RLS: cualquier usuario autenticado puede leer perfiles (para buscar amigos en el futuro); cada uno solo actualiza el suyo.
 
 ## Scripts
 
@@ -116,13 +150,15 @@ git push --follow-tags
 | Ruta | Descripción |
 |------|-------------|
 | `/` | Dashboard |
-| `/login` | Iniciar sesión |
-| `/register` | Crear cuenta |
+| `/login` | Iniciar sesión con Google |
+| `/auth/callback` | Retorno de OAuth (canje del código por la sesión) |
+| `/onboarding` | Elegir `@username` tras el primer login |
 | `/transactions` | Listado de transacciones |
 | `/transactions/new` | Nueva transacción |
 | `/transactions/[id]` | Detalle de transacción |
 | `/transactions/[id]/edit` | Editar transacción |
 | `/settings` | Configuración |
+| `/settings/profile` | Editar perfil (`@username` y nombre visible) |
 | `/settings/categories` | Categorías |
 | `/settings/payment-methods` | Métodos de pago |
 | `/settings/feedback` | Enviar feedback |
@@ -139,7 +175,8 @@ src/
 │   ├── transactions/    # Clean Arch
 │   ├── categories/      # Clean Arch
 │   ├── payment-methods/ # Clean Arch
-│   └── feedback/        # Clean Arch
+│   ├── feedback/        # Clean Arch
+│   └── profile/         # Clean Arch (username, nombre visible)
 ├── lib/supabase/        # clientes browser, server y proxy
 └── types/
 ```
@@ -164,8 +201,11 @@ Cada feature usa `domain/` → `application/` → `infrastructure/supabase/` (+ 
 
 Ideas pendientes (sin orden fijo):
 
-- [ ] Inicio de sesión con proveedores externos (OAuth: Google, Apple, etc.)
-- [ ] Creacion de cuenta con datos personales, onboarding completo.
+- [x] Inicio de sesión con Google (OAuth)
+- [ ] Otros proveedores OAuth (Apple, etc.)
+- [x] Onboarding con `@username` único
+- [ ] Amigos: buscar por `@username` y agregar (tabla `friendships` referenciando `profiles.id`)
+- [x] Cambio de `@username` con límite de días configurable
 - [ ] Passkeys (WebAuthn) para login sin contraseña
 - [ ] Paginación / infinite scroll en el listado de transacciones
 - [ ] Búsqueda por texto (comercio, descripción)
@@ -178,14 +218,15 @@ Ideas pendientes (sin orden fijo):
 - [ ] Exportar transacciones (CSV / PDF)
 - [ ] Recurrencias (suscripciones, sueldo, etc.)
 - [ ] PWA / instalación en móvil
-- [ ] Edición de perfil (nombre, avatar) más allá del tema
+- [x] Edición del nombre visible
+- [ ] Avatar propio (hoy se usa el de Google)
 - [ ] Panel interno para revisar feedback de usuarios
 
 ## Deuda técnica
 
-- [x] Desacoplar Supabase detrás de repositorios/adapters — **features migrados: transactions, categories, payment-methods, dashboard, auth, feedback**
+- [x] Desacoplar Supabase detrás de repositorios/adapters — **features migrados: transactions, categories, payment-methods, dashboard, auth, feedback, profile**
 - [ ] Generar tipos de DB con Supabase CLI (`Database`) en lugar de tipos manuales
 - [x] Unificar lecturas activas de categorías/métodos en el mismo repository del feature
 - [ ] Añadir tests (al menos unitarios de utils/schemas y smoke de páginas críticas)
-- [ ] Versionar migraciones SQL / schema en el repo (hoy el esquema vive solo en Supabase)
+- [ ] Versionar migraciones SQL / schema en el repo — **iniciado**: `profiles` ya vive en `supabase/migrations/`; faltan las migraciones previas (categorías, métodos de pago, transacciones, feedback)
 - [ ] Revisar mutaciones client-side vs server actions donde convenga (auth, feedback, CRUD)

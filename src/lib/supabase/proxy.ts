@@ -1,7 +1,17 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
+const PUBLIC_PREFIXES = ["/privacy"];
+
 export async function updateSession(request: NextRequest) {
+  if (
+    PUBLIC_PREFIXES.some((prefix) =>
+      request.nextUrl.pathname.startsWith(prefix),
+    )
+  ) {
+    return NextResponse.next({ request });
+  }
+
   let supabaseResponse = NextResponse.next({
     request,
   });
@@ -37,19 +47,51 @@ export async function updateSession(request: NextRequest) {
   const user = data?.claims;
 
   const pathname = request.nextUrl.pathname;
-  const isAuthRoute =
-    pathname.startsWith("/login") || pathname.startsWith("/register");
+  const isLoginRoute = pathname.startsWith("/login");
+  const isCallbackRoute = pathname.startsWith("/auth/");
+  const isOnboardingRoute = pathname.startsWith("/onboarding");
 
-  if (!user && !isAuthRoute) {
+  const redirectTo = (target: string) => {
     const url = request.nextUrl.clone();
-    url.pathname = "/login";
-    return NextResponse.redirect(url);
+    url.pathname = target;
+    url.search = "";
+    const response = NextResponse.redirect(url);
+    supabaseResponse.cookies
+      .getAll()
+      .forEach((cookie) => response.cookies.set(cookie));
+    return response;
+  };
+
+  if (isCallbackRoute) {
+    return supabaseResponse;
   }
 
-  if (user && isAuthRoute) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/";
-    return NextResponse.redirect(url);
+  if (!user) {
+    const code = request.nextUrl.searchParams.get("code");
+    if (code) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/auth/callback";
+      url.search = `?code=${encodeURIComponent(code)}`;
+      return NextResponse.redirect(url);
+    }
+
+    return isLoginRoute ? supabaseResponse : redirectTo("/login");
+  }
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("username")
+    .eq("id", user.sub)
+    .maybeSingle();
+
+  const hasUsername = Boolean(profile?.username);
+
+  if (!hasUsername && !isOnboardingRoute) {
+    return redirectTo("/onboarding");
+  }
+
+  if (hasUsername && (isLoginRoute || isOnboardingRoute)) {
+    return redirectTo("/");
   }
 
   return supabaseResponse;

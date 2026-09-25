@@ -1,17 +1,16 @@
 import Link from "next/link";
-import { LogoutButton } from "@/features/auth/components/LogoutButton";
 import { PageHeader } from "@/components/PageHeader";
+import { createServerDependencies } from "@/core/infrastructure/factories/createServerDependencies";
+import { LogoutButton } from "@/features/auth/components/LogoutButton";
+import { GetCurrentProfile } from "@/features/profile/application/GetCurrentProfile.application";
+import { ProfileHeader } from "@/features/profile/components/ProfileHeader";
 import { ThemeToggle } from "@/features/theme/ThemeToggle";
-import { createClient } from "@/lib/supabase/server";
 import { APP_NAME, APP_VERSION } from "@/lib/version";
 
 export default async function SettingsPage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  const email = user?.email ?? "usuario";
+  const { profileRepository } = await createServerDependencies();
+  const result = await new GetCurrentProfile(profileRepository).execute();
+  const profile = result.success ? result.data : null;
 
   return (
     <main className="flex min-h-full flex-1 flex-col px-4 py-8">
@@ -19,11 +18,17 @@ export default async function SettingsPage() {
         <PageHeader
           breadcrumbs={[{ href: "/", label: "Inicio" }]}
           fallbackHref="/"
-          title="Bienvenido"
-          description={email}
+          title="Ajustes"
         />
 
-        <LogoutButton />
+        {profile ? (
+          <ProfileHeader profile={profile} href="/settings/profile" />
+        ) : (
+          <p className="text-sm text-expense" role="alert">
+            {result.success ? null : result.error}
+          </p>
+        )}
+
 
         <section className="flex items-center justify-between gap-3 rounded-xl border border-zinc-300 bg-white px-4 py-3 dark:border-zinc-700 dark:bg-zinc-900">
           <p className="text-base font-medium text-zinc-900 dark:text-zinc-50">
@@ -54,6 +59,7 @@ export default async function SettingsPage() {
             Enviar feedback
             <span className="text-zinc-500 dark:text-zinc-400">→</span>
           </Link>
+          <LogoutButton />
         </nav>
 
         <p className="text-center text-xs text-zinc-500 dark:text-zinc-400">
