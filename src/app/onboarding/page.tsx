@@ -1,4 +1,7 @@
 import { redirect } from "next/navigation";
+import { Reveal } from "@/components/motion/Reveal";
+import { Stagger } from "@/components/motion/Stagger";
+import { Card } from "@/components/ui/Card";
 import { createServerDependencies } from "@/core/infrastructure/factories/createServerDependencies";
 import { LogoutButton } from "@/features/auth/components/LogoutButton";
 import { GetCurrentProfile } from "@/features/profile/application/GetCurrentProfile.application";
@@ -19,33 +22,41 @@ export default async function OnboardingPage() {
 
   return (
     <main className="flex min-h-full flex-1 flex-col items-center justify-center px-4 py-10">
-      <div className="flex w-full max-w-sm flex-col items-stretch gap-8">
-        <div className="flex flex-col items-center gap-3 text-center">
+      <Stagger
+        stagger={0.12}
+        className="flex w-full max-w-sm flex-col items-stretch gap-6"
+      >
+        <Reveal className="flex flex-col items-center gap-4 text-center">
           <ProfileAvatar
             avatarUrl={profile?.avatar_url ?? null}
             name={name}
-            size={72}
+            size={88}
+            className="ring-4 ring-border shadow-card"
           />
-          <h1 className="text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
+          <h1 className="font-display text-5xl font-extrabold tracking-[-0.05em] text-balance text-foreground">
             {firstName ? `¡Hola, ${firstName}!` : "¡Bienvenido!"}
           </h1>
-          <p className="text-sm text-zinc-500 dark:text-zinc-400">
-            Elige tu nombre de usuario. Tus amigos te encontrarán con él y
-            podrás cambiarlo después desde Ajustes.
-          </p>
-        </div>
+        </Reveal>
 
-        <OnboardingUsernameForm />
+        <Reveal spring="bouncy">
+          <Card className="glass-lens flex flex-col gap-5 px-6 py-7">
+            <p className="text-sm text-pretty text-muted-foreground">
+              Elige tu nombre de usuario. Tus amigos te encontrarán con él y
+              podrás cambiarlo después desde Ajustes.
+            </p>
+            <OnboardingUsernameForm />
+          </Card>
+        </Reveal>
 
-        <div className="flex flex-col gap-2 text-center">
+        <Reveal className="flex flex-col gap-3 text-center">
           {profile?.email ? (
-            <p className="text-xs text-zinc-500 dark:text-zinc-400">
+            <p className="text-xs text-muted-foreground">
               Sesión iniciada como {profile.email}
             </p>
           ) : null}
           <LogoutButton />
-        </div>
-      </div>
+        </Reveal>
+      </Stagger>
     </main>
   );
 }

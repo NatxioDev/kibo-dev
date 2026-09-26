@@ -33,7 +33,7 @@ export function useFeedbackForm() {
     setSuccess(false);
   }
 
-  function submit() {
+  function submit(): FieldErrors | null {
     setFormError(null);
     setFieldErrors({});
     setSuccess(false);
@@ -52,7 +52,7 @@ export function useFeedbackForm() {
         }
       }
       setFieldErrors(nextErrors);
-      return;
+      return nextErrors;
     }
 
     startTransition(async () => {
@@ -68,6 +68,7 @@ export function useFeedbackForm() {
       setValues({ type: "IDEA", message: "" });
       setSuccess(true);
     });
+    return null;
   }
 
   return {

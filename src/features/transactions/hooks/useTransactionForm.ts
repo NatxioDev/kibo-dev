@@ -141,7 +141,7 @@ export function useTransactionForm({
     setFormError(null);
   }
 
-  function submit() {
+  function submit(): FieldErrors | null {
     setFormError(null);
     setFieldErrors({});
 
@@ -156,7 +156,7 @@ export function useTransactionForm({
         }
       }
       setFieldErrors(nextErrors);
-      return;
+      return nextErrors;
     }
 
     const payload: TransactionFormValues = parsed.data;
@@ -175,9 +175,10 @@ export function useTransactionForm({
         return;
       }
 
-      router.push("/");
+      router.push(mode === "create" ? "/" : `/transactions/${transaction!.id}`);
       router.refresh();
     });
+    return null;
   }
 
   return {

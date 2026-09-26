@@ -1,5 +1,8 @@
-import Link from "next/link";
 import { PageHeader } from "@/components/PageHeader";
+import { PageShell } from "@/components/PageShell";
+import { Reveal } from "@/components/motion/Reveal";
+import { Alert } from "@/components/ui/Alert";
+import { Button } from "@/components/ui/Button";
 import { createServerDependencies } from "@/core/infrastructure/factories/createServerDependencies";
 import { ListCategories } from "@/features/categories/application/ListCategories.application";
 import { CategoryList } from "@/features/categories/components/CategoryList";
@@ -9,33 +12,26 @@ export default async function CategoriesSettingsPage() {
   const result = await new ListCategories(categoryRepository).execute();
 
   return (
-    <main className="flex min-h-full flex-1 flex-col px-4 py-8">
-      <div className="mx-auto flex w-full max-w-md flex-col gap-6">
+    <PageShell>
+      <Reveal>
         <PageHeader
-          breadcrumbs={[
-            { href: "/", label: "Inicio" },
-            { href: "/settings", label: "Perfil" },
-          ]}
-          fallbackHref="/settings"
+          back={{ href: "/settings", label: "Ajustes" }}
           title="Categorías"
           actions={
-            <Link
-              href="/settings/categories/new"
-              className="inline-flex h-11 shrink-0 items-center justify-center rounded-lg bg-zinc-900 px-4 text-sm font-medium text-zinc-50 dark:bg-zinc-100 dark:text-zinc-900"
-            >
-              + Nueva categoría
-            </Link>
+            <Button href="/settings/categories/new" size="sm">
+              + Nueva
+            </Button>
           }
         />
+      </Reveal>
 
-        {!result.success ? (
-          <p className="rounded-lg border border-expense-border bg-expense-soft px-4 py-3 text-sm text-expense">
-            {result.error}
-          </p>
-        ) : (
-          <CategoryList categories={result.data} />
-        )}
-      </div>
-    </main>
+      {!result.success ? (
+        <Reveal>
+          <Alert>{result.error}</Alert>
+        </Reveal>
+      ) : (
+        <CategoryList categories={result.data} />
+      )}
+    </PageShell>
   );
 }

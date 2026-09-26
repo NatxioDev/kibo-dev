@@ -1,6 +1,8 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
+import { useOptimistic, useTransition } from "react";
+import { Segmented } from "@/components/ui/Segmented";
 import type { TransactionListTypeFilter } from "@/features/transactions/utils/listFilters";
 
 type TransactionListFiltersProps = {
@@ -13,18 +15,13 @@ const TYPE_OPTIONS: { value: TransactionListTypeFilter; label: string }[] = [
   { value: "INCOME", label: "Ingresos" },
 ];
 
-const chipBase =
-  "inline-flex h-9 items-center justify-center rounded-lg px-3 text-sm font-medium transition-colors";
-const chipActive =
-  "bg-zinc-900 text-zinc-50 dark:bg-zinc-100 dark:text-zinc-900";
-const chipIdle =
-  "border border-zinc-300 bg-white text-zinc-700 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-200";
-
 export function TransactionListFilters({ type }: TransactionListFiltersProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const [optimisticType, setOptimisticType] = useOptimistic(type);
+  const [, startTransition] = useTransition();
 
-  function updateType(value: string) {
+  function updateType(value: TransactionListTypeFilter) {
     const params = new URLSearchParams(searchParams.toString());
     params.delete("currency");
     if (value === "all") {
@@ -33,25 +30,20 @@ export function TransactionListFilters({ type }: TransactionListFiltersProps) {
       params.set("type", value);
     }
     const query = params.toString();
-    router.replace(query ? `/transactions?${query}` : "/transactions");
+    startTransition(() => {
+      setOptimisticType(value);
+      router.replace(query ? `/transactions?${query}` : "/transactions", {
+        scroll: false,
+      });
+    });
   }
 
   return (
-    <div className="flex flex-wrap gap-2" role="group" aria-label="Tipo">
-      {TYPE_OPTIONS.map((option) => {
-        const active = type === option.value;
-        return (
-          <button
-            key={option.value}
-            type="button"
-            onClick={() => updateType(option.value)}
-            className={`${chipBase} ${active ? chipActive : chipIdle}`}
-            aria-pressed={active}
-          >
-            {option.label}
-          </button>
-        );
-      })}
-    </div>
+    <Segmented
+      label="Filtrar por tipo"
+      value={optimisticType}
+      options={TYPE_OPTIONS}
+      onChange={updateType}
+    />
   );
 }

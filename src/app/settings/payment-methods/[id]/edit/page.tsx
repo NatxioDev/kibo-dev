@@ -1,5 +1,7 @@
 import { notFound } from "next/navigation";
 import { PageHeader } from "@/components/PageHeader";
+import { PageShell } from "@/components/PageShell";
+import { Reveal } from "@/components/motion/Reveal";
 import { createServerDependencies } from "@/core/infrastructure/factories/createServerDependencies";
 import { GetPaymentMethod } from "@/features/payment-methods/application/GetPaymentMethod.application";
 import { PaymentMethodForm } from "@/features/payment-methods/components/PaymentMethodForm";
@@ -22,19 +24,16 @@ export default async function EditPaymentMethodPage({
   }
 
   return (
-    <main className="flex min-h-full flex-1 flex-col px-4 py-8">
-      <div className="mx-auto flex w-full max-w-md flex-col gap-6">
+    <PageShell>
+      <Reveal>
         <PageHeader
-          breadcrumbs={[
-            { href: "/", label: "Inicio" },
-            { href: "/settings", label: "Perfil" },
-            { href: "/settings/payment-methods", label: "Métodos de pago" },
-          ]}
-          fallbackHref="/settings/payment-methods"
-          title="Editar método de pago"
+          back={{ href: "/settings/payment-methods", label: "Métodos de pago" }}
+          title="Editar método"
         />
+      </Reveal>
+      <Reveal>
         <PaymentMethodForm mode="edit" paymentMethod={result.data} />
-      </div>
-    </main>
+      </Reveal>
+    </PageShell>
   );
 }

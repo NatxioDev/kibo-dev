@@ -1,6 +1,8 @@
 "use client";
 
+import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { KiboMark } from "@/components/ui/KiboMark";
 import { useEffect, useState } from "react";
 import { useDependencyContext } from "@/core/context/dependency/useDependencyContext";
 import { GetCurrentProfile } from "@/features/profile/application/GetCurrentProfile.application";
@@ -35,8 +37,15 @@ export function AppTopBar() {
   }
 
   return (
-    <div className="sticky top-0 z-40 border-b border-zinc-200 bg-background/90 backdrop-blur dark:border-zinc-800">
-      <div className="mx-auto flex h-12 w-full max-w-3xl items-center justify-end px-4">
+    <div className="sticky top-0 z-40 px-3 pt-[max(0.75rem,env(safe-area-inset-top))]">
+      <div className="glass glass-lens mx-auto flex h-14 w-full max-w-3xl items-center justify-between rounded-full border border-border bg-surface pr-2 pl-3 shadow-card">
+        <Link
+          href="/"
+          className="inline-flex items-center gap-2 font-display text-lg font-extrabold tracking-[-0.04em] text-foreground"
+        >
+          <KiboMark className="h-7 w-7" />
+          Kibo
+        </Link>
         <ProfileLink
           avatarUrl={profile?.avatar_url}
           name={profile?.display_name}

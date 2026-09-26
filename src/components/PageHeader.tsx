@@ -1,58 +1,62 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { BackButton } from "@/components/BackButton";
-
-type BreadcrumbItem = {
-  href: string;
-  label: string;
-};
 
 type PageHeaderProps = {
-  breadcrumbs: BreadcrumbItem[];
+  back?: { href: string; label: string };
+  eyebrow?: string;
   title: string;
-  description?: string;
-  fallbackHref?: string;
+  description?: ReactNode;
   actions?: ReactNode;
 };
 
 export function PageHeader({
-  breadcrumbs,
+  back,
+  eyebrow,
   title,
   description,
-  fallbackHref = "/",
   actions,
 }: PageHeaderProps) {
   return (
-    <header className="flex flex-col gap-3">
-      <div className="flex items-center gap-2">
-        <BackButton fallbackHref={fallbackHref} />
-        <nav
-          aria-label="Breadcrumb"
-          className="flex min-w-0 flex-wrap items-center gap-1.5 text-sm text-zinc-500 dark:text-zinc-400"
+    <header className="flex flex-col gap-4">
+      {back ? (
+        <Link
+          href={back.href}
+          className="-ml-2 inline-flex h-9 w-fit items-center gap-0.5 rounded-control pr-3 pl-1 text-[0.9375rem] font-semibold text-primary transition-colors hover:bg-surface-muted"
         >
-          {breadcrumbs.map((item, index) => (
-            <span key={`${item.href}-${item.label}`} className="flex items-center gap-1.5">
-              {index > 0 ? <span aria-hidden>/</span> : null}
-              <Link href={item.href} className="underline underline-offset-2">
-                {item.label}
-              </Link>
-            </span>
-          ))}
-        </nav>
-      </div>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.25"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="h-5 w-5"
+            aria-hidden
+          >
+            <path d="M15 18l-6-6 6-6" />
+          </svg>
+          {back.label}
+        </Link>
+      ) : null}
 
-      <div className="flex items-start justify-between gap-3">
+      <div className="flex items-end justify-between gap-4">
         <div className="min-w-0">
-          <h1 className="text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
+          {eyebrow ? (
+            <p className="mb-1 text-[0.6875rem] font-semibold tracking-[0.14em] text-muted-foreground uppercase">
+              {eyebrow}
+            </p>
+          ) : null}
+          <h1 className="font-display text-4xl font-extrabold tracking-[-0.045em] text-balance text-foreground sm:text-5xl">
             {title}
           </h1>
           {description ? (
-            <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+            <p className="mt-2 text-[0.9375rem] text-pretty text-muted-foreground">
               {description}
             </p>
           ) : null}
         </div>
-        {actions ? <div className="flex shrink-0 flex-col gap-2">{actions}</div> : null}
+        {actions ? <div className="flex shrink-0 gap-2">{actions}</div> : null}
       </div>
     </header>
   );

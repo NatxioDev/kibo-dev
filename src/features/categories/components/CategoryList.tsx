@@ -1,4 +1,12 @@
-import Link from "next/link";
+import { Reveal } from "@/components/motion/Reveal";
+import { Button } from "@/components/ui/Button";
+import { EmptyState } from "@/components/ui/EmptyState";
+import { ListGroup } from "@/components/ui/ListGroup";
+import {
+  categoryColorOf,
+  categoryColors,
+  categoryTint,
+} from "@/features/categories/categoryColor";
 import { CategoryListItem } from "@/features/categories/components/CategoryListItem";
 import type { Category } from "@/features/transactions/types";
 
@@ -6,55 +14,64 @@ type CategoryListProps = {
   categories: Category[];
 };
 
-export function CategoryList({ categories }: CategoryListProps) {
-  const expenses = categories.filter((category) => category.type === "EXPENSE");
-  const incomes = categories.filter((category) => category.type === "INCOME");
+function byActiveFirst(a: Category, b: Category) {
+  return Number(b.is_active) - Number(a.is_active);
+}
 
+export function CategoryList({ categories }: CategoryListProps) {
   if (categories.length === 0) {
     return (
-      <div className="rounded-xl border border-dashed border-zinc-300 dark:border-zinc-700 px-4 py-10 text-center">
-        <p className="text-base text-zinc-600 dark:text-zinc-300">
-          No tienes categorías todavía.
-        </p>
-        <Link
-          href="/settings/categories/new"
-          className="mt-4 inline-flex h-11 items-center justify-center rounded-lg bg-zinc-900 dark:bg-zinc-100 px-4 text-sm font-medium text-zinc-50 dark:text-zinc-900"
-        >
-          + Nueva categoría
-        </Link>
-      </div>
+      <Reveal>
+        <EmptyState
+          icon="🏷️"
+          title="Sin categorías"
+          description="Crea categorías para saber en qué se va tu dinero."
+          action={<Button href="/settings/categories/new">+ Nueva categoría</Button>}
+        />
+      </Reveal>
     );
   }
 
-  return (
-    <div className="flex flex-col gap-8">
-      <section>
-        <h2 className="mb-2 text-sm font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-          Gastos
-        </h2>
-        {expenses.length === 0 ? (
-          <p className="py-3 text-sm text-zinc-500 dark:text-zinc-400">Sin categorías de gasto.</p>
-        ) : (
-          expenses.map((category) => (
-            <CategoryListItem key={category.id} category={category} />
-          ))
-        )}
-      </section>
+  const colors = categoryColors(categories);
+  const groups = [
+    { title: "Gastos", type: "EXPENSE", empty: "Sin categorías de gasto." },
+    { title: "Ingresos", type: "INCOME", empty: "Sin categorías de ingreso." },
+  ] as const;
 
-      <section>
-        <h2 className="mb-2 text-sm font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-          Ingresos
-        </h2>
-        {incomes.length === 0 ? (
-          <p className="py-3 text-sm text-zinc-500 dark:text-zinc-400">
-            Sin categorías de ingreso.
-          </p>
-        ) : (
-          incomes.map((category) => (
-            <CategoryListItem key={category.id} category={category} />
-          ))
-        )}
-      </section>
-    </div>
+  return (
+    <>
+      {groups.map((group) => {
+        const items = categories
+          .filter((category) => category.type === group.type)
+          .sort(byActiveFirst);
+        return (
+          <Reveal key={group.type}>
+            <ListGroup title={group.title}>
+              {items.length === 0 ? (
+                <li className="px-4 py-4 text-sm text-muted-foreground">
+                  {group.empty}
+                </li>
+              ) : (
+                items.map((category) => (
+                  <CategoryListItem
+                    key={category.id}
+                    category={category}
+                    iconBackground={categoryTint(
+                      categoryColorOf(colors, category.id),
+                    )}
+                  />
+                ))
+              )}
+            </ListGroup>
+          </Reveal>
+        );
+      })}
+      <Reveal>
+        <p className="px-4 text-sm text-pretty text-muted-foreground">
+          Toca una categoría para editarla. Las desactivadas no aparecen al
+          registrar transacciones.
+        </p>
+      </Reveal>
+    </>
   );
 }

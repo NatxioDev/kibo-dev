@@ -1,4 +1,7 @@
-import Link from "next/link";
+import { Reveal } from "@/components/motion/Reveal";
+import { Button } from "@/components/ui/Button";
+import { EmptyState } from "@/components/ui/EmptyState";
+import { ListGroup } from "@/components/ui/ListGroup";
 import { PaymentMethodListItem } from "@/features/payment-methods/components/PaymentMethodListItem";
 import type { PaymentMethod } from "@/features/transactions/types";
 
@@ -9,28 +12,33 @@ type PaymentMethodListProps = {
 export function PaymentMethodList({ paymentMethods }: PaymentMethodListProps) {
   if (paymentMethods.length === 0) {
     return (
-      <div className="rounded-xl border border-dashed border-zinc-300 dark:border-zinc-700 px-4 py-10 text-center">
-        <p className="text-base text-zinc-600 dark:text-zinc-300">
-          No tienes métodos de pago todavía.
-        </p>
-        <Link
-          href="/settings/payment-methods/new"
-          className="mt-4 inline-flex h-11 items-center justify-center rounded-lg bg-zinc-900 dark:bg-zinc-100 px-4 text-sm font-medium text-zinc-50 dark:text-zinc-900"
-        >
-          + Nuevo método de pago
-        </Link>
-      </div>
+      <Reveal>
+        <EmptyState
+          icon="💳"
+          title="Sin métodos de pago"
+          description="Agrega efectivo, tarjetas o QR para saber cómo pagas."
+          action={
+            <Button href="/settings/payment-methods/new">+ Nuevo método</Button>
+          }
+        />
+      </Reveal>
     );
   }
 
+  const sorted = [...paymentMethods].sort(
+    (a, b) => Number(b.is_active) - Number(a.is_active),
+  );
+
   return (
-    <div className="flex flex-col">
-      {paymentMethods.map((paymentMethod) => (
-        <PaymentMethodListItem
-          key={paymentMethod.id}
-          paymentMethod={paymentMethod}
-        />
-      ))}
-    </div>
+    <Reveal>
+      <ListGroup footer="Toca un método para editarlo. Los desactivados no aparecen al registrar transacciones.">
+        {sorted.map((paymentMethod) => (
+          <PaymentMethodListItem
+            key={paymentMethod.id}
+            paymentMethod={paymentMethod}
+          />
+        ))}
+      </ListGroup>
+    </Reveal>
   );
 }

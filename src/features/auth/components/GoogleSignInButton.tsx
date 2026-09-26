@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/ui/Button";
 import { useGoogleSignIn } from "@/features/auth/hooks/useGoogleSignIn";
 
 type GoogleSignInButtonProps = {
@@ -35,15 +36,16 @@ export function GoogleSignInButton({ initialError }: GoogleSignInButtonProps) {
 
   return (
     <div className="flex w-full flex-col gap-3">
-      <button
-        type="button"
+      <Button
+        variant="secondary"
+        size="lg"
         onClick={signIn}
         disabled={loading}
-        className="flex h-12 w-full items-center justify-center gap-3 rounded-lg border border-zinc-300 bg-white text-base font-medium text-zinc-800 disabled:opacity-60 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
+        className="w-full gap-3"
       >
         <GoogleIcon />
         {loading ? "Redirigiendo…" : "Continuar con Google"}
-      </button>
+      </Button>
       {message ? (
         <p className="text-center text-sm text-expense" role="alert">
           {message}

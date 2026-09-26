@@ -1,3 +1,6 @@
+import { Reveal } from "@/components/motion/Reveal";
+import { Button } from "@/components/ui/Button";
+import { EmptyState } from "@/components/ui/EmptyState";
 import { TransactionListItem } from "@/features/transactions/components/TransactionListItem";
 import type { TransactionWithRelations } from "@/features/transactions/types";
 import { groupTransactionsByDate } from "@/features/transactions/utils/groupTransactionsByDate";
@@ -13,27 +16,27 @@ export function TransactionList({
 }: TransactionListProps) {
   if (transactions.length === 0) {
     return (
-      <div className="rounded-xl border border-dashed border-zinc-300 px-4 py-10 text-center dark:border-zinc-700">
+      <Reveal>
         {filtersActive ? (
-          <>
-            <p className="text-base text-zinc-600 dark:text-zinc-300">
-              No hay resultados para estos filtros.
-            </p>
-            <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">
-              Prueba con otro tipo.
-            </p>
-          </>
+          <EmptyState
+            icon="🔎"
+            title="Sin resultados"
+            description="No hay transacciones de este tipo. Prueba con otro filtro."
+            action={
+              <Button href="/transactions" variant="secondary" size="sm">
+                Ver todas
+              </Button>
+            }
+          />
         ) : (
-          <>
-            <p className="text-base text-zinc-600 dark:text-zinc-300">
-              Todavía no tienes transacciones.
-            </p>
-            <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">
-              Registra tu primer gasto o ingreso.
-            </p>
-          </>
+          <EmptyState
+            icon="🧾"
+            title="Todavía no hay movimientos"
+            description="Registra tu primer gasto o ingreso y aparecerá aquí."
+            action={<Button href="/transactions/new">+ Registrar</Button>}
+          />
         )}
-      </div>
+      </Reveal>
     );
   }
 
@@ -42,22 +45,29 @@ export function TransactionList({
   return (
     <div className="flex flex-col gap-6">
       {groups.map((group) => (
-        <section key={group.key} aria-labelledby={`tx-day-${group.key}`}>
+        <Reveal
+          as="section"
+          key={group.key}
+          className="flex flex-col gap-2"
+        >
           <h2
             id={`tx-day-${group.key}`}
-            className="mb-1 px-0.5 text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400"
+            className="px-4 text-[0.6875rem] font-semibold tracking-[0.14em] text-muted-foreground uppercase"
           >
             {group.label}
           </h2>
-          <div className="flex flex-col">
+          <ul
+            aria-labelledby={`tx-day-${group.key}`}
+            className="glass flex flex-col divide-y divide-track rounded-card border border-border bg-surface py-1 shadow-card"
+          >
             {group.items.map((transaction) => (
               <TransactionListItem
                 key={transaction.id}
                 transaction={transaction}
               />
             ))}
-          </div>
-        </section>
+          </ul>
+        </Reveal>
       ))}
     </div>
   );

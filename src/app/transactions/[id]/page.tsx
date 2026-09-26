@@ -1,5 +1,7 @@
 import { notFound } from "next/navigation";
 import { PageHeader } from "@/components/PageHeader";
+import { PageShell } from "@/components/PageShell";
+import { Reveal } from "@/components/motion/Reveal";
 import { createServerDependencies } from "@/core/infrastructure/factories/createServerDependencies";
 import { GetTransactionWithRelations } from "@/features/transactions/application/GetTransaction.application";
 import { TransactionDetail } from "@/features/transactions/components/TransactionDetail";
@@ -27,18 +29,15 @@ export default async function TransactionDetailPage({
     "Detalle";
 
   return (
-    <main className="flex min-h-full flex-1 flex-col px-4 py-8">
-      <div className="mx-auto flex w-full max-w-md flex-col gap-6">
+    <PageShell>
+      <Reveal>
         <PageHeader
-          breadcrumbs={[
-            { href: "/", label: "Inicio" },
-            { href: "/transactions", label: "Transacciones" },
-          ]}
-          fallbackHref="/transactions"
+          back={{ href: "/transactions", label: "Transacciones" }}
+          eyebrow={result.data.type === "INCOME" ? "Ingreso" : "Gasto"}
           title={title}
         />
-        <TransactionDetail transaction={result.data} />
-      </div>
-    </main>
+      </Reveal>
+      <TransactionDetail transaction={result.data} />
+    </PageShell>
   );
 }

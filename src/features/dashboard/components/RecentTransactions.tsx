@@ -1,5 +1,11 @@
 import Link from "next/link";
-import { formatCategoryLabel } from "@/features/categories/components/formatCategoryLabel";
+import { Pressable } from "@/components/motion/Pressable";
+import { Card } from "@/components/ui/Card";
+import {
+  type CategoryColorMap,
+  categoryColorOf,
+  categoryTint,
+} from "@/features/categories/categoryColor";
 import {
   formatTransactionAmount,
   formatTransactionDate,
@@ -9,70 +15,88 @@ import type { TransactionWithRelations } from "@/features/transactions/types";
 
 type RecentTransactionsProps = {
   transactions: TransactionWithRelations[];
+  colors: CategoryColorMap;
 };
 
-export function RecentTransactions({ transactions }: RecentTransactionsProps) {
+export function RecentTransactions({
+  transactions,
+  colors,
+}: RecentTransactionsProps) {
   return (
-    <section className="flex flex-col gap-4">
+    <Card as="section" className="flex flex-col gap-3 px-5 py-5">
       <div className="flex items-center justify-between gap-3">
-        <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-50">
+        <h2 className="font-display text-xl font-bold tracking-[-0.03em] text-foreground">
           Últimas transacciones
         </h2>
         <Link
           href="/transactions"
-          className="text-sm font-medium text-zinc-500 dark:text-zinc-400 underline"
+          className="text-sm font-medium text-primary hover:opacity-80"
         >
           Ver todas →
         </Link>
       </div>
 
       {transactions.length === 0 ? (
-        <p className="text-sm text-zinc-500 dark:text-zinc-400">
+        <p className="text-sm text-muted-foreground">
           No hay transacciones en este período.
         </p>
       ) : (
-        <ul className="flex flex-col">
+        <ul className="-mx-2 flex flex-col">
           {transactions.map((transaction) => {
-            const merchant =
-              transaction.merchant?.trim() ||
-              formatCategoryLabel(transaction.category);
-            const categoryLabel = formatCategoryLabel(transaction.category);
-            const amountClass =
-              transaction.type === "INCOME" ? "text-income" : "text-zinc-900 dark:text-zinc-50";
+            const isIncome = transaction.type === "INCOME";
+            const categoryName = transaction.category?.name ?? "Sin categoría";
+            const merchant = transaction.merchant?.trim() || categoryName;
+            const categoryIcon =
+              transaction.category?.icon?.trim() || (isIncome ? "💰" : "📦");
             const timeLabel = formatTransactionTime(transaction.created_at);
             const dateLabel = timeLabel
               ? `${formatTransactionDate(transaction.date)} · ${timeLabel}`
               : formatTransactionDate(transaction.date);
 
             return (
-              <li
-                key={transaction.id}
-                className="flex items-start justify-between gap-3 border-b border-zinc-200 dark:border-zinc-800 py-3 last:border-b-0"
-              >
-                <div className="min-w-0 flex-1">
-                  <p className="text-xs text-zinc-500 dark:text-zinc-400">
-                    {dateLabel}
-                  </p>
-                  <p className="mt-1 truncate text-sm font-medium text-zinc-900 dark:text-zinc-50">
-                    {merchant}
-                  </p>
-                  <p className="mt-0.5 truncate text-xs text-zinc-500 dark:text-zinc-400">
-                    {categoryLabel}
-                  </p>
-                </div>
-                <p className={`shrink-0 text-sm font-semibold ${amountClass}`}>
-                  {formatTransactionAmount(
-                    transaction.amount,
-                    transaction.currency,
-                    transaction.type,
-                  )}
-                </p>
+              <li key={transaction.id}>
+                <Pressable>
+                  <Link
+                    href={`/transactions/${transaction.id}`}
+                    className="flex items-center gap-3 rounded-2xl px-2 py-2.5 transition-colors hover:bg-surface-muted"
+                  >
+                    <span
+                      aria-hidden
+                      className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-lg"
+                      style={{
+                        backgroundColor: categoryTint(
+                          categoryColorOf(colors, transaction.category_id),
+                        ),
+                      }}
+                    >
+                      {categoryIcon}
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-sm font-medium text-foreground">
+                        {merchant}
+                      </p>
+                      <p className="mt-0.5 truncate text-xs text-muted-foreground">
+                        {categoryName} · {dateLabel}
+                      </p>
+                    </div>
+                    <p
+                      className={`shrink-0 font-display text-sm font-bold tabular-nums ${
+                        isIncome ? "text-income" : "text-foreground"
+                      }`}
+                    >
+                      {formatTransactionAmount(
+                        transaction.amount,
+                        transaction.currency,
+                        transaction.type,
+                      )}
+                    </p>
+                  </Link>
+                </Pressable>
               </li>
             );
           })}
         </ul>
       )}
-    </section>
+    </Card>
   );
 }
-

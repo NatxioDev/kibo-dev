@@ -14,68 +14,57 @@ type TransactionListItemProps = {
 export function TransactionListItem({ transaction }: TransactionListItemProps) {
   const [deleteOpen, setDeleteOpen] = useState(false);
 
-  const categoryIcon = transaction.category?.icon?.trim() || "📦";
-  const title =
-    transaction.merchant?.trim() ||
-    transaction.category?.name ||
-    "Sin comercio";
+  const isIncome = transaction.type === "INCOME";
+  const categoryIcon =
+    transaction.category?.icon?.trim() || (isIncome ? "💰" : "📦");
   const categoryName = transaction.category?.name ?? "Sin categoría";
+  const title = transaction.merchant?.trim() || categoryName;
   const paymentLabel = transaction.payment_method?.name ?? "Sin método";
-  const amountClass =
-    transaction.type === "INCOME"
-      ? "text-income"
-      : "text-zinc-900 dark:text-zinc-50";
-  const editHref = `/transactions/${transaction.id}/edit`;
-  const detailHref = `/transactions/${transaction.id}`;
 
   return (
-    <>
-      <article className="border-b border-zinc-200 dark:border-zinc-800">
-        <div className="flex items-stretch gap-1">
-          <Link
-            href={detailHref}
-            className="flex min-w-0 flex-1 items-center gap-3 py-3.5 pr-1"
-            aria-label={`Ver detalle de ${title}`}
-          >
-            <span
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-zinc-100 text-lg dark:bg-zinc-800"
-              aria-hidden
-            >
-              {categoryIcon}
-            </span>
-            <div className="min-w-0 flex-1">
-              <p className="truncate text-base font-medium text-zinc-900 dark:text-zinc-50">
-                {title}
-              </p>
-              <p className="mt-0.5 truncate text-sm text-zinc-500 dark:text-zinc-400">
-                {categoryName} · {paymentLabel}
-              </p>
-            </div>
-            <p
-              className={`shrink-0 text-base font-semibold tabular-nums ${amountClass}`}
-            >
-              {formatTransactionAmount(
-                transaction.amount,
-                transaction.currency,
-                transaction.type,
-              )}
-            </p>
-          </Link>
+    <li className="flex items-center gap-1 pr-2">
+      <Link
+        href={`/transactions/${transaction.id}`}
+        className="flex min-w-0 flex-1 items-center gap-3 rounded-2xl py-3 pl-4 transition-colors hover:bg-surface-muted"
+      >
+        <span
+          aria-hidden
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-surface-muted text-lg"
+        >
+          {categoryIcon}
+        </span>
+        <span className="min-w-0 flex-1">
+          <span className="block truncate text-[0.9375rem] font-semibold text-foreground">
+            {title}
+          </span>
+          <span className="mt-0.5 block truncate text-sm text-muted-foreground">
+            {title === categoryName ? paymentLabel : `${categoryName} · ${paymentLabel}`}
+          </span>
+        </span>
+        <span
+          className={`shrink-0 font-display text-[0.9375rem] font-bold tabular-nums ${
+            isIncome ? "text-income" : "text-foreground"
+          }`}
+        >
+          {formatTransactionAmount(
+            transaction.amount,
+            transaction.currency,
+            transaction.type,
+          )}
+        </span>
+      </Link>
 
-          <div className="flex items-center py-3.5 pl-1">
-            <TransactionItemMenu
-              editHref={editHref}
-              onDelete={() => setDeleteOpen(true)}
-            />
-          </div>
-        </div>
-      </article>
+      <TransactionItemMenu
+        label={title}
+        editHref={`/transactions/${transaction.id}/edit`}
+        onDelete={() => setDeleteOpen(true)}
+      />
 
       <DeleteTransactionDialog
         open={deleteOpen}
         onClose={() => setDeleteOpen(false)}
         transactionId={transaction.id}
       />
-    </>
+    </li>
   );
 }

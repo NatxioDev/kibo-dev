@@ -1,7 +1,14 @@
 "use client";
 
-import Link from "next/link";
 import { type FormEvent } from "react";
+import { Alert } from "@/components/ui/Alert";
+import { Button } from "@/components/ui/Button";
+import {
+  errorProps,
+  Field,
+  focusFirstError,
+  inputClassName,
+} from "@/components/ui/Field";
 import { usePaymentMethodForm } from "@/features/payment-methods/hooks/usePaymentMethodForm";
 import type { PaymentMethod } from "@/features/transactions/types";
 
@@ -10,10 +17,7 @@ type PaymentMethodFormProps = {
   paymentMethod?: PaymentMethod;
 };
 
-const inputClassName =
-  "h-12 w-full rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-3 text-base text-zinc-900 dark:text-zinc-50 outline-none placeholder:text-zinc-400 dark:placeholder:text-zinc-500 focus:border-zinc-500 disabled:opacity-60";
-
-const labelClassName = "text-sm font-medium text-zinc-600 dark:text-zinc-300";
+const NAME_SUGGESTIONS = ["Efectivo", "Tarjeta de débito", "Tarjeta de crédito", "QR", "Transferencia"];
 
 export function PaymentMethodForm({
   mode,
@@ -24,55 +28,58 @@ export function PaymentMethodForm({
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    submit();
+    focusFirstError(submit(), ["name"]);
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex w-full flex-col gap-5">
-      <div className="flex flex-col gap-1.5">
-        <label htmlFor="name" className={labelClassName}>
-          Nombre
-        </label>
+    <form onSubmit={handleSubmit} noValidate className="flex w-full flex-col gap-6">
+      <Field label="Nombre" htmlFor="name" error={fieldErrors.name}>
         <input
           id="name"
           name="name"
           type="text"
+          autoComplete="off"
           value={values.name}
           disabled={loading}
           onChange={(event) => updateField("name", event.target.value)}
+          {...errorProps("name", fieldErrors.name)}
           className={inputClassName}
+          placeholder="Ej. Tarjeta BancoSol…"
         />
-        {fieldErrors.name ? (
-          <p className="text-sm text-expense">{fieldErrors.name}</p>
-        ) : null}
-      </div>
+      </Field>
 
-      {formError ? (
-        <p className="text-sm text-expense" role="alert">
-          {formError}
-        </p>
+      {mode === "create" ? (
+        <div className="flex flex-wrap gap-2" role="group" aria-label="Sugerencias">
+          {NAME_SUGGESTIONS.map((suggestion) => (
+            <button
+              key={suggestion}
+              type="button"
+              disabled={loading}
+              onClick={() => updateField("name", suggestion)}
+              className="glass h-9 rounded-control border border-border bg-surface px-3.5 text-sm font-semibold text-foreground transition-colors hover:bg-surface-muted"
+            >
+              {suggestion}
+            </button>
+          ))}
+        </div>
       ) : null}
 
-      <button
-        type="submit"
-        disabled={loading}
-        className="h-12 w-full rounded-lg bg-zinc-900 dark:bg-zinc-100 text-base font-medium text-zinc-50 dark:text-zinc-900 disabled:opacity-60"
-      >
-        {loading
-          ? mode === "create"
-            ? "Guardando…"
-            : "Actualizando…"
-          : mode === "create"
-            ? "Crear método de pago"
-            : "Guardar cambios"}
-      </button>
+      {formError ? <Alert>{formError}</Alert> : null}
 
-      <Link
-        href="/settings/payment-methods"
-        className="text-center text-sm font-medium text-zinc-500 dark:text-zinc-400 underline"
-      >
-        Cancelar
-      </Link>
+      <div className="flex flex-col gap-2">
+        <Button type="submit" size="lg" disabled={loading} className="w-full">
+          {loading
+            ? mode === "create"
+              ? "Guardando…"
+              : "Actualizando…"
+            : mode === "create"
+              ? "Crear método de pago"
+              : "Guardar cambios"}
+        </Button>
+        <Button href="/settings/payment-methods" variant="ghost">
+          Cancelar
+        </Button>
+      </div>
     </form>
   );
 }

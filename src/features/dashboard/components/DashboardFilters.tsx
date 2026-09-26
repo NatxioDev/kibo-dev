@@ -1,6 +1,8 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
+import { useOptimistic, useTransition } from "react";
+import { Segmented } from "@/components/ui/Segmented";
 import { DASHBOARD_PERIODS } from "@/features/dashboard/types";
 import type { DashboardPeriod } from "@/features/dashboard/types";
 import type { TransactionCurrency } from "@/features/transactions/types";
@@ -10,49 +12,47 @@ type DashboardFiltersProps = {
   currency: TransactionCurrency;
 };
 
-const selectClassName =
-  "h-11 w-full rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-3 text-sm text-zinc-900 dark:text-zinc-50 outline-none focus:border-zinc-500";
+const CURRENCY_OPTIONS = (["BOB", "USD"] as const).map((value) => ({
+  value,
+  label: value,
+}));
 
 export function DashboardFilters({ period, currency }: DashboardFiltersProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const [, startTransition] = useTransition();
+  const [selected, setSelected] = useOptimistic(
+    { period, currency },
+    (state, patch: Partial<DashboardFiltersProps>) => ({ ...state, ...patch }),
+  );
 
-  function updateParam(key: "period" | "currency", value: string) {
+  function updateParam<K extends keyof DashboardFiltersProps>(
+    key: K,
+    value: DashboardFiltersProps[K],
+  ) {
     const params = new URLSearchParams(searchParams.toString());
     params.set(key, value);
-    router.replace(`/?${params.toString()}`);
+    startTransition(() => {
+      setSelected({ [key]: value });
+      router.replace(`/?${params.toString()}`, { scroll: false });
+    });
   }
 
   return (
-    <div className="grid grid-cols-2 gap-3">
-      <label className="flex flex-col gap-1.5">
-        <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">Período</span>
-        <select
-          className={selectClassName}
-          value={period}
-          onChange={(event) => updateParam("period", event.target.value)}
-          aria-label="Período"
-        >
-          {DASHBOARD_PERIODS.map((item) => (
-            <option key={item.value} value={item.value}>
-              {item.label}
-            </option>
-          ))}
-        </select>
-      </label>
-
-      <label className="flex flex-col gap-1.5">
-        <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">Moneda</span>
-        <select
-          className={selectClassName}
-          value={currency}
-          onChange={(event) => updateParam("currency", event.target.value)}
-          aria-label="Moneda"
-        >
-          <option value="BOB">BOB</option>
-          <option value="USD">USD</option>
-        </select>
-      </label>
+    <div className="flex flex-col gap-2 sm:flex-row">
+      <Segmented
+        label="Período"
+        value={selected.period}
+        options={DASHBOARD_PERIODS}
+        onChange={(value) => updateParam("period", value)}
+        className="sm:flex-1"
+      />
+      <Segmented
+        label="Moneda"
+        value={selected.currency}
+        options={CURRENCY_OPTIONS}
+        onChange={(value) => updateParam("currency", value)}
+      />
     </div>
   );
 }

@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/ui/Button";
 import { useLogout } from "@/features/auth/hooks/useLogout";
 
 export function LogoutButton() {
@@ -7,16 +8,17 @@ export function LogoutButton() {
 
   return (
     <div className="flex w-full flex-col gap-2">
-      <button
-        type="button"
+      <Button
+        variant="destructive"
+        size="lg"
         onClick={logout}
         disabled={loading}
-        className="h-12 w-full rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-base font-medium text-zinc-800 dark:text-zinc-100 disabled:opacity-60"
+        className="w-full"
       >
         {loading ? "Cerrando sesión…" : "Cerrar sesión"}
-      </button>
+      </Button>
       {error ? (
-        <p className="text-sm text-expense" role="alert">
+        <p className="px-1 text-sm text-expense" role="alert">
           {error}
         </p>
       ) : null}

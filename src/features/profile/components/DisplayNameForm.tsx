@@ -1,6 +1,9 @@
 "use client";
 
 import { type FormEvent } from "react";
+import { Button } from "@/components/ui/Button";
+import { Card } from "@/components/ui/Card";
+import { inputClassName, labelClassName } from "@/components/ui/Field";
 import { useDisplayNameForm } from "@/features/profile/hooks/useDisplayNameForm";
 
 type DisplayNameFormProps = {
@@ -17,14 +20,12 @@ export function DisplayNameForm({ initialValue }: DisplayNameFormProps) {
   }
 
   return (
-    <form
+    <Card
+      as="form"
       onSubmit={handleSubmit}
-      className="flex flex-col gap-3 rounded-xl border border-zinc-300 bg-white px-4 py-4 dark:border-zinc-700 dark:bg-zinc-900"
+      className="flex flex-col gap-3 px-5 py-5"
     >
-      <label
-        htmlFor="display_name"
-        className="text-sm font-medium text-zinc-600 dark:text-zinc-300"
-      >
+      <label htmlFor="display_name" className={labelClassName}>
         Nombre visible
       </label>
       <div className="flex gap-2">
@@ -37,26 +38,25 @@ export function DisplayNameForm({ initialValue }: DisplayNameFormProps) {
           value={value}
           onChange={(event) => updateValue(event.target.value)}
           disabled={loading}
-          className="h-12 min-w-0 flex-1 rounded-lg border border-zinc-300 bg-white px-3 text-base text-zinc-900 outline-none focus:border-zinc-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50"
+          placeholder="Cómo quieres que te saludemos…"
+          aria-invalid={error ? true : undefined}
+          aria-describedby={error ? "display_name-error" : undefined}
+          className={`${inputClassName} min-w-0 flex-1 shadow-none`}
         />
-        <button
-          type="submit"
-          disabled={loading || !dirty}
-          className="h-12 shrink-0 rounded-lg bg-zinc-900 px-4 text-base font-medium text-zinc-50 disabled:opacity-60 dark:bg-zinc-100 dark:text-zinc-900"
-        >
+        <Button type="submit" size="lg" disabled={loading || !dirty}>
           {loading ? "Guardando…" : "Guardar"}
-        </button>
+        </Button>
       </div>
       {error ? (
-        <p className="text-sm text-expense" role="alert">
+        <p id="display_name-error" className="text-sm text-expense" role="alert">
           {error}
         </p>
       ) : null}
       {success ? (
         <p className="text-sm text-income" role="status">
-          Nombre actualizado.
+          ✓ Nombre actualizado.
         </p>
       ) : null}
-    </form>
+    </Card>
   );
 }

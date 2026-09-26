@@ -1,8 +1,9 @@
 "use client";
 
-import Link from "next/link";
 import { useState } from "react";
+import { ManagedListItem } from "@/components/ManagedListItem";
 import { DeactivatePaymentMethodDialog } from "@/features/payment-methods/components/DeactivatePaymentMethodDialog";
+import { paymentMethodIcon } from "@/features/payment-methods/components/paymentMethodIcon";
 import { useTogglePaymentMethodActive } from "@/features/payment-methods/hooks/useTogglePaymentMethodActive";
 import type { PaymentMethod } from "@/features/transactions/types";
 
@@ -16,56 +17,19 @@ export function PaymentMethodListItem({
   const [deactivateOpen, setDeactivateOpen] = useState(false);
   const { toggle, error, loading } = useTogglePaymentMethodActive();
 
-  const inactiveClass = paymentMethod.is_active ? "" : "opacity-50";
-
   return (
     <>
-      <article
-        className={`flex flex-col gap-3 border-b border-zinc-200 dark:border-zinc-800 py-4 last:border-b-0 ${inactiveClass}`}
-      >
-        <div className="min-w-0 flex-1">
-          <p className="truncate text-base font-medium text-zinc-900 dark:text-zinc-50">
-            {paymentMethod.name}
-          </p>
-          <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">
-            {paymentMethod.is_active ? "Activo" : "Inactivo"}
-          </p>
-        </div>
-
-        <div className="flex gap-2">
-          <Link
-            href={`/settings/payment-methods/${paymentMethod.id}/edit`}
-            className="inline-flex h-10 flex-1 items-center justify-center rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-sm font-medium text-zinc-800 dark:text-zinc-100"
-          >
-            Editar
-          </Link>
-          {paymentMethod.is_active ? (
-            <button
-              type="button"
-              onClick={() => setDeactivateOpen(true)}
-              className="inline-flex h-10 flex-1 items-center justify-center rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-sm font-medium text-expense"
-            >
-              Desactivar
-            </button>
-          ) : (
-            <button
-              type="button"
-              onClick={() => toggle(paymentMethod.id, true)}
-              disabled={loading}
-              className="inline-flex h-10 flex-1 items-center justify-center rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-sm font-medium text-zinc-800 dark:text-zinc-100 disabled:opacity-60"
-            >
-              {loading ? "Activando…" : "Activar"}
-            </button>
-          )}
-        </div>
-
-        {error && !deactivateOpen ? (
-          <p className="text-sm text-expense" role="alert">
-            {error}
-          </p>
-        ) : null}
-      </article>
-
+      <ManagedListItem
+        icon={paymentMethodIcon(paymentMethod.name)}
+        name={paymentMethod.name}
+        href={`/settings/payment-methods/${paymentMethod.id}/edit`}
+        isActive={paymentMethod.is_active}
+        inactiveLabel="Desactivado"
+        loading={loading}
+        error={deactivateOpen ? null : error}
+        onActivate={() => toggle(paymentMethod.id, true)}
+        onRequestDeactivate={() => setDeactivateOpen(true)}
+      />
       <DeactivatePaymentMethodDialog
         open={deactivateOpen}
         onClose={() => setDeactivateOpen(false)}
