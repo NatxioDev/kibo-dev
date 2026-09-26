@@ -10,15 +10,17 @@ const optionalUuid = z
   .nullable()
   .transform((value) => (value === "" || value == null ? null : value));
 
-const optionalText = z
-  .string()
-  .optional()
-  .nullable()
-  .transform((value) => {
-    if (value == null) return null;
-    const trimmed = value.trim();
-    return trimmed === "" ? null : trimmed;
-  });
+export const MERCHANT_MAX_LENGTH = 80;
+export const DESCRIPTION_MAX_LENGTH = 280;
+
+const optionalText = (maxLength: number) =>
+  z
+    .string()
+    .trim()
+    .max(maxLength, `Usa como máximo ${maxLength} caracteres.`)
+    .optional()
+    .nullable()
+    .transform((value) => (value == null || value === "" ? null : value));
 
 export const transactionFormSchema = z.object({
   type: z.enum(["EXPENSE", "INCOME"], {
@@ -41,6 +43,6 @@ export const transactionFormSchema = z.object({
     .regex(/^\d{4}-\d{2}-\d{2}$/, "Fecha inválida."),
   category_id: optionalUuid,
   payment_method_id: optionalUuid,
-  merchant: optionalText,
-  description: optionalText,
+  merchant: optionalText(MERCHANT_MAX_LENGTH),
+  description: optionalText(DESCRIPTION_MAX_LENGTH),
 });
