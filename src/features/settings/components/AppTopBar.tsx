@@ -5,6 +5,8 @@ import { usePathname } from "next/navigation";
 import { KiboLogo } from "@/components/ui/KiboLogo";
 import { useEffect, useState } from "react";
 import { useDependencyContext } from "@/core/context/dependency/useDependencyContext";
+import { FriendsLink } from "@/features/friends/components/FriendsLink";
+import { usePendingFriendRequests } from "@/features/friends/hooks/usePendingFriendRequests";
 import { GetCurrentProfile } from "@/features/profile/application/GetCurrentProfile.application";
 import type { CurrentProfile } from "@/features/profile/domain/models/Profile";
 import { ProfileLink } from "@/features/settings/components/ProfileLink";
@@ -16,6 +18,7 @@ export function AppTopBar() {
   const { profileRepository } = useDependencyContext();
   const [profile, setProfile] = useState<CurrentProfile | null>(null);
   const hidden = HIDDEN_PREFIXES.some((prefix) => pathname.startsWith(prefix));
+  const pendingFriendRequests = usePendingFriendRequests(!hidden, pathname);
 
   useEffect(() => {
     if (hidden || profile) return;
@@ -42,10 +45,16 @@ export function AppTopBar() {
         <Link href="/" className="inline-flex items-center text-foreground">
           <KiboLogo className="h-7" />
         </Link>
-        <ProfileLink
-          avatarUrl={profile?.avatar_url}
-          name={profile?.display_name}
-        />
+        <div className="flex items-center gap-2">
+          <FriendsLink
+            active={pathname.startsWith("/friends")}
+            pendingCount={pendingFriendRequests}
+          />
+          <ProfileLink
+            avatarUrl={profile?.avatar_url}
+            name={profile?.display_name}
+          />
+        </div>
       </div>
     </div>
   );

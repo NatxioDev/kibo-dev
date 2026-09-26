@@ -16,6 +16,7 @@ Gestor personal de ingresos y gastos.
 - Autenticación solo con Google (Supabase OAuth), logout y sesión con cookies
 - Perfil con `@username` único (elegido en onboarding y editable con límite de días), nombre visible editable y avatar de Google
 - Protección de rutas privadas y gate de onboarding (`proxy.ts`)
+- Amigos: buscar por `@username`, enviar/aceptar/rechazar solicitudes y eliminar amistades
 - Dashboard: ingresos, gastos, balance, gastos por categoría y últimas transacciones
 - Filtros de período (este mes / mes pasado / últimos 3 meses) y moneda (BOB / USD)
 - CRUD de transacciones (`source = MANUAL`, `status = CONFIRMED`)
@@ -27,7 +28,7 @@ Gestor personal de ingresos y gastos.
 ## Requisitos
 
 - Bun ≥ 1.2
-- Proyecto Supabase con las tablas `categories`, `payment_methods`, `transactions`, `feedback` y `profiles`, Auth y RLS configurados
+- Proyecto Supabase con las tablas `categories`, `payment_methods`, `transactions`, `feedback`, `profiles` y `friendships`, Auth y RLS configurados
 - Proveedor Google configurado en Supabase (ver [Autenticación con Google](#autenticación-con-google))
 
 ## Setup
@@ -91,7 +92,14 @@ Las migraciones nuevas se versionan en [`supabase/migrations/`](supabase/migrati
 - `username` (`citext`, único, `^[a-z0-9_]{3,20}$`, no reservado). Se elige en el onboarding; después solo se puede cambiar desde Ajustes, una vez cada `USERNAME_CHANGE_COOLDOWN_DAYS` días.
 - El cambio pasa por una Server Action con la secret key; un trigger bloquea cualquier cambio de `username` hecho con la sesión del usuario y registra `username_changed_at`.
 - `display_name` y `avatar_url` se completan desde Google al crear el usuario (trigger en `auth.users`).
-- RLS: cualquier usuario autenticado puede leer perfiles (para buscar amigos en el futuro); cada uno solo actualiza el suyo.
+- RLS: cualquier usuario autenticado puede leer perfiles (para buscar amigos); cada uno solo actualiza el suyo.
+
+La tabla `friendships`:
+
+- `requester_id` y `addressee_id` referencian `profiles.id`; `status` es `pending` o `accepted`.
+- Un índice único sobre el par ordenado impide dos relaciones entre las mismas personas (en cualquier dirección), y un check impide agregarse a uno mismo.
+- Rechazar, cancelar o eliminar una amistad borra la fila. Un trigger solo permite cambiar `status` y registra `responded_at`.
+- RLS: solo los participantes ven la fila; cada uno solo crea solicitudes propias en `pending`; solo el destinatario puede aceptarlas; cualquiera de los dos puede borrarla.
 
 ## Scripts
 
@@ -153,6 +161,7 @@ git push --follow-tags
 | `/login` | Iniciar sesión con Google |
 | `/auth/callback` | Retorno de OAuth (canje del código por la sesión) |
 | `/onboarding` | Elegir `@username` tras el primer login |
+| `/friends` | Buscar amigos, solicitudes y lista de amigos |
 | `/transactions` | Listado de transacciones |
 | `/transactions/new` | Nueva transacción |
 | `/transactions/[id]` | Detalle de transacción |
@@ -176,6 +185,7 @@ src/
 │   ├── categories/      # Clean Arch
 │   ├── payment-methods/ # Clean Arch
 │   ├── feedback/        # Clean Arch
+│   ├── friends/         # Clean Arch (búsqueda y solicitudes de amistad)
 │   └── profile/         # Clean Arch (username, nombre visible)
 ├── lib/supabase/        # clientes browser, server y proxy
 └── types/
@@ -204,7 +214,7 @@ Ideas pendientes (sin orden fijo):
 - [x] Inicio de sesión con Google (OAuth)
 - [ ] Otros proveedores OAuth (Apple, etc.)
 - [x] Onboarding con `@username` único
-- [ ] Amigos: buscar por `@username` y agregar (tabla `friendships` referenciando `profiles.id`)
+- [x] Amigos: buscar por `@username` y agregar (tabla `friendships` referenciando `profiles.id`)
 - [x] Cambio de `@username` con límite de días configurable
 - [ ] Passkeys (WebAuthn) para login sin contraseña
 - [ ] Paginación / infinite scroll en el listado de transacciones

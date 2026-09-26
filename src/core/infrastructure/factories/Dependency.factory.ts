@@ -7,6 +7,8 @@ import type { DashboardRepository } from "@/features/dashboard/domain/Dashboard.
 import { SupabaseDashboardRepository } from "@/features/dashboard/infrastructure/supabase/SupabaseDashboard.repository";
 import type { FeedbackRepository } from "@/features/feedback/domain/Feedback.repository";
 import { SupabaseFeedbackRepository } from "@/features/feedback/infrastructure/supabase/SupabaseFeedback.repository";
+import type { FriendshipRepository } from "@/features/friends/domain/Friendship.repository";
+import { SupabaseFriendshipRepository } from "@/features/friends/infrastructure/supabase/SupabaseFriendship.repository";
 import type { PaymentMethodRepository } from "@/features/payment-methods/domain/PaymentMethod.repository";
 import { SupabasePaymentMethodRepository } from "@/features/payment-methods/infrastructure/supabase/SupabasePaymentMethod.repository";
 import type { ProfileRepository } from "@/features/profile/domain/Profile.repository";
@@ -22,6 +24,7 @@ export type AppDependencies = {
   dashboardRepository: DashboardRepository;
   feedbackRepository: FeedbackRepository;
   profileRepository: ProfileRepository;
+  friendshipRepository: FriendshipRepository;
 };
 
 export class DependencyFactory {
@@ -34,6 +37,7 @@ export class DependencyFactory {
       dashboardRepository: new SupabaseDashboardRepository(supabase),
       feedbackRepository: new SupabaseFeedbackRepository(supabase),
       profileRepository: new SupabaseProfileRepository(supabase),
+      friendshipRepository: new SupabaseFriendshipRepository(supabase),
     };
   }
 }
