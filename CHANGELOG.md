@@ -1,3 +1,9 @@
+## [0.2.3](https://github.com/NatxioDev/kibo-dev/compare/v0.2.2...v0.2.3) (2026-09-26)
+
+### Bug Fixes
+
+* **transactions:** group thousands in the amount input while typing ([ea42136](https://github.com/NatxioDev/kibo-dev/commit/ea42136ddd93311b6495c8c693509dfb2c641be5))
+
 ## [0.2.2](https://github.com/NatxioDev/kibo-dev/compare/v0.2.1...v0.2.2) (2026-09-26)
 
 ### Bug Fixes
