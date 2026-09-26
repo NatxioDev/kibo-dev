@@ -1,8 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useDependencyContext } from "@/core/context/dependency/useDependencyContext";
-import { SearchFriends } from "@/features/friends/application/SearchFriends.application";
+import { searchFriendsAction } from "@/features/friends/actions/searchFriends.action";
 import type {
   FriendSearchResult,
   ServiceResult,
@@ -23,7 +22,6 @@ type SearchResponse = {
 
 /** `syncKey` must change whenever the user's friendships change, so results show the current relation. */
 export function useFriendSearch(syncKey: string) {
-  const { friendshipRepository } = useDependencyContext();
   const [value, setValue] = useState("");
   const [response, setResponse] = useState<SearchResponse | null>(null);
 
@@ -35,9 +33,8 @@ export function useFriendSearch(syncKey: string) {
 
     let cancelled = false;
     const timeout = setTimeout(async () => {
-      const result = await new SearchFriends(friendshipRepository).execute(
-        query,
-      );
+      // Llamar al server action en lugar del repositorio del cliente
+      const result = await searchFriendsAction(query);
 
       if (!cancelled) {
         setResponse({ query, result });
@@ -48,7 +45,7 @@ export function useFriendSearch(syncKey: string) {
       cancelled = true;
       clearTimeout(timeout);
     };
-  }, [query, syncKey, friendshipRepository]);
+  }, [query, syncKey]);
 
   const current = query && response?.query === query ? response.result : null;
 

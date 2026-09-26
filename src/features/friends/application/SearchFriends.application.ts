@@ -1,3 +1,5 @@
+import "server-only";
+
 import type { FriendshipRepository } from "@/features/friends/domain/Friendship.repository";
 import type {
   FriendSearchResult,

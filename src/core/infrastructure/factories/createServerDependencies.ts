@@ -1,7 +1,7 @@
-import { DependencyFactory } from "@/core/infrastructure/factories/Dependency.factory";
 import { createClient } from "@/lib/supabase/server";
+import { createServerDependenciesWithFriendship } from "./createServerDependenciesWithFriendship";
 
 export async function createServerDependencies() {
   const supabase = await createClient();
-  return DependencyFactory.createFromSupabase(supabase);
+  return createServerDependenciesWithFriendship(supabase);
 }

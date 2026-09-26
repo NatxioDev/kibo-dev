@@ -2,17 +2,15 @@
 
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
-import { useDependencyContext } from "@/core/context/dependency/useDependencyContext";
-import { AcceptFriendRequest } from "@/features/friends/application/AcceptFriendRequest.application";
-import { RemoveFriendship } from "@/features/friends/application/RemoveFriendship.application";
-import { SendFriendRequest } from "@/features/friends/application/SendFriendRequest.application";
+import { acceptFriendRequestAction } from "@/features/friends/actions/acceptFriendRequest.action";
+import { removeFriendshipAction } from "@/features/friends/actions/removeFriendship.action";
+import { sendFriendRequestAction } from "@/features/friends/actions/sendFriendRequest.action";
 import type { ServiceResult } from "@/features/friends/domain/models/Friendship";
 
 export type FriendshipAction = "send" | "accept" | "remove";
 
 export function useFriendshipActions() {
   const router = useRouter();
-  const { friendshipRepository } = useDependencyContext();
   const [error, setError] = useState<string | null>(null);
   const [lastAction, setLastAction] = useState<FriendshipAction | null>(null);
   const [isPending, startTransition] = useTransition();
@@ -39,27 +37,15 @@ export function useFriendshipActions() {
   }
 
   function send(addresseeId: string, onSuccess?: () => void) {
-    run(
-      "send",
-      () => new SendFriendRequest(friendshipRepository).execute(addresseeId),
-      onSuccess,
-    );
+    run("send", () => sendFriendRequestAction(addresseeId), onSuccess);
   }
 
   function accept(id: string, onSuccess?: () => void) {
-    run(
-      "accept",
-      () => new AcceptFriendRequest(friendshipRepository).execute(id),
-      onSuccess,
-    );
+    run("accept", () => acceptFriendRequestAction(id), onSuccess);
   }
 
   function remove(id: string, onSuccess?: () => void) {
-    run(
-      "remove",
-      () => new RemoveFriendship(friendshipRepository).execute(id),
-      onSuccess,
-    );
+    run("remove", () => removeFriendshipAction(id), onSuccess);
   }
 
   return {

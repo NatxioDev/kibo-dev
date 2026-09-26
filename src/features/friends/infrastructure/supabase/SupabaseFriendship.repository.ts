@@ -1,3 +1,5 @@
+import "server-only";
+
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { FriendshipRepository } from "@/features/friends/domain/Friendship.repository";
 import type {
