@@ -1,3 +1,9 @@
+## [0.5.1](https://github.com/NatxioDev/kibo-dev/compare/v0.5.0...v0.5.1) (2026-09-26)
+
+### Bug Fixes
+
+* keep default iOS status bar style in standalone mode ([c595d08](https://github.com/NatxioDev/kibo-dev/commit/c595d083b1d11aeae50df85d1140d47c177d408f))
+
 ## [0.5.0](https://github.com/NatxioDev/kibo-dev/compare/v0.4.0...v0.5.0) (2026-09-26)
 
 ### Features
