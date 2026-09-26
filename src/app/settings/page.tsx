@@ -8,7 +8,7 @@ import { LogoutButton } from "@/features/auth/components/LogoutButton";
 import { GetCurrentProfile } from "@/features/profile/application/GetCurrentProfile.application";
 import { ProfileHeader } from "@/features/profile/components/ProfileHeader";
 import { ThemeToggle } from "@/features/theme/ThemeToggle";
-import { APP_NAME, APP_VERSION } from "@/lib/version";
+import { APP_NAME, APP_STAGE, APP_VERSION } from "@/lib/version";
 
 export default async function SettingsPage() {
   const { profileRepository } = await createServerDependencies();
@@ -62,7 +62,7 @@ export default async function SettingsPage() {
       <Reveal className="flex flex-col gap-4">
         <LogoutButton />
         <p className="text-center text-xs text-muted-foreground tabular-nums">
-          {APP_NAME} v{APP_VERSION}
+          {APP_NAME} {APP_STAGE} v{APP_VERSION}
         </p>
       </Reveal>
     </PageShell>
