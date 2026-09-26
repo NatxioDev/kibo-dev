@@ -1,3 +1,9 @@
+## [0.4.0](https://github.com/NatxioDev/kibo-dev/compare/v0.3.0...v0.4.0) (2026-09-26)
+
+### Features
+
+* show beta stage next to app version and add founder badge dream ([6eddc5b](https://github.com/NatxioDev/kibo-dev/commit/6eddc5b511cfba921cab789387f9301e85780404))
+
 ## [0.3.0](https://github.com/NatxioDev/kibo-dev/compare/v0.2.3...v0.3.0) (2026-09-26)
 
 ### Features
