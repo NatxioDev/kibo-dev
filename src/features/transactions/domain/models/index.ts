@@ -1,5 +1,7 @@
+import type { CurrencyCode } from "@/core/domain/value-objects";
+
 export type TransactionType = "EXPENSE" | "INCOME";
-export type TransactionCurrency = "BOB" | "USD";
+export type TransactionCurrency = CurrencyCode;
 export type TransactionSource = "MANUAL" | "IMAGE" | "TEXT" | "AUDIO";
 export type TransactionStatus = "DRAFT" | "CONFIRMED";
 
