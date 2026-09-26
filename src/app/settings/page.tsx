@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { PageHeader } from "@/components/PageHeader";
 import { PageShell } from "@/components/PageShell";
 import { Reveal } from "@/components/motion/Reveal";
@@ -5,6 +6,7 @@ import { Alert } from "@/components/ui/Alert";
 import { ListGroup, ListRow } from "@/components/ui/ListGroup";
 import { createServerDependencies } from "@/core/infrastructure/factories/createServerDependencies";
 import { LogoutButton } from "@/features/auth/components/LogoutButton";
+import { UnseenDot } from "@/features/changelog/components/UnseenDot";
 import { GetCurrentProfile } from "@/features/profile/application/GetCurrentProfile.application";
 import { ProfileHeader } from "@/features/profile/components/ProfileHeader";
 import { ThemeToggle } from "@/features/theme/ThemeToggle";
@@ -60,6 +62,13 @@ export default async function SettingsPage() {
 
       <Reveal>
         <ListGroup title="Soporte">
+          <ListRow
+            icon="✨"
+            title="Novedades"
+            subtitle={`v${APP_VERSION}`}
+            trailing={<UnseenDot />}
+            href="/settings/novedades"
+          />
           <ListRow icon="💬" title="Enviar feedback" href="/settings/feedback" />
           <ListRow icon="🔒" title="Privacidad" href="/privacy" />
         </ListGroup>
@@ -67,9 +76,12 @@ export default async function SettingsPage() {
 
       <Reveal className="flex flex-col gap-4">
         <LogoutButton />
-        <p className="text-center text-xs text-muted-foreground tabular-nums">
+        <Link
+          href="/settings/novedades"
+          className="mx-auto text-center text-xs text-muted-foreground tabular-nums transition-colors hover:text-foreground"
+        >
           {APP_NAME} {APP_STAGE} v{APP_VERSION}
-        </p>
+        </Link>
       </Reveal>
     </PageShell>
   );
