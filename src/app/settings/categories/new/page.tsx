@@ -1,21 +1,20 @@
 import { PageHeader } from "@/components/PageHeader";
+import { PageShell } from "@/components/PageShell";
+import { Reveal } from "@/components/motion/Reveal";
 import { CategoryForm } from "@/features/categories/components/CategoryForm";
 
 export default function NewCategoryPage() {
   return (
-    <main className="flex min-h-full flex-1 flex-col px-4 py-8">
-      <div className="mx-auto flex w-full max-w-md flex-col gap-6">
+    <PageShell>
+      <Reveal>
         <PageHeader
-          breadcrumbs={[
-            { href: "/", label: "Inicio" },
-            { href: "/settings", label: "Perfil" },
-            { href: "/settings/categories", label: "Categorías" },
-          ]}
-          fallbackHref="/settings/categories"
+          back={{ href: "/settings/categories", label: "Categorías" }}
           title="Nueva categoría"
         />
+      </Reveal>
+      <Reveal>
         <CategoryForm mode="create" />
-      </div>
-    </main>
+      </Reveal>
+    </PageShell>
   );
 }

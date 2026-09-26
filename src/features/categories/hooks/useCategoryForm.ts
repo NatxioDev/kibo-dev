@@ -47,7 +47,7 @@ export function useCategoryForm({ mode, category }: UseCategoryFormOptions) {
     setFormError(null);
   }
 
-  function submit() {
+  function submit(): FieldErrors | null {
     setFormError(null);
     setFieldErrors({});
 
@@ -62,7 +62,7 @@ export function useCategoryForm({ mode, category }: UseCategoryFormOptions) {
         }
       }
       setFieldErrors(nextErrors);
-      return;
+      return nextErrors;
     }
 
     startTransition(async () => {
@@ -82,6 +82,7 @@ export function useCategoryForm({ mode, category }: UseCategoryFormOptions) {
       router.push("/settings/categories");
       router.refresh();
     });
+    return null;
   }
 
   return {

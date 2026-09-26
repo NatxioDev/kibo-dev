@@ -1,4 +1,7 @@
 import { PageHeader } from "@/components/PageHeader";
+import { PageShell } from "@/components/PageShell";
+import { Reveal } from "@/components/motion/Reveal";
+import { Alert } from "@/components/ui/Alert";
 import { createServerDependencies } from "@/core/infrastructure/factories/createServerDependencies";
 import { GetCurrentProfile } from "@/features/profile/application/GetCurrentProfile.application";
 import { DisplayNameForm } from "@/features/profile/components/DisplayNameForm";
@@ -25,35 +28,34 @@ export default async function ProfileSettingsPage() {
     : formatNextUsernameChange(usernameAvailability.nextChangeAt);
 
   return (
-    <main className="flex min-h-full flex-1 flex-col px-4 py-8">
-      <div className="mx-auto flex w-full max-w-md flex-col gap-6">
-        <PageHeader
-          breadcrumbs={[
-            { href: "/", label: "Inicio" },
-            { href: "/settings", label: "Perfil" },
-          ]}
-          fallbackHref="/settings"
-          title="Editar perfil"
-        />
+    <PageShell>
+      <Reveal>
+        <PageHeader back={{ href: "/settings", label: "Ajustes" }} title="Perfil" />
+      </Reveal>
 
-        {profile ? (
-          <>
+      {profile ? (
+        <>
+          <Reveal>
             <ProfileHeader profile={profile} />
-            {profile.username ? (
+          </Reveal>
+          {profile.username ? (
+            <Reveal>
               <UsernameSettings
                 username={profile.username}
                 nextChangeLabel={nextChangeLabel}
                 cooldownDays={cooldownDays}
               />
-            ) : null}
+            </Reveal>
+          ) : null}
+          <Reveal>
             <DisplayNameForm initialValue={profile.display_name ?? ""} />
-          </>
-        ) : (
-          <p className="text-sm text-expense" role="alert">
-            {result.success ? null : result.error}
-          </p>
-        )}
-      </div>
-    </main>
+          </Reveal>
+        </>
+      ) : (
+        <Reveal>
+          <Alert>{result.success ? "No se pudo cargar tu perfil." : result.error}</Alert>
+        </Reveal>
+      )}
+    </PageShell>
   );
 }

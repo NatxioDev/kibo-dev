@@ -183,7 +183,7 @@ src/
 
 Cada feature usa `domain/` → `application/` → `infrastructure/supabase/` (+ `hooks/`, `components/`, `schemas/` según aplique).
 
-**Clean Arch (Solnet-style):** UI/hooks → use cases → interfaces ← adaptadores `Supabase*`. Composition root en `core/`. Todos los features de datos/auth están migrados.
+**Clean Arch:** UI/hooks → use cases → interfaces ← adaptadores `Supabase*`. Composition root en `core/`. Todos los features de datos/auth están migrados.
 
 ## Seguridad
 
@@ -212,6 +212,7 @@ Ideas pendientes (sin orden fijo):
 - [ ] Filtro por moneda y por rango de fechas en `/transactions`
 - [ ] Captura no manual: imagen, texto o audio (`source = IMAGE | TEXT | AUDIO`)
 - [ ] Flujo de borradores (`status = DRAFT`) y confirmación
+- [ ] Color elegible por categoría: columna `color` en `categories` (Supabase) y selector en el formulario. Hoy el color se asigna automáticamente a partir del id (`features/categories/categoryColor.ts`); el valor guardado debería tener prioridad y usar el automático como fallback
 - [ ] Presupuestos por categoría / mes y alertas de límite
 - [ ] Conversión o vista unificada multi-moneda en el dashboard
 - [ ] Gráficos de tendencia (ingresos vs gastos en el tiempo)

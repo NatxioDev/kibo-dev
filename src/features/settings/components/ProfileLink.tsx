@@ -16,7 +16,7 @@ export function ProfileLink({
     <Link
       href="/settings"
       aria-label="Perfil"
-      className={`inline-flex h-10 w-10 items-center justify-center overflow-hidden rounded-4xl border border-zinc-300 bg-white text-zinc-800 transition-colors hover:bg-zinc-100 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100 dark:hover:bg-zinc-800 ${className}`}
+      className={`inline-flex h-10 w-10 items-center justify-center overflow-hidden rounded-full border border-border bg-surface text-foreground shadow-card transition-colors hover:bg-surface-muted ${className}`}
     >
       {avatarUrl ? (
         <ProfileAvatar avatarUrl={avatarUrl} name={name} size={40} />

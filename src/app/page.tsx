@@ -1,6 +1,10 @@
-import Link from "next/link";
 import { Suspense } from "react";
+import { Reveal } from "@/components/motion/Reveal";
+import { Stagger } from "@/components/motion/Stagger";
+import { Button } from "@/components/ui/Button";
 import { createServerDependencies } from "@/core/infrastructure/factories/createServerDependencies";
+import { ListCategories } from "@/features/categories/application/ListCategories.application";
+import { categoryColors } from "@/features/categories/categoryColor";
 import {
   GetDashboardData,
   parseDashboardCurrency,
@@ -23,55 +27,50 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   const params = await searchParams;
   const period = parseDashboardPeriod(params.period);
   const currency = parseDashboardCurrency(params.currency);
-  const { dashboardRepository, profileRepository } =
+  const { dashboardRepository, profileRepository, categoryRepository } =
     await createServerDependencies();
-  const [result, profileResult] = await Promise.all([
+  const [result, profileResult, categoriesResult] = await Promise.all([
     new GetDashboardData(dashboardRepository).execute({ period, currency }),
     new GetCurrentProfile(profileRepository).execute(),
+    new ListCategories(categoryRepository).execute(),
   ]);
   const displayName = profileResult.success
     ? profileResult.data.display_name
     : null;
+  const colors = categoryColors(
+    categoriesResult.success ? categoriesResult.data : [],
+  );
 
   return (
-    <main className="flex min-h-full flex-1 flex-col px-4 py-8">
-      <div className="mx-auto flex w-full max-w-3xl flex-col gap-6">
-        <header className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-          <DashboardHeader
-            displayName={displayName}
-            periodLabel={
-              result.success ? result.data.periodLabel : "Tu resumen"
-            }
-          />
-          <div className="flex shrink-0 flex-wrap gap-2">
-            <Link
-              href="/transactions/new"
-              className="inline-flex h-11 items-center justify-center rounded-lg bg-zinc-900 px-4 text-sm font-medium text-zinc-50 dark:bg-zinc-100 dark:text-zinc-900"
-            >
-              + Registrar transacción
-            </Link>
-            <Link
-              href="/transactions"
-              className="inline-flex h-11 items-center justify-center rounded-lg border border-zinc-300 bg-white px-4 text-sm font-medium text-zinc-800 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
-            >
-              Transacciones
-            </Link>
-          </div>
-        </header>
-
-        <Suspense
-          fallback={
-            <div className="grid grid-cols-2 gap-3">
-              <div className="h-11 animate-pulse rounded-lg bg-zinc-200 dark:bg-zinc-800" />
-              <div className="h-11 animate-pulse rounded-lg bg-zinc-200 dark:bg-zinc-800" />
-            </div>
-          }
+    <main className="flex min-h-full flex-1 flex-col px-4 pt-10 pb-16">
+      <Stagger className="mx-auto flex w-full max-w-3xl flex-col gap-5">
+        <Reveal
+          as="header"
+          className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between"
         >
-          <DashboardFilters period={period} currency={currency} />
-        </Suspense>
+          <DashboardHeader displayName={displayName} />
+          <div className="grid shrink-0 grid-cols-2 gap-2 sm:flex">
+            <Button href="/transactions/new">+ Registrar</Button>
+            <Button href="/transactions" variant="secondary">
+              Transacciones
+            </Button>
+          </div>
+        </Reveal>
+
+        <Reveal>
+          <Suspense
+            fallback={
+              <div className="h-11 animate-pulse rounded-control bg-surface-muted" />
+            }
+          >
+            <DashboardFilters period={period} currency={currency} />
+          </Suspense>
+        </Reveal>
 
         {!result.success ? (
-          <DashboardErrorState />
+          <Reveal>
+            <DashboardErrorState />
+          </Reveal>
         ) : (
           <>
             <DashboardSummary
@@ -79,22 +78,33 @@ export default async function HomePage({ searchParams }: HomePageProps) {
               expense={result.data.expense}
               balance={result.data.balance}
               currency={result.data.currency}
+              periodLabel={result.data.periodLabel}
             />
 
             {result.data.isEmpty ? (
-              <DashboardEmptyState />
+              <Reveal>
+                <DashboardEmptyState />
+              </Reveal>
             ) : (
-              <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
-                <ExpensesByCategory
-                  items={result.data.expensesByCategory}
-                  currency={result.data.currency}
-                />
-                <RecentTransactions transactions={result.data.recent} />
+              <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
+                <Reveal>
+                  <ExpensesByCategory
+                    items={result.data.expensesByCategory}
+                    currency={result.data.currency}
+                    colors={colors}
+                  />
+                </Reveal>
+                <Reveal>
+                  <RecentTransactions
+                    transactions={result.data.recent}
+                    colors={colors}
+                  />
+                </Reveal>
               </div>
             )}
           </>
         )}
-      </div>
+      </Stagger>
     </main>
   );
 }

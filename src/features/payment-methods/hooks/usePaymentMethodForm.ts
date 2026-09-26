@@ -46,7 +46,7 @@ export function usePaymentMethodForm({
     setFormError(null);
   }
 
-  function submit() {
+  function submit(): FieldErrors | null {
     setFormError(null);
     setFieldErrors({});
 
@@ -61,7 +61,7 @@ export function usePaymentMethodForm({
         }
       }
       setFieldErrors(nextErrors);
-      return;
+      return nextErrors;
     }
 
     startTransition(async () => {
@@ -83,6 +83,7 @@ export function usePaymentMethodForm({
       router.push("/settings/payment-methods");
       router.refresh();
     });
+    return null;
   }
 
   return {

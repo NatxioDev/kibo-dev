@@ -1,20 +1,24 @@
-import Link from "next/link";
+import { Button } from "@/components/ui/Button";
+import { Card } from "@/components/ui/Card";
 
 export function DashboardEmptyState() {
   return (
-    <div className="rounded-xl border border-dashed border-zinc-300 dark:border-zinc-700 px-4 py-8 text-center">
-      <p className="text-base text-zinc-600 dark:text-zinc-300">
+    <Card className="flex flex-col items-center px-6 py-10 text-center">
+      <span
+        aria-hidden
+        className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-surface-muted text-2xl"
+      >
+        🌱
+      </span>
+      <p className="mt-4 text-base font-medium text-foreground">
         Aún no tienes movimientos este período.
       </p>
-      <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">
+      <p className="mt-1 text-sm text-muted-foreground">
         Registra tu primer ingreso o gasto para comenzar.
       </p>
-      <Link
-        href="/transactions/new"
-        className="mt-5 inline-flex h-11 items-center justify-center rounded-lg bg-zinc-900 dark:bg-zinc-100 px-4 text-sm font-medium text-zinc-50 dark:text-zinc-900"
-      >
+      <Button href="/transactions/new" className="mt-6">
         + Registrar transacción
-      </Link>
-    </div>
+      </Button>
+    </Card>
   );
 }

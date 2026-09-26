@@ -1,5 +1,7 @@
 import { notFound } from "next/navigation";
 import { PageHeader } from "@/components/PageHeader";
+import { PageShell } from "@/components/PageShell";
+import { Reveal } from "@/components/motion/Reveal";
 import { createServerDependencies } from "@/core/infrastructure/factories/createServerDependencies";
 import { GetCategory } from "@/features/categories/application/GetCategory.application";
 import { CategoryForm } from "@/features/categories/components/CategoryForm";
@@ -20,19 +22,16 @@ export default async function EditCategoryPage({
   }
 
   return (
-    <main className="flex min-h-full flex-1 flex-col px-4 py-8">
-      <div className="mx-auto flex w-full max-w-md flex-col gap-6">
+    <PageShell>
+      <Reveal>
         <PageHeader
-          breadcrumbs={[
-            { href: "/", label: "Inicio" },
-            { href: "/settings", label: "Perfil" },
-            { href: "/settings/categories", label: "Categorías" },
-          ]}
-          fallbackHref="/settings/categories"
+          back={{ href: "/settings/categories", label: "Categorías" }}
           title="Editar categoría"
         />
+      </Reveal>
+      <Reveal>
         <CategoryForm mode="edit" category={result.data} />
-      </div>
-    </main>
+      </Reveal>
+    </PageShell>
   );
 }

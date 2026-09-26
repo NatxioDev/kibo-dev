@@ -1,8 +1,10 @@
 "use client";
 
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { Reveal } from "@/components/motion/Reveal";
+import { Button } from "@/components/ui/Button";
+import { Card } from "@/components/ui/Card";
 import { formatCategoryLabel } from "@/features/categories/components/formatCategoryLabel";
 import { DeleteTransactionDialog } from "@/features/transactions/components/DeleteTransactionDialog";
 import {
@@ -17,11 +19,11 @@ type TransactionDetailProps = {
 
 function DetailRow({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex flex-col gap-1 border-b border-zinc-200 py-3.5 last:border-b-0 dark:border-zinc-800">
-      <dt className="text-xs font-medium uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-        {label}
-      </dt>
-      <dd className="text-base text-zinc-900 dark:text-zinc-50">{value}</dd>
+    <div className="flex items-baseline justify-between gap-4 px-5 py-3.5">
+      <dt className="shrink-0 text-sm text-muted-foreground">{label}</dt>
+      <dd className="min-w-0 text-right text-[0.9375rem] font-semibold break-words text-foreground">
+        {value}
+      </dd>
     </div>
   );
 }
@@ -30,76 +32,78 @@ export function TransactionDetail({ transaction }: TransactionDetailProps) {
   const router = useRouter();
   const [deleteOpen, setDeleteOpen] = useState(false);
 
-  const title =
-    transaction.merchant?.trim() ||
-    transaction.category?.name ||
-    "Sin comercio";
-  const typeLabel = transaction.type === "INCOME" ? "Ingreso" : "Gasto";
-  const amountClass =
-    transaction.type === "INCOME"
-      ? "text-income"
-      : "text-zinc-900 dark:text-zinc-50";
+  const isIncome = transaction.type === "INCOME";
   const categoryLabel = formatCategoryLabel(transaction.category);
   const paymentLabel = transaction.payment_method?.name ?? "Sin método";
-  const description = transaction.description?.trim() || "—";
+  const description = transaction.description?.trim();
   const merchant = transaction.merchant?.trim() || "—";
 
   return (
     <>
-      <div className="flex flex-col gap-6">
-        <div className="flex flex-col items-center gap-2 py-2 text-center">
+      <Reveal>
+        <Card
+          variant="hero"
+          className="flex flex-col items-center gap-3 px-6 py-8 text-center"
+        >
           <span
-            className="flex h-14 w-14 items-center justify-center rounded-full bg-zinc-100 text-2xl dark:bg-zinc-800"
             aria-hidden
+            className="flex h-16 w-16 items-center justify-center rounded-3xl bg-white/15 text-3xl"
           >
-            {transaction.category?.icon?.trim() || "📦"}
+            {transaction.category?.icon?.trim() || (isIncome ? "💰" : "📦")}
           </span>
-          <p className="text-sm font-medium text-zinc-500 dark:text-zinc-400">
-            {typeLabel}
-          </p>
-          <p className={`text-3xl font-semibold tabular-nums ${amountClass}`}>
+          <p
+            className={`font-display text-5xl font-extrabold tracking-[-0.045em] tabular-nums ${
+              isIncome ? "text-income" : ""
+            }`}
+          >
             {formatTransactionAmount(
               transaction.amount,
               transaction.currency,
               transaction.type,
             )}
           </p>
-          <p className="text-base font-medium text-zinc-900 dark:text-zinc-50">
-            {title}
+          <p className="text-sm text-hero-muted first-letter:uppercase">
+            {formatTransactionDateTime(transaction.date, transaction.created_at)}
           </p>
-        </div>
+        </Card>
+      </Reveal>
 
-        <dl className="flex flex-col">
-          <DetailRow
-            label="Fecha"
-            value={formatTransactionDateTime(
-              transaction.date,
-              transaction.created_at,
-            )}
-          />
+      <Reveal>
+        <Card as="dl" className="flex flex-col divide-y divide-track py-1">
+          <DetailRow label="Tipo" value={isIncome ? "Ingreso" : "Gasto"} />
           <DetailRow label="Categoría" value={categoryLabel} />
           <DetailRow label="Método de pago" value={paymentLabel} />
           <DetailRow label="Comercio" value={merchant} />
-          <DetailRow label="Descripción" value={description} />
           <DetailRow label="Moneda" value={transaction.currency} />
-        </dl>
+        </Card>
+      </Reveal>
 
-        <div className="flex flex-col gap-3">
-          <Link
-            href={`/transactions/${transaction.id}/edit`}
-            className="inline-flex h-12 items-center justify-center rounded-lg bg-zinc-900 text-base font-medium text-zinc-50 dark:bg-zinc-100 dark:text-zinc-900"
-          >
-            Editar
-          </Link>
-          <button
-            type="button"
-            onClick={() => setDeleteOpen(true)}
-            className="inline-flex h-12 items-center justify-center rounded-lg border border-zinc-300 bg-white text-base font-medium text-expense dark:border-zinc-700 dark:bg-zinc-900"
-          >
-            Eliminar
-          </button>
-        </div>
-      </div>
+      {description ? (
+        <Reveal>
+          <Card className="flex flex-col gap-1.5 px-5 py-4">
+            <h2 className="text-sm text-muted-foreground">Nota</h2>
+            <p className="text-[0.9375rem] text-pretty break-words whitespace-pre-line text-foreground">
+              {description}
+            </p>
+          </Card>
+        </Reveal>
+      ) : null}
+
+      <Reveal className="grid grid-cols-2 gap-3">
+        <Button
+          href={`/transactions/${transaction.id}/edit`}
+          size="lg"
+        >
+          Editar
+        </Button>
+        <Button
+          variant="destructive"
+          size="lg"
+          onClick={() => setDeleteOpen(true)}
+        >
+          Eliminar…
+        </Button>
+      </Reveal>
 
       <DeleteTransactionDialog
         open={deleteOpen}

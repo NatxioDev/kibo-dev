@@ -1,5 +1,7 @@
 import { notFound } from "next/navigation";
 import { PageHeader } from "@/components/PageHeader";
+import { PageShell } from "@/components/PageShell";
+import { Reveal } from "@/components/motion/Reveal";
 import { createServerDependencies } from "@/core/infrastructure/factories/createServerDependencies";
 import { GetTransaction } from "@/features/transactions/application/GetTransaction.application";
 import { TransactionForm } from "@/features/transactions/components/TransactionForm";
@@ -20,18 +22,16 @@ export default async function EditTransactionPage({
   }
 
   return (
-    <main className="flex min-h-full flex-1 flex-col px-4 py-8">
-      <div className="mx-auto flex w-full max-w-md flex-col gap-6">
+    <PageShell>
+      <Reveal>
         <PageHeader
-          breadcrumbs={[
-            { href: "/", label: "Inicio" },
-            { href: "/transactions", label: "Transacciones" },
-          ]}
-          fallbackHref="/transactions"
+          back={{ href: `/transactions/${id}`, label: "Detalle" }}
           title="Editar transacción"
         />
+      </Reveal>
+      <Reveal>
         <TransactionForm mode="edit" transaction={result.data} />
-      </div>
-    </main>
+      </Reveal>
+    </PageShell>
   );
 }

@@ -2,6 +2,9 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { Button } from "@/components/ui/Button";
+import { Card } from "@/components/ui/Card";
+import { labelClassName } from "@/components/ui/Field";
 import { changeUsernameAction } from "@/features/profile/actions/changeUsername.action";
 import { UsernameForm } from "@/features/profile/components/UsernameForm";
 
@@ -22,11 +25,11 @@ export function UsernameSettings({
 
   const cooldownHint =
     cooldownDays > 0
-      ? `Puedes cambiarlo una vez cada ${cooldownDays} ${cooldownDays === 1 ? "día" : "días"}.`
+      ? `Solo puedes cambiarlo una vez cada ${cooldownDays} ${cooldownDays === 1 ? "día" : "días"}.`
       : null;
 
   return (
-    <section className="flex flex-col gap-3 rounded-xl border border-zinc-300 bg-white px-4 py-4 dark:border-zinc-700 dark:bg-zinc-900">
+    <Card as="section" className="flex flex-col gap-3 px-5 py-5">
       {editing ? (
         <>
           <UsernameForm
@@ -42,47 +45,43 @@ export function UsernameSettings({
             onCancel={() => setEditing(false)}
           />
           {cooldownHint ? (
-            <p className="text-xs text-zinc-500 dark:text-zinc-400">
-              {cooldownHint}
-            </p>
+            <p className="px-1 text-xs text-muted-foreground">{cooldownHint}</p>
           ) : null}
         </>
       ) : (
         <>
           <div className="flex items-center justify-between gap-3">
-            <div className="flex min-w-0 flex-col">
-              <span className="text-sm font-medium text-zinc-600 dark:text-zinc-300">
-                Nombre de usuario
-              </span>
-              <span className="truncate text-base text-zinc-900 dark:text-zinc-50">
+            <div className="flex min-w-0 flex-col gap-1">
+              <span className={labelClassName}>Nombre de usuario</span>
+              <span className="truncate text-base font-semibold text-foreground">
                 @{username}
               </span>
             </div>
             {nextChangeLabel ? null : (
-              <button
-                type="button"
+              <Button
+                variant="secondary"
+                size="sm"
                 onClick={() => {
                   setSaved(false);
                   setEditing(true);
                 }}
-                className="h-10 shrink-0 rounded-lg border border-zinc-300 bg-white px-4 text-sm font-medium text-zinc-800 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
               >
                 Cambiar
-              </button>
+              </Button>
             )}
           </div>
           {nextChangeLabel ? (
-            <p className="text-xs text-zinc-500 dark:text-zinc-400">
+            <p className="text-xs text-muted-foreground">
               Podrás cambiarlo de nuevo el {nextChangeLabel}.
             </p>
           ) : null}
           {saved ? (
             <p className="text-sm text-income" role="status">
-              Nombre de usuario actualizado.
+              ✓ Nombre de usuario actualizado.
             </p>
           ) : null}
         </>
       )}
-    </section>
+    </Card>
   );
 }
