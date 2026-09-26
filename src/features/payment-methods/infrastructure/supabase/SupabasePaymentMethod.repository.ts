@@ -1,3 +1,5 @@
+import "server-only";
+
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { PaymentMethodRepository } from "@/features/payment-methods/domain/PaymentMethod.repository";
 import { mapPaymentMethodError } from "@/features/payment-methods/infrastructure/supabase/mapPaymentMethodError";

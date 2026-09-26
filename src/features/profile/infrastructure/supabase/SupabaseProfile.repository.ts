@@ -1,3 +1,5 @@
+import "server-only";
+
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { ProfileRepository } from "@/features/profile/domain/Profile.repository";
 import type {

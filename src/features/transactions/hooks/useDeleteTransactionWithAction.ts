@@ -2,12 +2,10 @@
 
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
-import { useDependencyContext } from "@/core/context/dependency/useDependencyContext";
-import { DeleteTransaction } from "@/features/transactions/application/DeleteTransaction.application";
+import { deleteTransactionAction } from "@/features/transactions/actions/deleteTransaction.action";
 
-export function useDeleteTransaction() {
+export function useDeleteTransactionWithAction() {
   const router = useRouter();
-  const { transactionRepository } = useDependencyContext();
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
@@ -15,9 +13,7 @@ export function useDeleteTransaction() {
     setError(null);
 
     startTransition(async () => {
-      const result = await new DeleteTransaction(transactionRepository).execute(
-        id,
-      );
+      const result = await deleteTransactionAction(id);
 
       if (!result.success) {
         setError(result.error);

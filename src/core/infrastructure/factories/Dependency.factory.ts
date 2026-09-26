@@ -2,18 +2,12 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import type { AuthRepository } from "@/features/auth/domain/Auth.repository";
 import { SupabaseAuthRepository } from "@/features/auth/infrastructure/supabase/SupabaseAuth.repository";
 import type { CategoryRepository } from "@/features/categories/domain/Category.repository";
-import { SupabaseCategoryRepository } from "@/features/categories/infrastructure/supabase/SupabaseCategory.repository";
 import type { DashboardRepository } from "@/features/dashboard/domain/Dashboard.repository";
-import { SupabaseDashboardRepository } from "@/features/dashboard/infrastructure/supabase/SupabaseDashboard.repository";
 import type { FeedbackRepository } from "@/features/feedback/domain/Feedback.repository";
-import { SupabaseFeedbackRepository } from "@/features/feedback/infrastructure/supabase/SupabaseFeedback.repository";
 import type { FriendshipRepository } from "@/features/friends/domain/Friendship.repository";
 import type { PaymentMethodRepository } from "@/features/payment-methods/domain/PaymentMethod.repository";
-import { SupabasePaymentMethodRepository } from "@/features/payment-methods/infrastructure/supabase/SupabasePaymentMethod.repository";
 import type { ProfileRepository } from "@/features/profile/domain/Profile.repository";
-import { SupabaseProfileRepository } from "@/features/profile/infrastructure/supabase/SupabaseProfile.repository";
 import type { TransactionRepository } from "@/features/transactions/domain/Transaction.repository";
-import { SupabaseTransactionRepository } from "@/features/transactions/infrastructure/supabase/SupabaseTransaction.repository";
 
 // Dependencias disponibles en el servidor
 export type AppDependencies = {
@@ -27,8 +21,8 @@ export type AppDependencies = {
   friendshipRepository: FriendshipRepository;
 };
 
-// Dependencias disponibles en el cliente (sin friendshipRepository que es server-only)
-export type ClientDependencies = Omit<AppDependencies, "friendshipRepository">;
+// Dependencias disponibles en el cliente (solo auth, el resto es server-only)
+export type ClientDependencies = Pick<AppDependencies, "authRepository">;
 
 export class DependencyFactory {
   static createClientDependencies(
@@ -36,12 +30,6 @@ export class DependencyFactory {
   ): ClientDependencies {
     return {
       authRepository: new SupabaseAuthRepository(supabase),
-      transactionRepository: new SupabaseTransactionRepository(supabase),
-      categoryRepository: new SupabaseCategoryRepository(supabase),
-      paymentMethodRepository: new SupabasePaymentMethodRepository(supabase),
-      dashboardRepository: new SupabaseDashboardRepository(supabase),
-      feedbackRepository: new SupabaseFeedbackRepository(supabase),
-      profileRepository: new SupabaseProfileRepository(supabase),
     };
   }
 }

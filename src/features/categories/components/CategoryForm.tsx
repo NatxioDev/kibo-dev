@@ -11,7 +11,7 @@ import {
   inputClassName,
 } from "@/components/ui/Field";
 import { Segmented } from "@/components/ui/Segmented";
-import { useCategoryForm } from "@/features/categories/hooks/useCategoryForm";
+import { useCategoryFormWithActions } from "@/features/categories/hooks/useCategoryFormWithActions";
 import type { Category } from "@/features/transactions/types";
 
 type CategoryFormProps = {
@@ -26,7 +26,7 @@ const EMOJI_SUGGESTIONS = {
 
 export function CategoryForm({ mode, category }: CategoryFormProps) {
   const { values, updateField, fieldErrors, formError, loading, submit } =
-    useCategoryForm({ mode, category });
+    useCategoryFormWithActions({ mode, category });
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();

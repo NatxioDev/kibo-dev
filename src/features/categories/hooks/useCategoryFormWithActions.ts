@@ -2,40 +2,39 @@
 
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
-import { useDependencyContext } from "@/core/context/dependency/useDependencyContext";
-import { CreatePaymentMethod } from "@/features/payment-methods/application/CreatePaymentMethod.application";
-import { UpdatePaymentMethod } from "@/features/payment-methods/application/UpdatePaymentMethod.application";
-import { paymentMethodFormSchema } from "@/features/payment-methods/schemas/paymentMethodSchema";
-import type { PaymentMethod } from "@/features/transactions/domain/models";
+import { createCategoryAction } from "@/features/categories/actions/createCategory.action";
+import { updateCategoryAction } from "@/features/categories/actions/updateCategory.action";
+import { categoryFormSchema } from "@/features/categories/schemas/categorySchema";
+import type { Category, TransactionType } from "@/features/transactions/domain/models";
 
 type FormState = {
   name: string;
+  icon: string;
+  type: TransactionType;
 };
 
 type FieldErrors = Partial<Record<keyof FormState, string>>;
 
-type UsePaymentMethodFormOptions = {
+type UseCategoryFormOptions = {
   mode: "create" | "edit";
-  paymentMethod?: PaymentMethod;
+  category?: Category;
 };
 
-function toFormState(paymentMethod?: PaymentMethod): FormState {
-  if (!paymentMethod) {
-    return { name: "" };
+function toFormState(category?: Category): FormState {
+  if (!category) {
+    return { name: "", icon: "", type: "EXPENSE" };
   }
 
-  return { name: paymentMethod.name };
+  return {
+    name: category.name,
+    icon: category.icon ?? "",
+    type: category.type,
+  };
 }
 
-export function usePaymentMethodForm({
-  mode,
-  paymentMethod,
-}: UsePaymentMethodFormOptions) {
+export function useCategoryFormWithActions({ mode, category }: UseCategoryFormOptions) {
   const router = useRouter();
-  const { paymentMethodRepository } = useDependencyContext();
-  const [values, setValues] = useState<FormState>(() =>
-    toFormState(paymentMethod),
-  );
+  const [values, setValues] = useState<FormState>(() => toFormState(category));
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [formError, setFormError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
@@ -50,7 +49,7 @@ export function usePaymentMethodForm({
     setFormError(null);
     setFieldErrors({});
 
-    const parsed = paymentMethodFormSchema.safeParse(values);
+    const parsed = categoryFormSchema.safeParse(values);
 
     if (!parsed.success) {
       const nextErrors: FieldErrors = {};
@@ -65,22 +64,22 @@ export function usePaymentMethodForm({
     }
 
     startTransition(async () => {
+      const payload = {
+        name: parsed.data.name,
+        icon: parsed.data.icon ?? "",
+        type: parsed.data.type,
+      };
       const result =
         mode === "create"
-          ? await new CreatePaymentMethod(paymentMethodRepository).execute(
-              parsed.data,
-            )
-          : await new UpdatePaymentMethod(paymentMethodRepository).execute(
-              paymentMethod!.id,
-              parsed.data,
-            );
+          ? await createCategoryAction(payload)
+          : await updateCategoryAction(category!.id, payload);
 
       if (!result.success) {
         setFormError(result.error);
         return;
       }
 
-      router.push("/settings/payment-methods");
+      router.push("/settings/categories");
       router.refresh();
     });
     return null;

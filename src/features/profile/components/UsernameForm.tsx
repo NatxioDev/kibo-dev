@@ -5,10 +5,10 @@ import { Alert } from "@/components/ui/Alert";
 import { Button } from "@/components/ui/Button";
 import { labelClassName } from "@/components/ui/Field";
 import {
-  useUsernameForm,
+  useUsernameFormWithActions,
   type UseUsernameFormOptions,
   type UsernameStatus,
-} from "@/features/profile/hooks/useUsernameForm";
+} from "@/features/profile/hooks/useUsernameFormWithActions";
 
 const STATUS_MESSAGES: Partial<Record<UsernameStatus, string>> = {
   unchanged: "Es tu nombre de usuario actual.",
@@ -28,7 +28,7 @@ export function UsernameForm({
   ...options
 }: UsernameFormProps) {
   const { value, updateValue, status, validationError, formError, loading, submit } =
-    useUsernameForm(options);
+    useUsernameFormWithActions(options);
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();

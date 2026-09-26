@@ -9,7 +9,7 @@ import {
   focusFirstError,
   inputClassName,
 } from "@/components/ui/Field";
-import { usePaymentMethodForm } from "@/features/payment-methods/hooks/usePaymentMethodForm";
+import { usePaymentMethodFormWithActions } from "@/features/payment-methods/hooks/usePaymentMethodFormWithActions";
 import type { PaymentMethod } from "@/features/transactions/types";
 
 type PaymentMethodFormProps = {
@@ -24,7 +24,7 @@ export function PaymentMethodForm({
   paymentMethod,
 }: PaymentMethodFormProps) {
   const { values, updateField, fieldErrors, formError, loading, submit } =
-    usePaymentMethodForm({ mode, paymentMethod });
+    usePaymentMethodFormWithActions({ mode, paymentMethod });
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();

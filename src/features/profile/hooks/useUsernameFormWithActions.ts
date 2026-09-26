@@ -1,8 +1,7 @@
 "use client";
 
 import { useEffect, useState, useTransition } from "react";
-import { useDependencyContext } from "@/core/context/dependency/useDependencyContext";
-import { CheckUsernameAvailability } from "@/features/profile/application/CheckUsernameAvailability.application";
+import { checkUsernameAvailabilityAction } from "@/features/profile/actions/checkUsernameAvailability.action";
 import type { ServiceResult } from "@/features/profile/domain/models/Profile";
 import {
   sanitizeUsernameInput,
@@ -30,12 +29,11 @@ export type UseUsernameFormOptions = {
   onSuccess: () => void;
 };
 
-export function useUsernameForm({
+export function useUsernameFormWithActions({
   currentUsername = null,
   onSubmit,
   onSuccess,
 }: UseUsernameFormOptions) {
-  const { profileRepository } = useDependencyContext();
   const [value, setValue] = useState(currentUsername ?? "");
   const [availability, setAvailability] = useState<Availability | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
@@ -53,9 +51,7 @@ export function useUsernameForm({
 
     let cancelled = false;
     const timeout = setTimeout(async () => {
-      const result = await new CheckUsernameAvailability(
-        profileRepository,
-      ).execute(candidate);
+      const result = await checkUsernameAvailabilityAction(candidate);
 
       if (!cancelled && result.success) {
         setAvailability({ username: candidate, available: result.data });
@@ -66,7 +62,7 @@ export function useUsernameForm({
       cancelled = true;
       clearTimeout(timeout);
     };
-  }, [candidate, profileRepository]);
+  }, [candidate]);
 
   let status: UsernameStatus = "idle";
   if (validationError) {

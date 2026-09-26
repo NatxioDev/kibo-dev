@@ -1,3 +1,5 @@
+import "server-only";
+
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { FeedbackRepository } from "@/features/feedback/domain/Feedback.repository";
 import { mapFeedbackError } from "@/features/feedback/infrastructure/supabase/mapFeedbackError";
