@@ -1,6 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { acceptFriendRequestAction } from "@/features/friends/actions/acceptFriendRequest.action";
 import { removeFriendshipAction } from "@/features/friends/actions/removeFriendship.action";
@@ -10,7 +9,6 @@ import type { ServiceResult } from "@/features/friends/domain/models/Friendship"
 export type FriendshipAction = "send" | "accept" | "remove";
 
 export function useFriendshipActions() {
-  const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [lastAction, setLastAction] = useState<FriendshipAction | null>(null);
   const [isPending, startTransition] = useTransition();
@@ -31,8 +29,9 @@ export function useFriendshipActions() {
         return;
       }
 
+      // No necesitamos router.refresh() porque revalidatePath en el server action
+      // ya invalida el cache y Next.js recarga los datos del servidor automáticamente
       onSuccess?.();
-      router.refresh();
     });
   }
 
