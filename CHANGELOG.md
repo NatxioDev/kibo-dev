@@ -1,3 +1,9 @@
+## [0.5.0](https://github.com/NatxioDev/kibo-dev/compare/v0.4.0...v0.5.0) (2026-09-26)
+
+### Features
+
+* make app installable as a PWA ([16ff852](https://github.com/NatxioDev/kibo-dev/commit/16ff8529f169b68875d94252fbedea4faba98eda))
+
 ## [0.4.0](https://github.com/NatxioDev/kibo-dev/compare/v0.3.0...v0.4.0) (2026-09-26)
 
 ### Features
