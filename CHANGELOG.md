@@ -1,3 +1,9 @@
+## [0.6.0](https://github.com/NatxioDev/kibo-dev/compare/v0.5.1...v0.6.0) (2026-09-26)
+
+### Features
+
+* **settings:** add install app section with per-device PWA guides ([bffaf16](https://github.com/NatxioDev/kibo-dev/commit/bffaf16e04fe59a731f4d93d0f292fb543c6302d))
+
 ## [0.5.1](https://github.com/NatxioDev/kibo-dev/compare/v0.5.0...v0.5.1) (2026-09-26)
 
 ### Bug Fixes
