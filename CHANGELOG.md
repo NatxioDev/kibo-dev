@@ -1,3 +1,9 @@
+## [0.3.0](https://github.com/NatxioDev/kibo-dev/compare/v0.2.3...v0.3.0) (2026-09-26)
+
+### Features
+
+* implementar nuevo logo de marca Kibo ([14485f6](https://github.com/NatxioDev/kibo-dev/commit/14485f6f274588c08c7ca3e7ea1bf2efa72edb85))
+
 ## [0.2.3](https://github.com/NatxioDev/kibo-dev/compare/v0.2.2...v0.2.3) (2026-09-26)
 
 ### Bug Fixes
