@@ -1,3 +1,4 @@
+import { Money } from "@/core/domain/value-objects";
 import type {
   TransactionCurrency,
   TransactionType,
@@ -68,21 +69,16 @@ export function formatTransactionAmount(
   currency: TransactionCurrency,
   type: TransactionType,
 ): string {
-  const sign = type === "INCOME" ? "+" : "-";
-  return `${sign}${formatMoneyAmount(amount, currency)}`;
+  return Money.of(Math.abs(amount), currency).format({
+    sign: type === "INCOME" ? "+" : "-",
+  });
 }
 
 export function formatMoneyAmount(
   amount: number,
   currency: TransactionCurrency,
 ): string {
-  const prefix = currency === "BOB" ? "Bs " : "$";
-  const formatted = amount.toLocaleString("es-BO", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  });
-
-  return `${prefix}${formatted}`;
+  return Money.of(amount, currency).format();
 }
 
 export function todayDateInputValue(): string {

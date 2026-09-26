@@ -15,6 +15,7 @@ import {
   textareaClassName,
 } from "@/components/ui/Field";
 import { Segmented } from "@/components/ui/Segmented";
+import { Currency, Money } from "@/core/domain/value-objects";
 import { todayDateInputValue } from "@/features/transactions/components/formatters";
 import { useTransactionForm } from "@/features/transactions/hooks/useTransactionForm";
 import type { Transaction } from "@/features/transactions/types";
@@ -39,12 +40,6 @@ function yesterdayDateInputValue(): string {
   const d = new Date();
   d.setDate(d.getDate() - 1);
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
-}
-
-function sanitizeAmount(raw: string): string {
-  const normalized = raw.replace(",", ".").replace(/[^\d.]/g, "");
-  const [whole, ...rest] = normalized.split(".");
-  return rest.length ? `${whole}.${rest.join("").slice(0, 2)}` : whole;
 }
 
 function ChipSkeleton({ className }: { className: string }) {
@@ -90,7 +85,7 @@ export function TransactionForm({ mode, transaction }: TransactionFormProps) {
 
   const today = todayDateInputValue();
   const yesterday = yesterdayDateInputValue();
-  const currencySymbol = values.currency === "BOB" ? "Bs" : "$";
+  const currency = Currency.from(values.currency);
 
   return (
     <form onSubmit={handleSubmit} noValidate className="flex w-full flex-col gap-6">
@@ -130,7 +125,7 @@ export function TransactionForm({ mode, transaction }: TransactionFormProps) {
             aria-hidden
             className="font-display text-3xl font-bold tracking-tight text-muted-foreground"
           >
-            {currencySymbol}
+            {currency.symbol}
           </span>
           <input
             id="amount"
@@ -138,11 +133,14 @@ export function TransactionForm({ mode, transaction }: TransactionFormProps) {
             type="text"
             inputMode="decimal"
             autoComplete="off"
-            placeholder="0.00"
-            value={values.amount}
+            placeholder={currency.inputPlaceholder}
+            value={Money.toInputDisplay(values.amount, currency)}
             disabled={loading}
             onChange={(event) =>
-              updateField("amount", sanitizeAmount(event.target.value))
+              updateField(
+                "amount",
+                Money.sanitizeInput(event.target.value, currency),
+              )
             }
             {...errorProps("amount", fieldErrors.amount)}
             className={`w-full min-w-0 bg-transparent font-display text-5xl font-extrabold tracking-[-0.045em] tabular-nums placeholder:text-muted-foreground/40 focus-visible:outline-none ${

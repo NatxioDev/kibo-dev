@@ -1,4 +1,8 @@
 import { z } from "zod";
+import { CURRENCY_CODES } from "@/core/domain/value-objects";
+
+// Matches the `transactions.amount numeric(12,2)` column.
+const MAX_AMOUNT = 9_999_999_999.99;
 
 const optionalUuid = z
   .union([z.string().uuid(), z.literal("")])
@@ -22,8 +26,13 @@ export const transactionFormSchema = z.object({
   }),
   amount: z.coerce
     .number({ error: "El monto es obligatorio." })
-    .positive("El monto debe ser mayor que 0."),
-  currency: z.enum(["BOB", "USD"], {
+    .positive("El monto debe ser mayor que 0.")
+    .max(MAX_AMOUNT, "El monto no puede superar 9.999.999.999,99.")
+    .refine(
+      (value) => Number.isInteger(Number((value * 100).toPrecision(15))),
+      "El monto admite como máximo 2 decimales.",
+    ),
+  currency: z.enum(CURRENCY_CODES, {
     error: "Selecciona una moneda.",
   }),
   date: z
