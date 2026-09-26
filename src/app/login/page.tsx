@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Reveal } from "@/components/motion/Reveal";
 import { Stagger } from "@/components/motion/Stagger";
 import { Card } from "@/components/ui/Card";
+import { KiboLogo } from "@/components/ui/KiboLogo";
 import { GoogleSignInButton } from "@/features/auth/components/GoogleSignInButton";
 
 const ERROR_MESSAGES: Record<string, string> = {
@@ -26,9 +27,7 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
         className="relative flex w-full max-w-sm flex-col items-stretch gap-8"
       >
         <Reveal className="flex flex-col items-center gap-1 text-hero-foreground">
-          <h1 className="text-center font-display text-[7rem] leading-[0.85] font-extrabold tracking-[-0.07em] sm:text-[9rem]">
-            Kibo
-          </h1>
+          <KiboLogo className="h-24 w-auto sm:h-32" />
           <p className="text-center text-[0.6875rem] font-semibold tracking-[0.22em] text-hero-muted uppercase">
             Tu gestor personal de gastos
           </p>

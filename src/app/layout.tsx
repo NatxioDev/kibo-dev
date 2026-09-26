@@ -27,6 +27,14 @@ const interTight = Inter_Tight({
 export const metadata: Metadata = {
   title: "Kibo",
   description: "Gestor personal de gastos",
+  icons: {
+    icon: [
+      { url: "/brand/favicon.svg", type: "image/svg+xml" },
+      { url: "/brand/favicon-32.png", sizes: "32x32", type: "image/png" },
+    ],
+    apple: { url: "/brand/app-icon-180.png", sizes: "180x180" },
+  },
+  manifest: "/manifest.webmanifest",
 };
 
 export const viewport: Viewport = {
