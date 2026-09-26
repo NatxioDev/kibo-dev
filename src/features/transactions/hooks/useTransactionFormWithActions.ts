@@ -2,11 +2,10 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
-import { useDependencyContext } from "@/core/context/dependency/useDependencyContext";
-import { ListActiveCategoriesByType } from "@/features/categories/application/ListActiveCategoriesByType.application";
-import { ListActivePaymentMethods } from "@/features/payment-methods/application/ListActivePaymentMethods.application";
-import { CreateTransaction } from "@/features/transactions/application/CreateTransaction.application";
-import { UpdateTransaction } from "@/features/transactions/application/UpdateTransaction.application";
+import { listActiveCategoriesByTypeAction } from "@/features/transactions/actions/listActiveCategoriesByType.action";
+import { listActivePaymentMethodsAction } from "@/features/transactions/actions/listActivePaymentMethods.action";
+import { createTransactionAction } from "@/features/transactions/actions/createTransaction.action";
+import { updateTransactionAction } from "@/features/transactions/actions/updateTransaction.action";
 import { todayDateInputValue } from "@/features/transactions/components/formatters";
 import type {
   Category,
@@ -62,16 +61,11 @@ function toFormState(transaction?: Transaction): FormState {
   };
 }
 
-export function useTransactionForm({
+export function useTransactionFormWithActions({
   mode,
   transaction,
 }: UseTransactionFormOptions) {
   const router = useRouter();
-  const {
-    transactionRepository,
-    categoryRepository,
-    paymentMethodRepository,
-  } = useDependencyContext();
   const [values, setValues] = useState<FormState>(() =>
     toFormState(transaction),
   );
@@ -90,14 +84,9 @@ export function useTransactionForm({
       setLoadingOptions(true);
       setOptionsError(null);
 
-      const listCategories = new ListActiveCategoriesByType(categoryRepository);
-      const listPaymentMethods = new ListActivePaymentMethods(
-        paymentMethodRepository,
-      );
-
       const [categoriesResult, paymentMethodsResult] = await Promise.all([
-        listCategories.execute(values.type),
-        listPaymentMethods.execute(),
+        listActiveCategoriesByTypeAction(values.type),
+        listActivePaymentMethodsAction(),
       ]);
 
       if (cancelled) return;
@@ -124,7 +113,7 @@ export function useTransactionForm({
     return () => {
       cancelled = true;
     };
-  }, [values.type, categoryRepository, paymentMethodRepository]);
+  }, [values.type]);
 
   function updateField<K extends keyof FormState>(key: K, value: FormState[K]) {
     setValues((prev) => {
@@ -164,11 +153,8 @@ export function useTransactionForm({
     startTransition(async () => {
       const result =
         mode === "create"
-          ? await new CreateTransaction(transactionRepository).execute(payload)
-          : await new UpdateTransaction(transactionRepository).execute(
-              transaction!.id,
-              payload,
-            );
+          ? await createTransactionAction(payload)
+          : await updateTransactionAction(transaction!.id, payload);
 
       if (!result.success) {
         setFormError(result.error);

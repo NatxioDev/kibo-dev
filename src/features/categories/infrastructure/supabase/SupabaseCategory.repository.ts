@@ -1,3 +1,5 @@
+import "server-only";
+
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { CategoryRepository } from "@/features/categories/domain/Category.repository";
 import type { CategoryFormValues } from "@/features/categories/schemas/categorySchema";

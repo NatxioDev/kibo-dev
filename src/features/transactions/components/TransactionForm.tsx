@@ -18,7 +18,7 @@ import { Segmented } from "@/components/ui/Segmented";
 import { Currency } from "@/core/domain/value-objects";
 import { AmountInput } from "@/features/transactions/components/AmountInput";
 import { todayDateInputValue } from "@/features/transactions/components/formatters";
-import { useTransactionForm } from "@/features/transactions/hooks/useTransactionForm";
+import { useTransactionFormWithActions } from "@/features/transactions/hooks/useTransactionFormWithActions";
 import {
   DESCRIPTION_MAX_LENGTH,
   MERCHANT_MAX_LENGTH,
@@ -74,7 +74,7 @@ export function TransactionForm({ mode, transaction }: TransactionFormProps) {
     optionsError,
     loading,
     submit,
-  } = useTransactionForm({ mode, transaction });
+  } = useTransactionFormWithActions({ mode, transaction });
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();

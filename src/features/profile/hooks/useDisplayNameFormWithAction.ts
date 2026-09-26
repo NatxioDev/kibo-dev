@@ -2,13 +2,11 @@
 
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
-import { useDependencyContext } from "@/core/context/dependency/useDependencyContext";
-import { UpdateDisplayName } from "@/features/profile/application/UpdateDisplayName.application";
+import { updateDisplayNameAction } from "@/features/profile/actions/updateDisplayName.action";
 import { displayNameSchema } from "@/features/profile/schemas/displayNameSchema";
 
-export function useDisplayNameForm(initialValue: string) {
+export function useDisplayNameFormWithAction(initialValue: string) {
   const router = useRouter();
-  const { profileRepository } = useDependencyContext();
   const [value, setValue] = useState(initialValue);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
@@ -31,9 +29,7 @@ export function useDisplayNameForm(initialValue: string) {
     }
 
     startTransition(async () => {
-      const result = await new UpdateDisplayName(profileRepository).execute(
-        parsed.data,
-      );
+      const result = await updateDisplayNameAction(parsed.data);
 
       if (!result.success) {
         setError(result.error);

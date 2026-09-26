@@ -1,7 +1,7 @@
 "use client";
 
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
-import { useDeleteTransaction } from "@/features/transactions/hooks/useDeleteTransaction";
+import { useDeleteTransactionWithAction } from "@/features/transactions/hooks/useDeleteTransactionWithAction";
 
 type DeleteTransactionDialogProps = {
   open: boolean;
@@ -16,7 +16,7 @@ export function DeleteTransactionDialog({
   transactionId,
   onDeleted,
 }: DeleteTransactionDialogProps) {
-  const { remove, error, loading, setError } = useDeleteTransaction();
+  const { remove, error, loading, setError } = useDeleteTransactionWithAction();
 
   function handleClose() {
     if (loading) return;

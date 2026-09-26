@@ -4,10 +4,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { KiboLogo } from "@/components/ui/KiboLogo";
 import { useEffect, useState } from "react";
-import { useDependencyContext } from "@/core/context/dependency/useDependencyContext";
 import { FriendsLink } from "@/features/friends/components/FriendsLink";
 import { usePendingFriendRequests } from "@/features/friends/hooks/usePendingFriendRequests";
-import { GetCurrentProfile } from "@/features/profile/application/GetCurrentProfile.application";
+import { getCurrentProfileAction } from "@/features/profile/actions/getCurrentProfile.action";
 import type { CurrentProfile } from "@/features/profile/domain/models/Profile";
 import { ProfileLink } from "@/features/settings/components/ProfileLink";
 
@@ -15,7 +14,6 @@ const HIDDEN_PREFIXES = ["/login", "/auth", "/onboarding", "/settings", "/privac
 
 export function AppTopBar() {
   const pathname = usePathname();
-  const { profileRepository } = useDependencyContext();
   const [profile, setProfile] = useState<CurrentProfile | null>(null);
   const hidden = HIDDEN_PREFIXES.some((prefix) => pathname.startsWith(prefix));
   const pendingFriendRequests = usePendingFriendRequests(!hidden, pathname);
@@ -24,7 +22,7 @@ export function AppTopBar() {
     if (hidden || profile) return;
 
     let cancelled = false;
-    new GetCurrentProfile(profileRepository).execute().then((result) => {
+    getCurrentProfileAction().then((result) => {
       if (!cancelled && result.success) {
         setProfile(result.data);
       }
@@ -33,7 +31,7 @@ export function AppTopBar() {
     return () => {
       cancelled = true;
     };
-  }, [hidden, profile, profileRepository]);
+  }, [hidden, profile]);
 
   if (hidden) {
     return null;
