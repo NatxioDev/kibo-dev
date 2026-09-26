@@ -1,3 +1,9 @@
+## [0.2.0](https://github.com/NatxioDev/kibo-dev/compare/v0.1.0...v0.2.0) (2026-09-26)
+
+### Features
+
+* **ui:** liquid glass redesign and per-category colors ([dd85131](https://github.com/NatxioDev/kibo-dev/commit/dd851317787d383c12e065f68ec1d888f639768e))
+
 ## [0.1.0](https://github.com/NatxioDev/kibo-dev/compare/v0.0.5...v0.1.0) (2026-09-25)
 
 ### Features
