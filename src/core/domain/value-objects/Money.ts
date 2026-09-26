@@ -30,27 +30,60 @@ export class Money {
   }
 
   /**
-   * Normalizes raw user input into a canonical string with "." as decimal
-   * separator. Both "," and "." are accepted as decimal keys because mobile
-   * decimal keyboards only expose one of them; when both appear (pasted
-   * values) the last one is the decimal separator.
+   * Normalizes raw input (usually the grouped value shown by `toInputDisplay`
+   * plus the user's edit) into a canonical string with "." as decimal
+   * separator.
+   *
+   * - The currency's decimal separator is always the decimal.
+   * - The thousands separator is grouping, except when typed as the last
+   *   character: mobile decimal keyboards only expose one of "," / ".", so it
+   *   must also work as the decimal key.
+   * - A thousands separator after the decimal one with digits following
+   *   (e.g. "1,234.56" pasted into BOB) means a foreign format: the last
+   *   separator is the decimal.
+   * - For pasted text, a lone thousands separator not followed by exactly 3
+   *   digits is a decimal ("12.50" pasted into BOB is 12,50).
    */
   static sanitizeInput(
     raw: string,
     currency: Currency | CurrencyCode,
+    { pasted = false }: { pasted?: boolean } = {},
   ): string {
     const resolved =
       typeof currency === "string" ? Currency.from(currency) : currency;
-    const cleaned = raw.replace(/[^\d.,]/g, "");
+    const { decimalSeparator, thousandsSeparator } = resolved;
+    let cleaned = raw.replace(/[^\d.,]/g, "");
 
-    const hasDot = cleaned.includes(".");
-    const hasComma = cleaned.includes(",");
-    const decimalIndex =
-      hasDot && hasComma
-        ? Math.max(cleaned.lastIndexOf("."), cleaned.lastIndexOf(","))
-        : cleaned.search(/[.,]/);
+    const lastDecimal = cleaned.lastIndexOf(decimalSeparator);
+    const lastThousands = cleaned.lastIndexOf(thousandsSeparator);
+    const endsWithThousands =
+      lastThousands !== -1 && lastThousands === cleaned.length - 1;
 
-    if (decimalIndex === -1) return stripLeadingZeros(cleaned);
+    let decimalIndex: number;
+    if (lastDecimal !== -1 && lastThousands > lastDecimal) {
+      if (endsWithThousands) {
+        cleaned = cleaned.slice(0, -1);
+        decimalIndex = cleaned.indexOf(decimalSeparator);
+      } else {
+        decimalIndex = lastThousands;
+      }
+    } else if (lastDecimal !== -1) {
+      decimalIndex = cleaned.indexOf(decimalSeparator);
+    } else if (endsWithThousands) {
+      decimalIndex = lastThousands;
+    } else if (
+      pasted &&
+      lastThousands !== -1 &&
+      cleaned.length - lastThousands - 1 !== 3
+    ) {
+      decimalIndex = lastThousands;
+    } else {
+      decimalIndex = -1;
+    }
+
+    if (decimalIndex === -1) {
+      return stripLeadingZeros(cleaned.replace(/[.,]/g, ""));
+    }
 
     const whole = cleaned.slice(0, decimalIndex).replace(/[.,]/g, "");
     const fraction = cleaned
@@ -61,14 +94,21 @@ export class Money {
     return `${stripLeadingZeros(whole) || "0"}.${fraction}`;
   }
 
-  /** Renders a canonical amount string with the currency's decimal separator. */
+  /**
+   * Renders a canonical amount string with the currency's separators, keeping
+   * a trailing decimal separator so the user can keep typing ("12." -> "12,").
+   */
   static toInputDisplay(
     canonical: string,
     currency: Currency | CurrencyCode,
   ): string {
     const resolved =
       typeof currency === "string" ? Currency.from(currency) : currency;
-    return canonical.replace(".", resolved.decimalSeparator);
+    const [whole, fraction] = canonical.split(".");
+    const grouped = groupThousands(whole, resolved.thousandsSeparator);
+    return fraction === undefined
+      ? grouped
+      : `${grouped}${resolved.decimalSeparator}${fraction}`;
   }
 
   toNumber(): number {
@@ -81,9 +121,10 @@ export class Money {
     const absolute = Math.abs(this.minorUnits);
     const factor = 10 ** fractionDigits;
 
-    const whole = Math.floor(absolute / factor)
-      .toString()
-      .replace(/\B(?=(\d{3})+(?!\d))/g, thousandsSeparator);
+    const whole = groupThousands(
+      Math.floor(absolute / factor).toString(),
+      thousandsSeparator,
+    );
     const fraction = (absolute % factor)
       .toString()
       .padStart(fractionDigits, "0");
@@ -100,6 +141,10 @@ export class Money {
       this.currency.equals(other.currency)
     );
   }
+}
+
+function groupThousands(digits: string, separator: string): string {
+  return digits.replace(/\B(?=(\d{3})+(?!\d))/g, separator);
 }
 
 function stripLeadingZeros(digits: string): string {

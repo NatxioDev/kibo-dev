@@ -15,7 +15,8 @@ import {
   textareaClassName,
 } from "@/components/ui/Field";
 import { Segmented } from "@/components/ui/Segmented";
-import { Currency, Money } from "@/core/domain/value-objects";
+import { Currency } from "@/core/domain/value-objects";
+import { AmountInput } from "@/features/transactions/components/AmountInput";
 import { todayDateInputValue } from "@/features/transactions/components/formatters";
 import { useTransactionForm } from "@/features/transactions/hooks/useTransactionForm";
 import {
@@ -131,21 +132,14 @@ export function TransactionForm({ mode, transaction }: TransactionFormProps) {
           >
             {currency.symbol}
           </span>
-          <input
+          <AmountInput
             id="amount"
             name="amount"
-            type="text"
-            inputMode="decimal"
             autoComplete="off"
-            placeholder={currency.inputPlaceholder}
-            value={Money.toInputDisplay(values.amount, currency)}
+            currency={currency}
+            value={values.amount}
             disabled={loading}
-            onChange={(event) =>
-              updateField(
-                "amount",
-                Money.sanitizeInput(event.target.value, currency),
-              )
-            }
+            onValueChange={(amount) => updateField("amount", amount)}
             {...errorProps("amount", fieldErrors.amount)}
             className={`w-full min-w-0 bg-transparent font-display text-5xl font-extrabold tracking-[-0.045em] tabular-nums placeholder:text-muted-foreground/40 focus-visible:outline-none ${
               values.type === "INCOME" ? "text-income" : "text-foreground"
