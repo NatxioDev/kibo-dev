@@ -37,7 +37,6 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     title: "Kibo",
-    statusBarStyle: "black-translucent",
   },
 };
 
