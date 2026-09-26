@@ -29,7 +29,7 @@ function Section({
 
 export default function PrivacyPage() {
   return (
-    <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col gap-7 px-4 pt-8 pb-[max(4rem,env(safe-area-inset-bottom))]">
+    <main className="mx-auto flex w-full max-w-2xl flex-1 flex-col gap-7 px-4 pt-[max(2rem,env(safe-area-inset-top))] pb-[max(4rem,env(safe-area-inset-bottom))]">
       <PageHeader
         back={{ href: "/", label: "Kibo" }}
         title="Política de privacidad"

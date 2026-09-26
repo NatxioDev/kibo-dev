@@ -21,7 +21,7 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
   const initialError = errorKey ? (ERROR_MESSAGES[errorKey] ?? null) : null;
 
   return (
-    <main className="relative flex min-h-full flex-1 flex-col items-center justify-center overflow-hidden px-4 py-10">
+    <main className="relative flex min-h-full flex-1 flex-col items-center justify-center overflow-hidden px-4 pt-[max(2.5rem,env(safe-area-inset-top))] pb-[max(2.5rem,env(safe-area-inset-bottom))]">
       <Stagger
         stagger={0.12}
         className="relative flex w-full max-w-sm flex-col items-stretch gap-8"
