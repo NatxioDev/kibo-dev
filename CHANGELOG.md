@@ -1,3 +1,9 @@
+## [0.2.2](https://github.com/NatxioDev/kibo-dev/compare/v0.2.1...v0.2.2) (2026-09-26)
+
+### Bug Fixes
+
+* **transactions:** limit merchant and note length ([b08d02b](https://github.com/NatxioDev/kibo-dev/commit/b08d02b2c9d52258faf162ed729b88ea97c2529a))
+
 ## [0.2.1](https://github.com/NatxioDev/kibo-dev/compare/v0.2.0...v0.2.1) (2026-09-26)
 
 ### Bug Fixes
