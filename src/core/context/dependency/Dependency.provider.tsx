@@ -11,7 +11,7 @@ type DependencyProviderProps = {
 
 export function DependencyProvider({ children }: DependencyProviderProps) {
   const dependencies = useMemo(
-    () => DependencyFactory.createFromSupabase(createClient()),
+    () => DependencyFactory.createClientDependencies(createClient()),
     [],
   );
 
