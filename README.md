@@ -107,7 +107,7 @@ bun run release:local # bump manual local (solo si CI no aplica)
 
 ## Versionado
 
-- La versión vive en `package.json` y se muestra en `/settings` (`Kibo vX.Y.Z`).
+- La versión vive en `package.json` y se muestra en `/settings` (`Kibo beta vX.Y.Z`). La etapa (`beta`) se define en `APP_STAGE` (`src/lib/version.ts`).
 - Opcional: override con `NEXT_PUBLIC_APP_VERSION` en el entorno de deploy.
 - **Husky** exige Conventional Commits (`feat:`, `fix:`, `chore:`, …).
 
@@ -222,6 +222,12 @@ Ideas pendientes (sin orden fijo):
 - [x] Edición del nombre visible
 - [ ] Avatar propio (hoy se usa el de Google)
 - [ ] Panel interno para revisar feedback de usuarios
+
+## Sueños
+
+Cosas que nos encantaría que Kibo tenga algún día:
+
+- [ ] Badge de **Founder** para quienes usaron Kibo durante la beta: marcar a esos usuarios (p. ej. columna `is_founder` o `joined_during_beta` en `profiles`, calculada por `created_at` antes de la fecha de salida de la beta) y mostrar el badge en su perfil y junto a su `@username`
 
 ## Deuda técnica
 
