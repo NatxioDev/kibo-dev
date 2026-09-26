@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, Inter_Tight } from "next/font/google";
 import { MotionProvider } from "@/components/motion/MotionProvider";
 import { LiquidLensFilter } from "@/components/ui/LiquidLensFilter";
 import { DependencyProvider } from "@/core/context/dependency/Dependency.provider";
+import { InstallPromptListener } from "@/features/install/components/InstallPromptListener";
 import { AppTopBar } from "@/features/settings/components/AppTopBar";
 import { ThemeProvider } from "@/features/theme/ThemeProvider";
 import { ThemeScript } from "@/features/theme/ThemeScript";
@@ -60,6 +61,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       </head>
       <body className="flex min-h-full flex-col font-sans">
         <LiquidLensFilter />
+        <InstallPromptListener />
         <div aria-hidden className="app-blobs motion-safe:animate-blobs" />
         <ThemeProvider>
           <MotionProvider>

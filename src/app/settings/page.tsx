@@ -32,6 +32,12 @@ export default async function SettingsPage() {
       <Reveal>
         <ListGroup title="Preferencias">
           <ListRow icon="🌙" title="Modo oscuro" trailing={<ThemeToggle />} />
+          <ListRow
+            icon="📲"
+            title="Instalar app"
+            subtitle="Tenla en tu pantalla de inicio"
+            href="/settings/install"
+          />
         </ListGroup>
       </Reveal>
 
