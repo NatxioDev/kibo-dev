@@ -18,6 +18,10 @@ import { Segmented } from "@/components/ui/Segmented";
 import { Currency, Money } from "@/core/domain/value-objects";
 import { todayDateInputValue } from "@/features/transactions/components/formatters";
 import { useTransactionForm } from "@/features/transactions/hooks/useTransactionForm";
+import {
+  DESCRIPTION_MAX_LENGTH,
+  MERCHANT_MAX_LENGTH,
+} from "@/features/transactions/schemas/transactionSchema";
 import type { Transaction } from "@/features/transactions/types";
 
 type TransactionFormProps = {
@@ -281,6 +285,7 @@ export function TransactionForm({ mode, transaction }: TransactionFormProps) {
           name="merchant"
           type="text"
           autoComplete="off"
+          maxLength={MERCHANT_MAX_LENGTH}
           value={values.merchant}
           disabled={loading}
           onChange={(event) => updateField("merchant", event.target.value)}
@@ -298,11 +303,21 @@ export function TransactionForm({ mode, transaction }: TransactionFormProps) {
         }
         htmlFor="description"
         error={fieldErrors.description}
+        hint={
+          <span
+            className={`block text-right tabular-nums ${
+              values.description.length > DESCRIPTION_MAX_LENGTH ? "text-expense" : ""
+            }`}
+          >
+            {values.description.length}/{DESCRIPTION_MAX_LENGTH}
+          </span>
+        }
       >
         <textarea
           id="description"
           name="description"
           rows={3}
+          maxLength={DESCRIPTION_MAX_LENGTH}
           value={values.description}
           disabled={loading}
           onChange={(event) => updateField("description", event.target.value)}
