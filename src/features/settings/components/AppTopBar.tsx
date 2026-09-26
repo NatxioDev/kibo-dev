@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { KiboLogo } from "@/components/ui/KiboLogo";
 import { useEffect, useState } from "react";
+import { useWhatsNew } from "@/features/changelog/hooks/useWhatsNew";
 import { FriendsLink } from "@/features/friends/components/FriendsLink";
 import { usePendingFriendRequests } from "@/features/friends/hooks/usePendingFriendRequests";
 import { getCurrentProfileAction } from "@/features/profile/actions/getCurrentProfile.action";
@@ -17,6 +18,7 @@ export function AppTopBar() {
   const [profile, setProfile] = useState<CurrentProfile | null>(null);
   const hidden = HIDDEN_PREFIXES.some((prefix) => pathname.startsWith(prefix));
   const pendingFriendRequests = usePendingFriendRequests(!hidden, pathname);
+  const { hasUnseen } = useWhatsNew();
 
   useEffect(() => {
     if (hidden || profile) return;
@@ -51,6 +53,7 @@ export function AppTopBar() {
           <ProfileLink
             avatarUrl={profile?.avatar_url}
             name={profile?.display_name}
+            showDot={hasUnseen}
           />
         </div>
       </div>
