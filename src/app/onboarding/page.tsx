@@ -21,7 +21,7 @@ export default async function OnboardingPage() {
   const firstName = name?.split(" ")[0];
 
   return (
-    <main className="flex min-h-full flex-1 flex-col items-center justify-center px-4 py-10">
+    <main className="flex min-h-full flex-1 flex-col items-center justify-center px-4 pt-[max(2.5rem,env(safe-area-inset-top))] pb-[max(2.5rem,env(safe-area-inset-bottom))]">
       <Stagger
         stagger={0.12}
         className="flex w-full max-w-sm flex-col items-stretch gap-6"

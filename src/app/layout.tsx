@@ -34,7 +34,11 @@ export const metadata: Metadata = {
     ],
     apple: { url: "/brand/app-icon-180.png", sizes: "180x180" },
   },
-  manifest: "/manifest.webmanifest",
+  appleWebApp: {
+    capable: true,
+    title: "Kibo",
+    statusBarStyle: "black-translucent",
+  },
 };
 
 export const viewport: Viewport = {
