@@ -7,6 +7,7 @@ import type { DashboardRepository } from "@/features/dashboard/domain/Dashboard.
 import { SupabaseDashboardRepository } from "@/features/dashboard/infrastructure/supabase/SupabaseDashboard.repository";
 import type { FeedbackRepository } from "@/features/feedback/domain/Feedback.repository";
 import { SupabaseFeedbackRepository } from "@/features/feedback/infrastructure/supabase/SupabaseFeedback.repository";
+import type { FriendshipRepository } from "@/features/friends/domain/Friendship.repository";
 import type { PaymentMethodRepository } from "@/features/payment-methods/domain/PaymentMethod.repository";
 import { SupabasePaymentMethodRepository } from "@/features/payment-methods/infrastructure/supabase/SupabasePaymentMethod.repository";
 import type { ProfileRepository } from "@/features/profile/domain/Profile.repository";
@@ -14,6 +15,7 @@ import { SupabaseProfileRepository } from "@/features/profile/infrastructure/sup
 import type { TransactionRepository } from "@/features/transactions/domain/Transaction.repository";
 import { SupabaseTransactionRepository } from "@/features/transactions/infrastructure/supabase/SupabaseTransaction.repository";
 
+// Dependencias disponibles en el servidor
 export type AppDependencies = {
   authRepository: AuthRepository;
   transactionRepository: TransactionRepository;
@@ -22,10 +24,16 @@ export type AppDependencies = {
   dashboardRepository: DashboardRepository;
   feedbackRepository: FeedbackRepository;
   profileRepository: ProfileRepository;
+  friendshipRepository: FriendshipRepository;
 };
 
+// Dependencias disponibles en el cliente (sin friendshipRepository que es server-only)
+export type ClientDependencies = Omit<AppDependencies, "friendshipRepository">;
+
 export class DependencyFactory {
-  static createFromSupabase(supabase: SupabaseClient): AppDependencies {
+  static createClientDependencies(
+    supabase: SupabaseClient,
+  ): ClientDependencies {
     return {
       authRepository: new SupabaseAuthRepository(supabase),
       transactionRepository: new SupabaseTransactionRepository(supabase),
