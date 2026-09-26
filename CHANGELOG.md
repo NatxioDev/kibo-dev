@@ -1,3 +1,9 @@
+## [0.2.1](https://github.com/NatxioDev/kibo-dev/compare/v0.2.0...v0.2.1) (2026-09-26)
+
+### Bug Fixes
+
+* **transactions:** add Money/Currency value objects for currency separators ([06c4002](https://github.com/NatxioDev/kibo-dev/commit/06c40024cf710cf837d513641a71bc5d30ddbb91))
+
 ## [0.2.0](https://github.com/NatxioDev/kibo-dev/compare/v0.1.0...v0.2.0) (2026-09-26)
 
 ### Features
