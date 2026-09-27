@@ -7,6 +7,14 @@ import type { Release } from "@/features/changelog/types";
  */
 export const RELEASES: Release[] = [
   {
+    version: "0.7.1",
+    date: "2026-09-27",
+    fixes: [
+      "Los nombres de categorías y métodos de pago tienen un límite de caracteres para que no se desborden en la pantalla.",
+      "Cada categoría admite un solo emoji como ícono.",
+    ],
+  },
+  {
     version: "0.7.0",
     date: "2026-09-26",
     title: "Amigos en Kibo",
