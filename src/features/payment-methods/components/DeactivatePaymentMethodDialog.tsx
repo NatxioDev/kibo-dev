@@ -1,7 +1,7 @@
 "use client";
 
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
-import { useTogglePaymentMethodActive } from "@/features/payment-methods/hooks/useTogglePaymentMethodActive";
+import { useTogglePaymentMethodActiveWithAction } from "@/features/payment-methods/hooks/useTogglePaymentMethodActiveWithAction";
 
 type DeactivatePaymentMethodDialogProps = {
   open: boolean;
@@ -16,7 +16,7 @@ export function DeactivatePaymentMethodDialog({
   paymentMethodId,
   paymentMethodName,
 }: DeactivatePaymentMethodDialogProps) {
-  const { toggle, error, loading, setError } = useTogglePaymentMethodActive();
+  const { toggle, error, loading, setError } = useTogglePaymentMethodActiveWithAction();
 
   function handleClose() {
     if (loading) return;

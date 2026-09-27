@@ -18,16 +18,22 @@ import { Segmented } from "@/components/ui/Segmented";
 import { Currency } from "@/core/domain/value-objects";
 import { AmountInput } from "@/features/transactions/components/AmountInput";
 import { todayDateInputValue } from "@/features/transactions/components/formatters";
-import { useTransactionForm } from "@/features/transactions/hooks/useTransactionForm";
+import { useTransactionFormWithActions } from "@/features/transactions/hooks/useTransactionFormWithActions";
 import {
   DESCRIPTION_MAX_LENGTH,
   MERCHANT_MAX_LENGTH,
 } from "@/features/transactions/schemas/transactionSchema";
+import type { FriendProfile } from "@/features/friends/domain/models/Friendship";
+import { SplitWithFriends } from "@/features/splits/components/SplitWithFriends";
+import type { ExpenseEditContext } from "@/features/splits/domain/models";
 import type { Transaction } from "@/features/transactions/types";
 
 type TransactionFormProps = {
-  mode: "create" | "edit";
+  mode: "create" | "edit" | "edit-bill";
   transaction?: Transaction;
+  friends?: FriendProfile[];
+  bill?: ExpenseEditContext | null;
+  shareLock?: { payerName: string } | null;
 };
 
 const FIELD_ORDER = [
@@ -39,6 +45,7 @@ const FIELD_ORDER = [
   "payment_method_id",
   "merchant",
   "description",
+  "split",
 ] as const;
 
 function yesterdayDateInputValue(): string {
@@ -61,11 +68,21 @@ function ChipSkeleton({ className }: { className: string }) {
   );
 }
 
-export function TransactionForm({ mode, transaction }: TransactionFormProps) {
+export function TransactionForm({
+  mode,
+  transaction,
+  friends = [],
+  bill = null,
+  shareLock = null,
+}: TransactionFormProps) {
   const router = useRouter();
   const {
     values,
     updateField,
+    split,
+    updateSplit,
+    toggleFriend,
+    setFriendAmount,
     fieldErrors,
     formError,
     categories,
@@ -74,7 +91,11 @@ export function TransactionForm({ mode, transaction }: TransactionFormProps) {
     optionsError,
     loading,
     submit,
-  } = useTransactionForm({ mode, transaction });
+    amountLocked,
+    typeLocked,
+    showSplit,
+    splitRequired,
+  } = useTransactionFormWithActions({ mode, transaction, friends, bill, shareLock });
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -83,7 +104,11 @@ export function TransactionForm({ mode, transaction }: TransactionFormProps) {
 
   function handleCancel() {
     const fallback =
-      mode === "edit" && transaction ? `/transactions/${transaction.id}` : "/transactions";
+      mode === "edit" && transaction
+        ? `/transactions/${transaction.id}`
+        : mode === "edit-bill"
+          ? "/friends"
+          : "/transactions";
     if (window.history.length > 1) router.back();
     else router.push(fallback);
   }
@@ -99,7 +124,7 @@ export function TransactionForm({ mode, transaction }: TransactionFormProps) {
           label="Tipo de transacción"
           size="lg"
           value={values.type}
-          disabled={loading}
+          disabled={loading || typeLocked}
           onChange={(value) => updateField("type", value)}
           options={[
             { value: "EXPENSE", label: "Gasto" },
@@ -111,12 +136,12 @@ export function TransactionForm({ mode, transaction }: TransactionFormProps) {
       <Card className="flex flex-col gap-3 px-5 pt-4 pb-5 focus-within:ring-2 focus-within:ring-primary/50">
         <div className="flex items-center justify-between gap-3">
           <label htmlFor="amount" className={labelClassName}>
-            Monto
+            {showSplit && split.enabled ? "Total de la cuenta" : "Monto"}
           </label>
           <Segmented
             label="Moneda"
             value={values.currency}
-            disabled={loading}
+            disabled={loading || amountLocked}
             onChange={(value) => updateField("currency", value)}
             options={[
               { value: "BOB", label: "BOB" },
@@ -138,7 +163,7 @@ export function TransactionForm({ mode, transaction }: TransactionFormProps) {
             autoComplete="off"
             currency={currency}
             value={values.amount}
-            disabled={loading}
+            disabled={loading || amountLocked}
             onValueChange={(amount) => updateField("amount", amount)}
             {...errorProps("amount", fieldErrors.amount)}
             className={`w-full min-w-0 bg-transparent font-display text-5xl font-extrabold tracking-[-0.045em] tabular-nums placeholder:text-muted-foreground/40 focus-visible:outline-none ${
@@ -320,6 +345,37 @@ export function TransactionForm({ mode, transaction }: TransactionFormProps) {
           placeholder="Añade un detalle…"
         />
       </Field>
+
+      {shareLock ? (
+        <Alert>
+          Esta es tu parte de un gasto de {shareLock.payerName}. El monto lo define quien pagó.
+          Tú puedes cambiar la categoría y la nota.
+        </Alert>
+      ) : null}
+
+      {showSplit ? (
+        <SplitWithFriends
+          enabled={split.enabled}
+          onEnabledChange={(enabled) => updateSplit({ enabled })}
+          showToggle={!splitRequired}
+          payerConsumes={split.payerConsumes}
+          onPayerConsumesChange={(payerConsumes) => updateSplit({ payerConsumes })}
+          mode={split.mode}
+          onModeChange={(nextMode) => updateSplit({ mode: nextMode })}
+          friends={friends}
+          selectedIds={split.friendIds}
+          onToggleFriend={toggleFriend}
+          payerAmount={split.payerAmount}
+          onPayerAmount={(payerAmount) => updateSplit({ payerAmount })}
+          friendAmounts={split.friendAmounts}
+          onFriendAmount={setFriendAmount}
+          totalAmount={values.amount}
+          currency={values.currency}
+          disabled={loading}
+          amountsLocked={amountLocked}
+          error={fieldErrors.split}
+        />
+      ) : null}
 
       {optionsError ? <Alert>{optionsError}</Alert> : null}
       {formError ? <Alert>{formError}</Alert> : null}

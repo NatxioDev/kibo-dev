@@ -1,7 +1,7 @@
 import type { CategoryFormValues } from "@/features/categories/schemas/categorySchema";
+import type { ServiceResult } from "@/core/domain/ServiceResult";
 import type {
   Category,
-  ServiceResult,
   TransactionType,
 } from "@/features/transactions/domain/models";
 

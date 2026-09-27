@@ -1,10 +1,12 @@
+import "server-only";
+
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type {
   DashboardQuery,
   DashboardRepository,
 } from "@/features/dashboard/domain/Dashboard.repository";
+import type { ServiceResult } from "@/core/domain/ServiceResult";
 import type {
-  ServiceResult,
   TransactionWithRelations,
 } from "@/features/transactions/domain/models";
 import {

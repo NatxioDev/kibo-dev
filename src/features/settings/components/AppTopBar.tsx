@@ -3,34 +3,23 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { KiboLogo } from "@/components/ui/KiboLogo";
-import { useEffect, useState } from "react";
-import { useDependencyContext } from "@/core/context/dependency/useDependencyContext";
-import { GetCurrentProfile } from "@/features/profile/application/GetCurrentProfile.application";
+import { useWhatsNew } from "@/features/changelog/hooks/useWhatsNew";
+import { FriendsLink } from "@/features/friends/components/FriendsLink";
+import { useFriendAlerts } from "@/features/friends/hooks/usePendingFriendRequests";
 import type { CurrentProfile } from "@/features/profile/domain/models/Profile";
 import { ProfileLink } from "@/features/settings/components/ProfileLink";
 
 const HIDDEN_PREFIXES = ["/login", "/auth", "/onboarding", "/settings", "/privacy"];
 
-export function AppTopBar() {
+type AppTopBarProps = {
+  profile: CurrentProfile | null;
+};
+
+export function AppTopBar({ profile }: AppTopBarProps) {
   const pathname = usePathname();
-  const { profileRepository } = useDependencyContext();
-  const [profile, setProfile] = useState<CurrentProfile | null>(null);
   const hidden = HIDDEN_PREFIXES.some((prefix) => pathname.startsWith(prefix));
-
-  useEffect(() => {
-    if (hidden || profile) return;
-
-    let cancelled = false;
-    new GetCurrentProfile(profileRepository).execute().then((result) => {
-      if (!cancelled && result.success) {
-        setProfile(result.data);
-      }
-    });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [hidden, profile, profileRepository]);
+  const friendAlerts = useFriendAlerts(!hidden, pathname);
+  const { hasUnseen } = useWhatsNew();
 
   if (hidden) {
     return null;
@@ -42,10 +31,19 @@ export function AppTopBar() {
         <Link href="/" className="inline-flex items-center text-foreground">
           <KiboLogo className="h-7" />
         </Link>
-        <ProfileLink
-          avatarUrl={profile?.avatar_url}
-          name={profile?.display_name}
-        />
+        <div className="flex items-center gap-2">
+          <FriendsLink
+            active={pathname.startsWith("/friends")}
+            requests={friendAlerts.requests}
+            unclassified={friendAlerts.unclassified}
+            disputes={friendAlerts.disputes}
+          />
+          <ProfileLink
+            avatarUrl={profile?.avatar_url}
+            name={profile?.display_name}
+            showDot={hasUnseen}
+          />
+        </div>
       </div>
     </div>
   );

@@ -1,8 +1,11 @@
+import "server-only";
+
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { FeedbackRepository } from "@/features/feedback/domain/Feedback.repository";
 import { mapFeedbackError } from "@/features/feedback/infrastructure/supabase/mapFeedbackError";
 import type { FeedbackFormOutput } from "@/features/feedback/schemas/feedbackSchema";
-import type { Feedback, ServiceResult } from "@/features/feedback/types";
+import type { ServiceResult } from "@/core/domain/ServiceResult";
+import type { Feedback } from "@/features/feedback/types";
 
 export class SupabaseFeedbackRepository implements FeedbackRepository {
   constructor(private readonly supabase: SupabaseClient) {}

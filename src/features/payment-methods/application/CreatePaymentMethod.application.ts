@@ -1,8 +1,8 @@
 import type { PaymentMethodRepository } from "@/features/payment-methods/domain/PaymentMethod.repository";
 import type { PaymentMethodFormValues } from "@/features/payment-methods/schemas/paymentMethodSchema";
+import type { ServiceResult } from "@/core/domain/ServiceResult";
 import type {
   PaymentMethod,
-  ServiceResult,
 } from "@/features/transactions/domain/models";
 
 export class CreatePaymentMethod {

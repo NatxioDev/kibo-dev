@@ -1,7 +1,7 @@
 import type { CategoryRepository } from "@/features/categories/domain/Category.repository";
+import type { ServiceResult } from "@/core/domain/ServiceResult";
 import type {
   Category,
-  ServiceResult,
   TransactionType,
 } from "@/features/transactions/domain/models";
 

@@ -1,6 +1,6 @@
 "use client";
 
 import { createContext } from "react";
-import type { AppDependencies } from "@/core/infrastructure/factories/Dependency.factory";
+import type { ClientDependencies } from "@/core/infrastructure/factories/Dependency.factory";
 
-export const DependencyContext = createContext<AppDependencies | null>(null);
+export const DependencyContext = createContext<ClientDependencies | null>(null);

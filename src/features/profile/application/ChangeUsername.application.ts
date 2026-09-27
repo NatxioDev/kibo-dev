@@ -1,8 +1,8 @@
 import type { ProfileAdminRepository } from "@/features/profile/domain/ProfileAdmin.repository";
 import type { ProfileRepository } from "@/features/profile/domain/Profile.repository";
+import type { ServiceResult } from "@/core/domain/ServiceResult";
 import type {
   Profile,
-  ServiceResult,
 } from "@/features/profile/domain/models/Profile";
 import {
   formatNextUsernameChange,

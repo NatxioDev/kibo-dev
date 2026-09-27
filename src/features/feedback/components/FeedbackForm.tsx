@@ -10,7 +10,7 @@ import {
   textareaClassName,
 } from "@/components/ui/Field";
 import { Segmented } from "@/components/ui/Segmented";
-import { useFeedbackForm } from "@/features/feedback/hooks/useFeedbackForm";
+import { useFeedbackFormWithAction } from "@/features/feedback/hooks/useFeedbackFormWithAction";
 import type { FeedbackType } from "@/features/feedback/types";
 
 const TYPE_OPTIONS: { value: FeedbackType; label: string }[] = [
@@ -27,7 +27,7 @@ const PLACEHOLDERS: Record<FeedbackType, string> = {
 
 export function FeedbackForm() {
   const { values, updateField, fieldErrors, formError, success, loading, submit } =
-    useFeedbackForm();
+    useFeedbackFormWithAction();
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();

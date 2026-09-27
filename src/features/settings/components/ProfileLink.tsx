@@ -4,38 +4,48 @@ import { ProfileAvatar } from "@/features/profile/components/ProfileAvatar";
 type ProfileLinkProps = {
   avatarUrl?: string | null;
   name?: string | null;
+  showDot?: boolean;
   className?: string;
 };
 
 export function ProfileLink({
   avatarUrl = null,
   name = null,
+  showDot = false,
   className = "",
 }: ProfileLinkProps) {
   return (
     <Link
       href="/settings"
-      aria-label="Perfil"
-      className={`inline-flex h-10 w-10 items-center justify-center overflow-hidden rounded-full border border-border bg-surface text-foreground shadow-card transition-colors hover:bg-surface-muted ${className}`}
+      aria-label={showDot ? "Perfil, hay novedades" : "Perfil"}
+      className={`relative inline-flex h-10 w-10 items-center justify-center rounded-full border border-border bg-surface text-foreground shadow-card transition-colors hover:bg-surface-muted ${className}`}
     >
-      {avatarUrl ? (
-        <ProfileAvatar avatarUrl={avatarUrl} name={name} size={40} />
-      ) : (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.75"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className="h-5 w-5"
+      <span className="inline-flex h-full w-full items-center justify-center overflow-hidden rounded-full">
+        {avatarUrl ? (
+          <ProfileAvatar avatarUrl={avatarUrl} name={name} size={40} />
+        ) : (
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.75"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="h-5 w-5"
+            aria-hidden
+          >
+            <circle cx="12" cy="8" r="3.5" />
+            <path d="M5.5 19.5a6.5 6.5 0 0 1 13 0" />
+          </svg>
+        )}
+      </span>
+      {showDot ? (
+        <span
           aria-hidden
-        >
-          <circle cx="12" cy="8" r="3.5" />
-          <path d="M5.5 19.5a6.5 6.5 0 0 1 13 0" />
-        </svg>
-      )}
+          className="absolute -top-0.5 -right-0.5 h-3 w-3 rounded-full bg-expense ring-2 ring-background"
+        />
+      ) : null}
     </Link>
   );
 }
