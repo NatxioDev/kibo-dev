@@ -7,6 +7,19 @@ import type { Release } from "@/features/changelog/types";
  */
 export const RELEASES: Release[] = [
   {
+    version: "0.8.0",
+    date: "2026-09-27",
+    title: "Entra con Passkey",
+    new: [
+      "Puedes iniciar sesión con una Passkey, sin escribir contraseña ni email.",
+      "Desde Ajustes → Seguridad registras, renombras o eliminas tus Passkeys.",
+      "Google sigue disponible como respaldo si pierdes el dispositivo.",
+    ],
+    improvements: [
+      "El login con Passkey aparece marcado como beta mientras afinamos la experiencia.",
+    ],
+  },
+  {
     version: "0.7.1",
     date: "2026-09-27",
     fixes: [

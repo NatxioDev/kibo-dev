@@ -13,7 +13,7 @@ Gestor personal de ingresos y gastos.
 
 ## Funcionalidades
 
-- Autenticación solo con Google (Supabase OAuth), logout y sesión con cookies
+- Autenticación con Google (Supabase OAuth) y Passkeys (WebAuthn, beta), logout y sesión con cookies
 - Perfil con `@username` único (elegido en onboarding y editable con límite de días), nombre visible editable y avatar de Google
 - Protección de rutas privadas y gate de onboarding (`proxy.ts`)
 - Amigos: buscar por `@username`, enviar/aceptar/rechazar solicitudes y eliminar amistades
@@ -66,9 +66,11 @@ bun run dev
 
 Abre [http://localhost:3000](http://localhost:3000).
 
-## Autenticación con Google
+## Autenticación
 
-El login usa el proveedor Google nativo de Supabase Auth. No hay registro ni login por email.
+El login ofrece **Google OAuth** y **Passkeys (WebAuthn)**. No hay registro ni login por email/contraseña. Ambos métodos producen la misma sesión de Supabase Auth; `proxy.ts` y el resto de Kibo no distinguen el método usado.
+
+### Google
 
 1. **Google Cloud Console** → Google Auth Platform:
    - Crea un OAuth client de tipo **Web application**.
@@ -81,9 +83,32 @@ El login usa el proveedor Google nativo de Supabase Auth. No hay registro ni log
    - **Site URL**: la URL de producción.
    - **Redirect URLs**: `http://localhost:3000/auth/callback` y `https://<tu-dominio>/auth/callback`.
 
-Flujo: `/login` → Google → `/auth/callback` (canjea el código por la sesión) → si el perfil no tiene `username`, `/onboarding`; si ya lo tiene, `/`.
+Flujo Google: `/login` → Google → `/auth/callback` (canjea el código por la sesión) → si el perfil no tiene `username`, `/onboarding`; si ya lo tiene, `/`.
 
 Un usuario antiguo de email que entre con Google usando el mismo correo (ya verificado) se vincula automáticamente a su cuenta y conserva sus datos.
+
+### Passkeys (WebAuthn, beta)
+
+Las Passkeys usan la API de `@supabase/supabase-js` (`signInWithPasskey`, `registerPasskey`, `auth.passkey.list|update|delete`). En versiones recientes esa API está **habilitada por defecto** (el flag `auth.experimental.passkey` quedó deprecado). La superficie de Supabase Auth para Passkeys puede cambiar; trátala como **beta**.
+
+**Configuración en Supabase** (Authentication → WebAuthn / Passkeys, o equivalente del dashboard):
+
+| Entorno | Relying Party Display Name | Relying Party ID | Origins |
+|---------|----------------------------|------------------|---------|
+| Local | `Kibo` | `localhost` | `http://localhost:3000` |
+| QA | `Kibo` | dominio de QA (sin esquema) | `https://<qa-domain>` |
+| Producción | `Kibo` | dominio de producción (sin esquema) | `https://<prod-domain>` |
+
+El **RP ID es una decisión estable**: cambiarlo invalida las Passkeys ya registradas para ese RP. En local suele ser `localhost`; en producción el hostname canónico de la app (p. ej. `app.kibo.example`), no un subdominio distinto al que usa el usuario.
+
+Flujo Passkey:
+
+1. El usuario inicia sesión con Google (u otra Passkey ya registrada).
+2. En **Ajustes → Seguridad** registra una Passkey (ceremonia WebAuthn en el dispositivo).
+3. Tras cerrar sesión, en `/login` puede usar **Continuar con Passkey** (credencial discoverable; no pide email ni username).
+4. Supabase crea la sesión habitual; Kibo navega a `/` y `proxy.ts` aplica el mismo gate de onboarding.
+
+Google permanece como método de recuperación si se pierde el dispositivo o se eliminan las Passkeys.
 
 ## Base de datos
 
@@ -235,7 +260,7 @@ Ideas pendientes (sin orden fijo):
 - [x] Onboarding con `@username` único
 - [x] Amigos: buscar por `@username` y agregar (tabla `friendships` referenciando `profiles.id`)
 - [x] Cambio de `@username` con límite de días configurable
-- [ ] Passkeys (WebAuthn) para login sin contraseña
+- [x] Passkeys (WebAuthn) para login sin contraseña
 - [ ] Paginación / infinite scroll en el listado de transacciones
 - [ ] Búsqueda por texto (comercio, descripción)
 - [ ] Filtro por moneda y por rango de fechas en `/transactions`
