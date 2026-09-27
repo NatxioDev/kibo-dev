@@ -13,8 +13,8 @@ import {
 import { Segmented } from "@/components/ui/Segmented";
 import { useCategoryForm } from "@/features/categories/hooks/useCategoryForm";
 import {
-  CATEGORY_ICON_MAX_LENGTH,
   CATEGORY_NAME_MAX_LENGTH,
+  toSingleGrapheme,
 } from "@/features/categories/schemas/categorySchema";
 import type { Category } from "@/features/transactions/types";
 
@@ -90,7 +90,7 @@ export function CategoryForm({ mode, category }: CategoryFormProps) {
         label="Emoji"
         htmlFor="icon"
         error={fieldErrors.icon}
-        hint="Elige uno o escribe el tuyo."
+        hint="Un solo emoji."
       >
         <div className="flex flex-wrap gap-2" role="group" aria-label="Sugerencias de emoji">
           {EMOJI_SUGGESTIONS[values.type].map((emoji) => (
@@ -117,10 +117,11 @@ export function CategoryForm({ mode, category }: CategoryFormProps) {
           type="text"
           autoComplete="off"
           spellCheck={false}
-          maxLength={CATEGORY_ICON_MAX_LENGTH}
           value={values.icon}
           disabled={loading}
-          onChange={(event) => updateField("icon", event.target.value)}
+          onChange={(event) =>
+            updateField("icon", toSingleGrapheme(event.target.value))
+          }
           {...errorProps("icon", fieldErrors.icon)}
           className={`${inputClassName} w-24 text-center text-xl`}
           placeholder="🙂"
