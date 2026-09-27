@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { createServerDependencies } from "@/core/infrastructure/factories/createServerDependencies";
 import { SetPaymentMethodActive } from "@/features/payment-methods/application/SetPaymentMethodActive.application";
-import type { ServiceResult } from "@/features/transactions/domain/models";
+import type { ServiceResult } from "@/core/domain/ServiceResult";
 
 // Validación con zod
 const setPaymentMethodActiveSchema = z.object({

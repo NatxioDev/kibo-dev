@@ -3,7 +3,8 @@
 import { z } from "zod";
 import { createServerDependencies } from "@/core/infrastructure/factories/createServerDependencies";
 import { ListActiveCategoriesByType } from "@/features/categories/application/ListActiveCategoriesByType.application";
-import type { Category, ServiceResult, TransactionType } from "@/features/transactions/domain/models";
+import type { ServiceResult } from "@/core/domain/ServiceResult";
+import type { Category, TransactionType } from "@/features/transactions/domain/models";
 
 // Validación del tipo de transacción con zod
 const listCategoriesSchema = z.object({

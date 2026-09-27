@@ -2,8 +2,8 @@ import "server-only";
 
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { TransactionRepository } from "@/features/transactions/domain/Transaction.repository";
+import type { ServiceResult } from "@/core/domain/ServiceResult";
 import type {
-  ServiceResult,
   Transaction,
   TransactionFormValues,
   TransactionWithRelations,

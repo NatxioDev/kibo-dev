@@ -2,7 +2,8 @@
 
 import { createServerDependencies } from "@/core/infrastructure/factories/createServerDependencies";
 import { ListActivePaymentMethods } from "@/features/payment-methods/application/ListActivePaymentMethods.application";
-import type { PaymentMethod, ServiceResult } from "@/features/transactions/domain/models";
+import type { ServiceResult } from "@/core/domain/ServiceResult";
+import type { PaymentMethod } from "@/features/transactions/domain/models";
 
 export async function listActivePaymentMethodsAction(): Promise<
   ServiceResult<PaymentMethod[]>

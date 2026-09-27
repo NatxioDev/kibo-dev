@@ -1,4 +1,4 @@
-import type { ServiceResult } from "@/features/transactions/domain/models";
+import type { ServiceResult } from "@/core/domain/ServiceResult";
 import type { TransactionRepository } from "@/features/transactions/domain/Transaction.repository";
 import type { SplitRepository } from "@/features/splits/domain/Split.repository";
 

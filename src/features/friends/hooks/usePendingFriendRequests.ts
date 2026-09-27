@@ -6,7 +6,13 @@ import type { FriendAlertCounts } from "@/features/splits/domain/models";
 
 const EMPTY: FriendAlertCounts = { requests: 0, unclassified: 0, disputes: 0 };
 
-/** Refetches whenever `refreshKey` changes and when the app returns to the foreground. */
+/**
+ * Hook del cliente que cuenta solicitudes de amistad, gastos por clasificar y deudas en revisión.
+ * Se mantiene en el cliente porque:
+ * - Se actualiza automáticamente cuando cambia la ruta (refreshKey)
+ * - Se actualiza cuando la app vuelve al foreground (visibilitychange event)
+ * - Proporciona feedback reactivo sin recargar la página
+ */
 export function useFriendAlerts(enabled: boolean, refreshKey: string): FriendAlertCounts {
   const [alerts, setAlerts] = useState<FriendAlertCounts>(EMPTY);
 

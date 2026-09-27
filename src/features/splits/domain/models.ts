@@ -1,6 +1,6 @@
 import type { CurrencyCode } from "@/core/domain/value-objects";
 import type { FriendProfile } from "@/features/friends/domain/models/Friendship";
-import type { ServiceResult } from "@/features/profile/domain/models/Profile";
+import type { ServiceResult } from "@/core/domain/ServiceResult";
 
 export type { ServiceResult };
 

@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { createServerDependencies } from "@/core/infrastructure/factories/createServerDependencies";
 import { CreatePaymentMethod } from "@/features/payment-methods/application/CreatePaymentMethod.application";
 import { paymentMethodFormSchema } from "@/features/payment-methods/schemas/paymentMethodSchema";
-import type { ServiceResult } from "@/features/transactions/domain/models";
+import type { ServiceResult } from "@/core/domain/ServiceResult";
 
 type PaymentMethodFormValues = {
   name: string;
