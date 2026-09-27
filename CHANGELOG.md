@@ -1,3 +1,10 @@
+## [0.7.1](https://github.com/NatxioDev/kibo-dev/compare/v0.7.0...v0.7.1) (2026-09-27)
+
+### Bug Fixes
+
+* **categories:** allow only a single emoji as category icon ([83c3a63](https://github.com/NatxioDev/kibo-dev/commit/83c3a639a2244f5c462cc7aca09aa7c09d1569f4))
+* **settings:** limit category and payment method name length ([ee18c81](https://github.com/NatxioDev/kibo-dev/commit/ee18c810f81b8845aa9889e19c88100b3bcc825b))
+
 ## [0.7.0](https://github.com/NatxioDev/kibo-dev/compare/v0.6.0...v0.7.0) (2026-09-27)
 
 ### Features
