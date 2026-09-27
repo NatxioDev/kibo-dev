@@ -40,6 +40,12 @@ export default async function SettingsPage() {
             subtitle="Tenla en tu pantalla de inicio"
             href="/settings/install"
           />
+          <ListRow
+            icon="🔐"
+            title="Seguridad"
+            subtitle="Passkeys para entrar sin contraseña"
+            href="/settings/security"
+          />
         </ListGroup>
       </Reveal>
 

@@ -4,6 +4,7 @@ import { Stagger } from "@/components/motion/Stagger";
 import { Card } from "@/components/ui/Card";
 import { KiboLogo } from "@/components/ui/KiboLogo";
 import { GoogleSignInButton } from "@/features/auth/components/GoogleSignInButton";
+import { PasskeySignInButton } from "@/features/auth/components/PasskeySignInButton";
 
 const ERROR_MESSAGES: Record<string, string> = {
   oauth: "No pudimos iniciar sesión con Google. Inténtalo de nuevo.",
@@ -61,7 +62,15 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
               ))}
             </ul>
 
-            <GoogleSignInButton initialError={initialError} />
+            <div className="flex flex-col gap-3">
+              <GoogleSignInButton initialError={initialError} />
+              <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                <span className="h-px flex-1 bg-border" aria-hidden />
+                o
+                <span className="h-px flex-1 bg-border" aria-hidden />
+              </div>
+              <PasskeySignInButton />
+            </div>
           </Card>
         </Reveal>
 
