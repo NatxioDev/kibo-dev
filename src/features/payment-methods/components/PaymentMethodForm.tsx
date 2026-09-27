@@ -10,6 +10,7 @@ import {
   inputClassName,
 } from "@/components/ui/Field";
 import { usePaymentMethodForm } from "@/features/payment-methods/hooks/usePaymentMethodForm";
+import { PAYMENT_METHOD_NAME_MAX_LENGTH } from "@/features/payment-methods/schemas/paymentMethodSchema";
 import type { PaymentMethod } from "@/features/transactions/types";
 
 type PaymentMethodFormProps = {
@@ -39,6 +40,7 @@ export function PaymentMethodForm({
           name="name"
           type="text"
           autoComplete="off"
+          maxLength={PAYMENT_METHOD_NAME_MAX_LENGTH}
           value={values.name}
           disabled={loading}
           onChange={(event) => updateField("name", event.target.value)}

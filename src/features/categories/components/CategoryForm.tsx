@@ -12,6 +12,10 @@ import {
 } from "@/components/ui/Field";
 import { Segmented } from "@/components/ui/Segmented";
 import { useCategoryForm } from "@/features/categories/hooks/useCategoryForm";
+import {
+  CATEGORY_ICON_MAX_LENGTH,
+  CATEGORY_NAME_MAX_LENGTH,
+} from "@/features/categories/schemas/categorySchema";
 import type { Category } from "@/features/transactions/types";
 
 type CategoryFormProps = {
@@ -72,6 +76,7 @@ export function CategoryForm({ mode, category }: CategoryFormProps) {
           name="name"
           type="text"
           autoComplete="off"
+          maxLength={CATEGORY_NAME_MAX_LENGTH}
           value={values.name}
           disabled={loading}
           onChange={(event) => updateField("name", event.target.value)}
@@ -112,6 +117,7 @@ export function CategoryForm({ mode, category }: CategoryFormProps) {
           type="text"
           autoComplete="off"
           spellCheck={false}
+          maxLength={CATEGORY_ICON_MAX_LENGTH}
           value={values.icon}
           disabled={loading}
           onChange={(event) => updateField("icon", event.target.value)}
