@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { createServerDependencies } from "@/core/infrastructure/factories/createServerDependencies";
 import { UpdateCategory } from "@/features/categories/application/UpdateCategory.application";
 import { categoryFormSchema } from "@/features/categories/schemas/categorySchema";
-import type { ServiceResult } from "@/features/transactions/domain/models";
+import type { ServiceResult } from "@/core/domain/ServiceResult";
 
 type CategoryFormValues = {
   name: string;

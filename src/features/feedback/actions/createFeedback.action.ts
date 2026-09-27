@@ -3,7 +3,7 @@
 import { createServerDependencies } from "@/core/infrastructure/factories/createServerDependencies";
 import { CreateFeedback } from "@/features/feedback/application/CreateFeedback.application";
 import { feedbackFormSchema } from "@/features/feedback/schemas/feedbackSchema";
-import type { ServiceResult } from "@/features/transactions/domain/models";
+import type { ServiceResult } from "@/core/domain/ServiceResult";
 import type { FeedbackType } from "@/features/feedback/types";
 
 type FeedbackFormValues = {

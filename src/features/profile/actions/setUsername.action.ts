@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { createServerDependencies } from "@/core/infrastructure/factories/createServerDependencies";
 import { SetUsername } from "@/features/profile/application/SetUsername.application";
-import type { ServiceResult } from "@/features/profile/domain/models/Profile";
+import type { ServiceResult } from "@/core/domain/ServiceResult";
 
 export async function setUsernameAction(
   username: string,

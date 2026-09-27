@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { createServerDependencies } from "@/core/infrastructure/factories/createServerDependencies";
 import { CreateTransaction } from "@/features/transactions/application/CreateTransaction.application";
-import type { ServiceResult } from "@/features/transactions/domain/models";
+import type { ServiceResult } from "@/core/domain/ServiceResult";
 import { transactionFormSchema } from "@/features/transactions/schemas/transactionSchema";
 import type { TransactionFormValues } from "@/features/transactions/domain/models";
 

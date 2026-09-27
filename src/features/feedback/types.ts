@@ -14,7 +14,3 @@ export type FeedbackFormValues = {
   message: string;
   page: string | null;
 };
-
-export type ServiceResult<T> =
-  | { success: true; data: T }
-  | { success: false; error: string };

@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { createServerDependencies } from "@/core/infrastructure/factories/createServerDependencies";
 import { DeleteTransaction } from "@/features/transactions/application/DeleteTransaction.application";
-import type { ServiceResult } from "@/features/transactions/domain/models";
+import type { ServiceResult } from "@/core/domain/ServiceResult";
 
 // Validación del ID con zod
 const deleteTransactionSchema = z.object({

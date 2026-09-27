@@ -1,5 +1,5 @@
+import type { ServiceResult } from "@/core/domain/ServiceResult";
 import type {
-  ServiceResult,
   Transaction,
   TransactionFormValues,
   TransactionWithRelations,

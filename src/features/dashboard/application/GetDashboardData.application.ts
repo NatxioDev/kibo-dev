@@ -9,8 +9,8 @@ import {
   getPeriodRange,
   parseDashboardPeriod,
 } from "@/features/dashboard/utils/period";
+import type { ServiceResult } from "@/core/domain/ServiceResult";
 import type {
-  ServiceResult,
   TransactionCurrency,
 } from "@/features/transactions/domain/models";
 
