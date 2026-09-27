@@ -1,3 +1,11 @@
+## [0.7.0](https://github.com/NatxioDev/kibo-dev/compare/v0.6.0...v0.7.0) (2026-09-27)
+
+### Features
+
+* **changelog:** sección Novedades y aviso de versión (CUC-60) ([bab2025](https://github.com/NatxioDev/kibo-dev/commit/bab20256912801fd9747b01a76a3e1cf414191d0))
+* **friends:** amigos por [@username](https://github.com/username) (CUC-19) para v0.7.0 ([#55](https://github.com/NatxioDev/kibo-dev/issues/55)) ([ab0d750](https://github.com/NatxioDev/kibo-dev/commit/ab0d750762c5e229ec765671c158e987bd6dec67))
+* **splits:** gastos compartidos y deudas entre amigos (CUC-61) ([efbcac0](https://github.com/NatxioDev/kibo-dev/commit/efbcac08ec82ee554a93bafc2ed715f7772e4919))
+
 ## [0.6.0](https://github.com/NatxioDev/kibo-dev/compare/v0.5.1...v0.6.0) (2026-09-26)
 
 ### Features
