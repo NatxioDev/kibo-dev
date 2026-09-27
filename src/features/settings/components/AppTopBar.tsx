@@ -6,7 +6,7 @@ import { KiboLogo } from "@/components/ui/KiboLogo";
 import { useEffect, useState } from "react";
 import { useWhatsNew } from "@/features/changelog/hooks/useWhatsNew";
 import { FriendsLink } from "@/features/friends/components/FriendsLink";
-import { usePendingFriendRequests } from "@/features/friends/hooks/usePendingFriendRequests";
+import { useFriendAlerts } from "@/features/friends/hooks/usePendingFriendRequests";
 import { getCurrentProfileAction } from "@/features/profile/actions/getCurrentProfile.action";
 import type { CurrentProfile } from "@/features/profile/domain/models/Profile";
 import { ProfileLink } from "@/features/settings/components/ProfileLink";
@@ -17,7 +17,7 @@ export function AppTopBar() {
   const pathname = usePathname();
   const [profile, setProfile] = useState<CurrentProfile | null>(null);
   const hidden = HIDDEN_PREFIXES.some((prefix) => pathname.startsWith(prefix));
-  const pendingFriendRequests = usePendingFriendRequests(!hidden, pathname);
+  const friendAlerts = useFriendAlerts(!hidden, pathname);
   const { hasUnseen } = useWhatsNew();
 
   useEffect(() => {
@@ -48,7 +48,9 @@ export function AppTopBar() {
         <div className="flex items-center gap-2">
           <FriendsLink
             active={pathname.startsWith("/friends")}
-            pendingCount={pendingFriendRequests}
+            requests={friendAlerts.requests}
+            unclassified={friendAlerts.unclassified}
+            disputes={friendAlerts.disputes}
           />
           <ProfileLink
             avatarUrl={profile?.avatar_url}

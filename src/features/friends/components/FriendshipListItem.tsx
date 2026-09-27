@@ -4,14 +4,17 @@ import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { FriendRow, friendName } from "@/features/friends/components/FriendRow";
 import { RemoveFriendDialog } from "@/features/friends/components/RemoveFriendDialog";
+import { balanceLines } from "@/features/splits/components/balanceLines";
+import type { PersonBalance } from "@/features/splits/domain/models";
 import type { Friendship } from "@/features/friends/domain/models/Friendship";
 import { useFriendshipActions } from "@/features/friends/hooks/useFriendshipActions";
 
 type FriendshipListItemProps = {
   friendship: Friendship;
+  balance?: PersonBalance;
 };
 
-export function FriendshipListItem({ friendship }: FriendshipListItemProps) {
+export function FriendshipListItem({ friendship, balance }: FriendshipListItemProps) {
   const [removeOpen, setRemoveOpen] = useState(false);
   const { accept, remove, error, loading, pendingAction } = useFriendshipActions();
   const { id, status, direction, friend } = friendship;
@@ -22,6 +25,14 @@ export function FriendshipListItem({ friendship }: FriendshipListItemProps) {
       <>
         <FriendRow
           profile={friend}
+          href={`/friends/${friend.id}`}
+          subtitle={
+            balance?.pendingSettlement
+              ? "Pago por confirmar"
+              : balance
+                ? balanceLines(balance.balances).join(" · ") || (balance.hasHistory ? "Están a mano" : undefined)
+                : undefined
+          }
           trailing={
             <Button
               variant="ghost"

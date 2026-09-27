@@ -33,7 +33,7 @@ export async function sendFriendRequestAction(
 
   if (result.success) {
     // Revalidar la página de amigos para que los datos se actualicen
-    revalidatePath("/friends");
+    revalidatePath("/friends", "layout");
   }
 
   return result;

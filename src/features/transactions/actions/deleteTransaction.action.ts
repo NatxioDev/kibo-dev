@@ -24,17 +24,17 @@ export async function deleteTransactionAction(
   }
 
   // Obtener dependencias del servidor (incluye autenticación)
-  const { transactionRepository } = await createServerDependencies();
+  const { transactionRepository, splitRepository } = await createServerDependencies();
 
-  // Ejecutar el caso de uso
-  const result = await new DeleteTransaction(transactionRepository).execute(
-    parsed.data.id,
-  );
+  const result = await new DeleteTransaction(
+    transactionRepository,
+    splitRepository,
+  ).execute(parsed.data.id);
 
   if (result.success) {
-    // Revalidar las rutas relevantes
     revalidatePath("/");
     revalidatePath("/transactions");
+    revalidatePath("/friends", "layout");
   }
 
   return result;

@@ -2,21 +2,37 @@ import Link from "next/link";
 
 type FriendsLinkProps = {
   active?: boolean;
-  pendingCount?: number;
+  requests?: number;
+  unclassified?: number;
+  disputes?: number;
 };
 
-export function FriendsLink({ active = false, pendingCount = 0 }: FriendsLinkProps) {
-  const showBadge = pendingCount > 0 && !active;
-  const label = showBadge
-    ? `Amigos, ${pendingCount} ${pendingCount === 1 ? "solicitud pendiente" : "solicitudes pendientes"}`
-    : "Amigos";
+function countLabel(count: number, singular: string, plural: string): string | null {
+  if (count <= 0) return null;
+  return `${count} ${count === 1 ? singular : plural}`;
+}
+
+export function FriendsLink({
+  active = false,
+  requests = 0,
+  unclassified = 0,
+  disputes = 0,
+}: FriendsLinkProps) {
+  const total = requests + unclassified + disputes;
+  const showBadge = total > 0 && !active;
+  const details = [
+    countLabel(requests, "solicitud pendiente", "solicitudes pendientes"),
+    countLabel(unclassified, "gasto por clasificar", "gastos por clasificar"),
+    countLabel(disputes, "deuda en revisión", "deudas en revisión"),
+  ].filter((part): part is string => part != null);
+  const label = showBadge ? `Amigos, ${details.join(", ")}` : "Amigos";
 
   return (
     <Link
       href="/friends"
       aria-label={label}
       aria-current={active ? "page" : undefined}
-      className={`relative inline-flex h-10 w-10 items-center justify-center rounded-full border shadow-card transition-colors ${
+      className={`relative inline-flex h-10 w-10 items-center justify-center rounded-full border shadow-card transition-colors focus-visible:ring-2 focus-visible:ring-primary/50 ${
         active
           ? "border-primary/40 bg-primary text-primary-foreground"
           : "border-border bg-surface text-foreground hover:bg-surface-muted"
@@ -43,7 +59,7 @@ export function FriendsLink({ active = false, pendingCount = 0 }: FriendsLinkPro
           aria-hidden
           className="absolute -top-1 -right-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-expense px-1 text-[0.6875rem] leading-none font-bold text-white tabular-nums ring-2 ring-background"
         >
-          {pendingCount > 9 ? "9+" : pendingCount}
+          {total > 9 ? "9+" : total}
         </span>
       ) : null}
     </Link>

@@ -1,22 +1,22 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { countPendingFriendRequestsAction } from "@/features/friends/actions/countPendingFriendRequests.action";
+import { countFriendAlertsAction } from "@/features/splits/actions/split.action";
+import type { FriendAlertCounts } from "@/features/splits/domain/models";
 
-/** Refetches whenever `refreshKey` changes (e.g. the pathname) and when the app returns to the foreground. */
-export function usePendingFriendRequests(enabled: boolean, refreshKey: string) {
-  const [count, setCount] = useState(0);
+const EMPTY: FriendAlertCounts = { requests: 0, unclassified: 0, disputes: 0 };
+
+/** Refetches whenever `refreshKey` changes and when the app returns to the foreground. */
+export function useFriendAlerts(enabled: boolean, refreshKey: string): FriendAlertCounts {
+  const [alerts, setAlerts] = useState<FriendAlertCounts>(EMPTY);
 
   useEffect(() => {
     if (!enabled) return;
 
     let cancelled = false;
     const load = () => {
-      // Llamar al server action en lugar del repositorio del cliente
-      countPendingFriendRequestsAction().then((result) => {
-        if (!cancelled && result.success) {
-          setCount(result.data);
-        }
+      countFriendAlertsAction().then((result) => {
+        if (!cancelled && result.success) setAlerts(result.data);
       });
     };
     const handleVisibility = () => {
@@ -31,5 +31,5 @@ export function usePendingFriendRequests(enabled: boolean, refreshKey: string) {
     };
   }, [enabled, refreshKey]);
 
-  return enabled ? count : 0;
+  return enabled ? alerts : EMPTY;
 }
