@@ -13,6 +13,8 @@ export const RELEASES: Release[] = [
     new: [
       "Ahora puedes buscar a tus amigos por su @username y enviarles una solicitud.",
       "Acepta o rechaza solicitudes desde la nueva sección Amigos, con un aviso cuando tienes solicitudes pendientes.",
+      "Divide un gasto con tus amigos: en tus movimientos queda solo tu parte y Kibo lleva la cuenta de quién le debe a quién.",
+      "Marca cuando pagas o cobras una deuda y mira el saldo con cada amigo en la sección Amigos.",
       "Nueva sección Novedades en Ajustes para enterarte de lo nuevo en cada versión.",
     ],
     improvements: [

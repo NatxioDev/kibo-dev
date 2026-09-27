@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { KiboLogo } from "@/components/ui/KiboLogo";
 import { useWhatsNew } from "@/features/changelog/hooks/useWhatsNew";
 import { FriendsLink } from "@/features/friends/components/FriendsLink";
-import { usePendingFriendRequests } from "@/features/friends/hooks/usePendingFriendRequests";
+import { useFriendAlerts } from "@/features/friends/hooks/usePendingFriendRequests";
 import type { CurrentProfile } from "@/features/profile/domain/models/Profile";
 import { ProfileLink } from "@/features/settings/components/ProfileLink";
 
@@ -18,7 +18,7 @@ type AppTopBarProps = {
 export function AppTopBar({ profile }: AppTopBarProps) {
   const pathname = usePathname();
   const hidden = HIDDEN_PREFIXES.some((prefix) => pathname.startsWith(prefix));
-  const pendingFriendRequests = usePendingFriendRequests(!hidden, pathname);
+  const friendAlerts = useFriendAlerts(!hidden, pathname);
   const { hasUnseen } = useWhatsNew();
 
   if (hidden) {
@@ -34,7 +34,9 @@ export function AppTopBar({ profile }: AppTopBarProps) {
         <div className="flex items-center gap-2">
           <FriendsLink
             active={pathname.startsWith("/friends")}
-            pendingCount={pendingFriendRequests}
+            requests={friendAlerts.requests}
+            unclassified={friendAlerts.unclassified}
+            disputes={friendAlerts.disputes}
           />
           <ProfileLink
             avatarUrl={profile?.avatar_url}

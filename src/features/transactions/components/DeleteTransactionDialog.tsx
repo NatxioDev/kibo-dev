@@ -7,6 +7,7 @@ type DeleteTransactionDialogProps = {
   open: boolean;
   onClose: () => void;
   transactionId: string;
+  description?: string;
   onDeleted?: () => void;
 };
 
@@ -14,6 +15,7 @@ export function DeleteTransactionDialog({
   open,
   onClose,
   transactionId,
+  description = "Se borrará de tu historial y de los totales. Esta acción no se puede deshacer.",
   onDeleted,
 }: DeleteTransactionDialogProps) {
   const { remove, error, loading, setError } = useDeleteTransactionWithAction();
@@ -36,7 +38,7 @@ export function DeleteTransactionDialog({
     <ConfirmDialog
       open={open}
       title="¿Eliminar esta transacción?"
-      description="Se borrará de tu historial y de los totales. Esta acción no se puede deshacer."
+      description={description}
       confirmLabel="Eliminar"
       pendingLabel="Eliminando…"
       loading={loading}

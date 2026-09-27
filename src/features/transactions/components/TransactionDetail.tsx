@@ -15,6 +15,8 @@ import type { TransactionWithRelations } from "@/features/transactions/types";
 
 type TransactionDetailProps = {
   transaction: TransactionWithRelations;
+  sharedNotice?: string | null;
+  deleteDescription?: string;
 };
 
 function DetailRow({ label, value }: { label: string; value: string }) {
@@ -28,7 +30,11 @@ function DetailRow({ label, value }: { label: string; value: string }) {
   );
 }
 
-export function TransactionDetail({ transaction }: TransactionDetailProps) {
+export function TransactionDetail({
+  transaction,
+  sharedNotice = null,
+  deleteDescription,
+}: TransactionDetailProps) {
   const router = useRouter();
   const [deleteOpen, setDeleteOpen] = useState(false);
 
@@ -78,6 +84,12 @@ export function TransactionDetail({ transaction }: TransactionDetailProps) {
         </Card>
       </Reveal>
 
+      {sharedNotice ? (
+        <Reveal>
+          <Card className="px-5 py-4 text-sm text-pretty text-foreground">{sharedNotice}</Card>
+        </Reveal>
+      ) : null}
+
       {description ? (
         <Reveal>
           <Card className="flex flex-col gap-1.5 px-5 py-4">
@@ -109,6 +121,7 @@ export function TransactionDetail({ transaction }: TransactionDetailProps) {
         open={deleteOpen}
         onClose={() => setDeleteOpen(false)}
         transactionId={transaction.id}
+        description={deleteDescription}
         onDeleted={() => router.push("/transactions")}
       />
     </>
