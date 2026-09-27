@@ -1,8 +1,8 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { ProfileAdminRepository } from "@/features/profile/domain/ProfileAdmin.repository";
+import type { ServiceResult } from "@/core/domain/ServiceResult";
 import type {
   Profile,
-  ServiceResult,
 } from "@/features/profile/domain/models/Profile";
 import { mapProfileError } from "@/features/profile/infrastructure/supabase/mapProfileError";
 

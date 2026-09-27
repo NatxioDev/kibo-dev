@@ -4,7 +4,7 @@ import { type FormEvent } from "react";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { inputClassName, labelClassName } from "@/components/ui/Field";
-import { useDisplayNameForm } from "@/features/profile/hooks/useDisplayNameForm";
+import { useDisplayNameFormWithAction } from "@/features/profile/hooks/useDisplayNameFormWithAction";
 
 type DisplayNameFormProps = {
   initialValue: string;
@@ -12,7 +12,7 @@ type DisplayNameFormProps = {
 
 export function DisplayNameForm({ initialValue }: DisplayNameFormProps) {
   const { value, updateValue, error, success, dirty, loading, submit } =
-    useDisplayNameForm(initialValue);
+    useDisplayNameFormWithAction(initialValue);
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();

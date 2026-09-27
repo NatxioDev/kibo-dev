@@ -4,7 +4,7 @@ import { useState } from "react";
 import { ManagedListItem } from "@/components/ManagedListItem";
 import { DeactivatePaymentMethodDialog } from "@/features/payment-methods/components/DeactivatePaymentMethodDialog";
 import { paymentMethodIcon } from "@/features/payment-methods/components/paymentMethodIcon";
-import { useTogglePaymentMethodActive } from "@/features/payment-methods/hooks/useTogglePaymentMethodActive";
+import { useTogglePaymentMethodActiveWithAction } from "@/features/payment-methods/hooks/useTogglePaymentMethodActiveWithAction";
 import type { PaymentMethod } from "@/features/transactions/types";
 
 type PaymentMethodListItemProps = {
@@ -15,7 +15,7 @@ export function PaymentMethodListItem({
   paymentMethod,
 }: PaymentMethodListItemProps) {
   const [deactivateOpen, setDeactivateOpen] = useState(false);
-  const { toggle, error, loading } = useTogglePaymentMethodActive();
+  const { toggle, error, loading } = useTogglePaymentMethodActiveWithAction();
 
   return (
     <>

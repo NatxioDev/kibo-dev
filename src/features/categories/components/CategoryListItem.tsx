@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { ManagedListItem } from "@/components/ManagedListItem";
 import { DeactivateCategoryDialog } from "@/features/categories/components/DeactivateCategoryDialog";
-import { useToggleCategoryActive } from "@/features/categories/hooks/useToggleCategoryActive";
+import { useToggleCategoryActiveWithAction } from "@/features/categories/hooks/useToggleCategoryActiveWithAction";
 import type { Category } from "@/features/transactions/types";
 
 type CategoryListItemProps = {
@@ -16,7 +16,7 @@ export function CategoryListItem({
   iconBackground,
 }: CategoryListItemProps) {
   const [deactivateOpen, setDeactivateOpen] = useState(false);
-  const { toggle, error, loading } = useToggleCategoryActive();
+  const { toggle, error, loading } = useToggleCategoryActiveWithAction();
 
   return (
     <>

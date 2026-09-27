@@ -1,0 +1,54 @@
+import type { Release } from "@/features/changelog/types";
+
+/**
+ * Novedades visibles para el usuario, de la versión más nueva a la más vieja.
+ * Textos en español y sin jerga técnica. Las versiones mayores a la de
+ * `package.json` no se muestran hasta que se publiquen.
+ */
+export const RELEASES: Release[] = [
+  {
+    version: "0.7.0",
+    date: "2026-09-26",
+    title: "Amigos en Kibo",
+    new: [
+      "Ahora puedes buscar a tus amigos por su @username y enviarles una solicitud.",
+      "Acepta o rechaza solicitudes desde la nueva sección Amigos, con un aviso cuando tienes solicitudes pendientes.",
+      "Divide un gasto con tus amigos: en tus movimientos queda solo tu parte y Kibo lleva la cuenta de quién le debe a quién.",
+      "Marca cuando pagas o cobras una deuda y mira el saldo con cada amigo en la sección Amigos.",
+      "Nueva sección Novedades en Ajustes para enterarte de lo nuevo en cada versión.",
+    ],
+    improvements: [
+      "Kibo guarda y carga tus datos de forma más segura y rápida.",
+    ],
+  },
+  {
+    version: "0.6.0",
+    date: "2026-09-26",
+    title: "Instala Kibo fácilmente",
+    new: [
+      "Nueva sección Instalar app en Ajustes, con una guía paso a paso para tu celular o computadora.",
+    ],
+  },
+  {
+    version: "0.5.1",
+    date: "2026-09-26",
+    fixes: [
+      "La barra de estado del iPhone vuelve a verse bien cuando usas Kibo instalada.",
+    ],
+  },
+  {
+    version: "0.5.0",
+    date: "2026-09-26",
+    title: "Kibo como app",
+    new: [
+      "Puedes instalar Kibo en tu pantalla de inicio y abrirla como cualquier otra app.",
+    ],
+  },
+  {
+    version: "0.4.0",
+    date: "2026-09-26",
+    new: [
+      "Ajustes ahora muestra la versión de Kibo y que estamos en etapa beta.",
+    ],
+  },
+];

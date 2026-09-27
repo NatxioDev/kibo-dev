@@ -5,7 +5,7 @@ import { createAdminDependencies } from "@/core/infrastructure/factories/createA
 import { createServerDependencies } from "@/core/infrastructure/factories/createServerDependencies";
 import { ChangeUsername } from "@/features/profile/application/ChangeUsername.application";
 import { getUsernameChangeCooldownDays } from "@/features/profile/config/usernameChange.config";
-import type { ServiceResult } from "@/features/profile/domain/models/Profile";
+import type { ServiceResult } from "@/core/domain/ServiceResult";
 
 export async function changeUsernameAction(
   username: string,

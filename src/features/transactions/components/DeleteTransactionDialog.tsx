@@ -1,12 +1,13 @@
 "use client";
 
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
-import { useDeleteTransaction } from "@/features/transactions/hooks/useDeleteTransaction";
+import { useDeleteTransactionWithAction } from "@/features/transactions/hooks/useDeleteTransactionWithAction";
 
 type DeleteTransactionDialogProps = {
   open: boolean;
   onClose: () => void;
   transactionId: string;
+  description?: string;
   onDeleted?: () => void;
 };
 
@@ -14,9 +15,10 @@ export function DeleteTransactionDialog({
   open,
   onClose,
   transactionId,
+  description = "Se borrará de tu historial y de los totales. Esta acción no se puede deshacer.",
   onDeleted,
 }: DeleteTransactionDialogProps) {
-  const { remove, error, loading, setError } = useDeleteTransaction();
+  const { remove, error, loading, setError } = useDeleteTransactionWithAction();
 
   function handleClose() {
     if (loading) return;
@@ -36,7 +38,7 @@ export function DeleteTransactionDialog({
     <ConfirmDialog
       open={open}
       title="¿Eliminar esta transacción?"
-      description="Se borrará de tu historial y de los totales. Esta acción no se puede deshacer."
+      description={description}
       confirmLabel="Eliminar"
       pendingLabel="Eliminando…"
       loading={loading}

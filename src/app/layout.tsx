@@ -3,8 +3,9 @@ import { Geist, Geist_Mono, Inter_Tight } from "next/font/google";
 import { MotionProvider } from "@/components/motion/MotionProvider";
 import { LiquidLensFilter } from "@/components/ui/LiquidLensFilter";
 import { DependencyProvider } from "@/core/context/dependency/Dependency.provider";
+import { WhatsNewDialog } from "@/features/changelog/components/WhatsNewDialog";
 import { InstallPromptListener } from "@/features/install/components/InstallPromptListener";
-import { AppTopBar } from "@/features/settings/components/AppTopBar";
+import { AppTopBarWrapper } from "@/features/settings/components/AppTopBarWrapper";
 import { ThemeProvider } from "@/features/theme/ThemeProvider";
 import { ThemeScript } from "@/features/theme/ThemeScript";
 import "./globals.css";
@@ -66,8 +67,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <ThemeProvider>
           <MotionProvider>
             <DependencyProvider>
-              <AppTopBar />
+              <AppTopBarWrapper />
               {children}
+              <WhatsNewDialog />
             </DependencyProvider>
           </MotionProvider>
         </ThemeProvider>

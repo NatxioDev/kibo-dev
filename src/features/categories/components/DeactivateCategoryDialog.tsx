@@ -1,7 +1,7 @@
 "use client";
 
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
-import { useToggleCategoryActive } from "@/features/categories/hooks/useToggleCategoryActive";
+import { useToggleCategoryActiveWithAction } from "@/features/categories/hooks/useToggleCategoryActiveWithAction";
 
 type DeactivateCategoryDialogProps = {
   open: boolean;
@@ -16,7 +16,7 @@ export function DeactivateCategoryDialog({
   categoryId,
   categoryName,
 }: DeactivateCategoryDialogProps) {
-  const { toggle, error, loading, setError } = useToggleCategoryActive();
+  const { toggle, error, loading, setError } = useToggleCategoryActiveWithAction();
 
   function handleClose() {
     if (loading) return;

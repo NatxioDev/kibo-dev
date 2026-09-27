@@ -14,10 +14,11 @@ export default async function TransactionDetailPage({
   params,
 }: TransactionDetailPageProps) {
   const { id } = await params;
-  const { transactionRepository } = await createServerDependencies();
-  const result = await new GetTransactionWithRelations(
-    transactionRepository,
-  ).execute(id);
+  const { transactionRepository, splitRepository } = await createServerDependencies();
+  const [result, link] = await Promise.all([
+    new GetTransactionWithRelations(transactionRepository).execute(id),
+    splitRepository.findByTransaction(id),
+  ]);
 
   if (!result.success) {
     notFound();
@@ -28,6 +29,16 @@ export default async function TransactionDetailPage({
     result.data.category?.name ||
     "Detalle";
 
+  const shared = link.success ? link.data : null;
+  const sharedNotice = shared
+    ? shared.isPayer
+      ? "Este gasto está dividido. En tus movimientos quedó solo tu parte."
+      : `Esta es tu parte de un gasto de ${shared.payerName}.`
+    : null;
+  const deleteDescription = shared?.isPayer
+    ? "Se anula para todos y sale de los movimientos. El historial de la deuda se conserva. Si ya hubo un pago confirmado, no se puede eliminar."
+    : undefined;
+
   return (
     <PageShell>
       <Reveal>
@@ -37,7 +48,11 @@ export default async function TransactionDetailPage({
           title={title}
         />
       </Reveal>
-      <TransactionDetail transaction={result.data} />
+      <TransactionDetail
+        transaction={result.data}
+        sharedNotice={sharedNotice}
+        deleteDescription={deleteDescription}
+      />
     </PageShell>
   );
 }
