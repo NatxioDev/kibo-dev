@@ -11,7 +11,3 @@ export type Profile = {
 export type CurrentProfile = Profile & {
   email: string | null;
 };
-
-export type ServiceResult<T> =
-  | { success: true; data: T }
-  | { success: false; error: string };

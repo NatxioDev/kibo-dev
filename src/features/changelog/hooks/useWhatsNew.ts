@@ -9,6 +9,13 @@ import {
 import { getUnseenReleases } from "@/features/changelog/utils/releases";
 import { APP_VERSION } from "@/lib/version";
 
+/**
+ * Hook del cliente para rastrear cambios no vistos en el changelog.
+ * Se mantiene completamente en el cliente porque:
+ * - Usa localStorage para persistir la última versión vista por el usuario
+ * - El estado de "visto" es específico del navegador/dispositivo
+ * - No requiere sincronización con el servidor
+ */
 export function useWhatsNew() {
   // `undefined` mientras no hidrata; `null` si el usuario nunca abrió Kibo en este navegador.
   const lastSeen = useSyncExternalStore<string | null | undefined>(

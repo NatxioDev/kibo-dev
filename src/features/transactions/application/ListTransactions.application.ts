@@ -1,6 +1,6 @@
 import type { TransactionRepository } from "@/features/transactions/domain/Transaction.repository";
+import type { ServiceResult } from "@/core/domain/ServiceResult";
 import type {
-  ServiceResult,
   TransactionWithRelations,
 } from "@/features/transactions/domain/models";
 import type { ListTransactionsFilters } from "@/features/transactions/utils/listFilters";

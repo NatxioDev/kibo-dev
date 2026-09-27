@@ -2,7 +2,7 @@
 
 import { createServerDependencies } from "@/core/infrastructure/factories/createServerDependencies";
 import { CheckUsernameAvailability } from "@/features/profile/application/CheckUsernameAvailability.application";
-import type { ServiceResult } from "@/features/profile/domain/models/Profile";
+import type { ServiceResult } from "@/core/domain/ServiceResult";
 
 export async function checkUsernameAvailabilityAction(
   username: string,

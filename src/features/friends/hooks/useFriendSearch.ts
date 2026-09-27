@@ -20,7 +20,13 @@ type SearchResponse = {
   result: ServiceResult<FriendSearchResult[]>;
 };
 
-/** `syncKey` must change whenever the user's friendships change, so results show the current relation. */
+/**
+ * Hook del cliente para búsqueda de amigos con debounce.
+ * Se mantiene en el cliente porque:
+ * - Implementa debounce de 300ms para evitar búsquedas innecesarias
+ * - Actualiza resultados reactivamente mientras el usuario escribe
+ * - Maneja el estado de búsqueda (idle/searching/done/error) de forma interactiva
+ */
 export function useFriendSearch(syncKey: string) {
   const [value, setValue] = useState("");
   const [response, setResponse] = useState<SearchResponse | null>(null);

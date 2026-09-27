@@ -77,6 +77,10 @@ export function useTransactionFormWithActions({
   const [optionsError, setOptionsError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
+  // Carga dinámica de opciones del formulario desde el cliente.
+  // Se mantiene en el cliente porque las categorías cambian según el tipo de transacción
+  // seleccionado, requiriendo re-fetch reactivo. Los métodos de pago se cargan
+  // junto con las categorías para mantener el estado consistente.
   useEffect(() => {
     let cancelled = false;
 

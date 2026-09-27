@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { createServerDependencies } from "@/core/infrastructure/factories/createServerDependencies";
 import { UpdateDisplayName } from "@/features/profile/application/UpdateDisplayName.application";
-import type { ServiceResult } from "@/features/profile/domain/models/Profile";
+import type { ServiceResult } from "@/core/domain/ServiceResult";
 import { displayNameSchema } from "@/features/profile/schemas/displayNameSchema";
 
 export async function updateDisplayNameAction(

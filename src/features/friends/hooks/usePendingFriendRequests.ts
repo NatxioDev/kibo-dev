@@ -3,7 +3,13 @@
 import { useEffect, useState } from "react";
 import { countPendingFriendRequestsAction } from "@/features/friends/actions/countPendingFriendRequests.action";
 
-/** Refetches whenever `refreshKey` changes (e.g. the pathname) and when the app returns to the foreground. */
+/**
+ * Hook del cliente que cuenta las solicitudes de amistad pendientes.
+ * Se mantiene en el cliente porque:
+ * - Se actualiza automáticamente cuando cambia la ruta (refreshKey)
+ * - Se actualiza cuando la app vuelve al foreground (visibilitychange event)
+ * - Proporciona feedback reactivo sin recargar la página
+ */
 export function usePendingFriendRequests(enabled: boolean, refreshKey: string) {
   const [count, setCount] = useState(0);
 

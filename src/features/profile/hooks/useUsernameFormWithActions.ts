@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useTransition } from "react";
 import { checkUsernameAvailabilityAction } from "@/features/profile/actions/checkUsernameAvailability.action";
-import type { ServiceResult } from "@/features/profile/domain/models/Profile";
+import type { ServiceResult } from "@/core/domain/ServiceResult";
 import {
   sanitizeUsernameInput,
   usernameSchema,

@@ -1,17 +1,16 @@
-"use server";
-
 import { createServerDependencies } from "@/core/infrastructure/factories/createServerDependencies";
 import { GetCurrentProfile } from "@/features/profile/application/GetCurrentProfile.application";
-import type { CurrentProfile, ServiceResult } from "@/features/profile/domain/models/Profile";
+import { AppTopBar } from "@/features/settings/components/AppTopBar";
 
-export async function getCurrentProfileAction(): Promise<
-  ServiceResult<CurrentProfile>
-> {
-  // Obtener dependencias del servidor (incluye autenticación)
+/**
+ * Server Component que carga el perfil del usuario actual
+ * y lo pasa al componente cliente AppTopBar.
+ */
+export async function AppTopBarWrapper() {
   const { profileRepository } = await createServerDependencies();
-
-  // Ejecutar el caso de uso
   const result = await new GetCurrentProfile(profileRepository).execute();
 
-  return result;
+  const profile = result.success ? result.data : null;
+
+  return <AppTopBar profile={profile} />;
 }

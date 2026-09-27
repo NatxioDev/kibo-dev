@@ -1,6 +1,6 @@
 import type { Profile } from "@/features/profile/domain/models/Profile";
 
-export type { ServiceResult } from "@/features/profile/domain/models/Profile";
+export type { ServiceResult } from "@/core/domain/ServiceResult";
 
 export type FriendProfile = Pick<
   Profile,
