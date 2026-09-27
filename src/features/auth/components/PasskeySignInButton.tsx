@@ -5,23 +5,17 @@ import { usePasskeySignIn } from "@/features/auth/hooks/usePasskeySignIn";
 
 function PasskeyIcon() {
   return (
-    <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden fill="none">
-      <path
-        d="M12.5 10.5a3.5 3.5 0 1 0-3.4 3.49L7 16v2h2v2h2v-2.1l1.1-1.1c.45.13.93.2 1.4.2a3.5 3.5 0 0 0 0-7Zm0 5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3Z"
-        className="fill-current"
-      />
-      <path
-        d="M19 8.5A7.5 7.5 0 0 0 7.2 4.8"
-        className="stroke-current"
-        strokeWidth="1.75"
-        strokeLinecap="round"
-      />
-      <path
-        d="M5 15.5A7.5 7.5 0 0 0 16.8 19.2"
-        className="stroke-current"
-        strokeWidth="1.75"
-        strokeLinecap="round"
-      />
+    <svg
+      viewBox="0 0 24 24"
+      className="h-5 w-5 shrink-0 text-foreground"
+      aria-hidden
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.75"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M15.75 5.25a3 3 0 0 1 3 3m3 0a6 6 0 0 1-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.661-1.009.661-1.591a6 6 0 1 1 11.681-1.801Z" />
     </svg>
   );
 }
