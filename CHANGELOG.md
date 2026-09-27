@@ -1,3 +1,13 @@
+## [0.8.0](https://github.com/NatxioDev/kibo-dev/compare/v0.7.1...v0.8.0) (2026-09-27)
+
+### Features
+
+* **auth:** add Passkeys (WebAuthn) login and management ([037d98a](https://github.com/NatxioDev/kibo-dev/commit/037d98a81dc50892c2db3e32f5549b883c0bfc21))
+
+### Bug Fixes
+
+* **auth:** replace Passkey login icon with a clear key glyph ([5533c0d](https://github.com/NatxioDev/kibo-dev/commit/5533c0daf45e198044779e30749ab7621d219990))
+
 ## [0.7.1](https://github.com/NatxioDev/kibo-dev/compare/v0.7.0...v0.7.1) (2026-09-27)
 
 ### Bug Fixes
