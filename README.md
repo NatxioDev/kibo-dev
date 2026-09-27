@@ -178,6 +178,7 @@ git push --follow-tags
 src/
 ├── app/                 # App Router (páginas)
 ├── core/                # DI (DependencyProvider, DependencyFactory)
+│   └── domain/          # Tipos compartidos (ServiceResult)
 ├── features/
 │   ├── auth/            # Clean Arch
 │   ├── dashboard/       # Clean Arch (GetDashboardData)
@@ -194,6 +195,24 @@ src/
 Cada feature usa `domain/` → `application/` → `infrastructure/supabase/` (+ `hooks/`, `components/`, `schemas/` según aplique).
 
 **Clean Arch:** UI/hooks → use cases → interfaces ← adaptadores `Supabase*`. Composition root en `core/`. Todos los features de datos/auth están migrados.
+
+### Regla de capas (server-only)
+
+**Principio:** Las lecturas de datos se ejecutan en el servidor; el cliente solo conserva `authRepository` para cerrar sesión.
+
+**Flujo de capas:**
+
+1. **Server Components** → leen datos con `createServerDependencies()` (casos de uso + repositorios) y los pasan como props a componentes cliente
+2. **Server Actions** → punto de entrada público validado con **zod** + sesión, delegan a casos de uso
+3. **Casos de uso** (application) → lógica de negocio, llaman a repositorios
+4. **Repositorios** (infrastructure) → marcados con `server-only`, acceden a Supabase
+5. **Server Actions** → ejecutan `revalidatePath()` tras mutaciones para invalidar caché
+
+**Consideraciones:**
+
+- Cada server action es un **endpoint público**: siempre validar entrada (zod) y sesión
+- Las lecturas van en **Server Components** cuando es posible (datos iniciales de página)
+- Las lecturas se quedan en el **cliente** cuando son reactivas (búsqueda con debounce, eventos de visibilidad, localStorage)
 
 ## Seguridad
 
