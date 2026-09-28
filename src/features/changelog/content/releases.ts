@@ -7,6 +7,15 @@ import type { Release } from "@/features/changelog/types";
  */
 export const RELEASES: Release[] = [
   {
+    version: "0.9.0",
+    date: "2026-09-28",
+    title: "Balance a tu manera",
+    new: [
+      "Puedes ocultar o mostrar el balance del dashboard con un toque en el ícono del ojo.",
+      "Kibo recuerda tu preferencia en este dispositivo al volver a abrir la app.",
+    ],
+  },
+  {
     version: "0.8.0",
     date: "2026-09-27",
     title: "Entra con Passkey",
