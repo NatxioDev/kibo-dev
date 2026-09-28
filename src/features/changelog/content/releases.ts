@@ -7,6 +7,13 @@ import type { Release } from "@/features/changelog/types";
  */
 export const RELEASES: Release[] = [
   {
+    version: "0.8.1",
+    date: "2026-09-28",
+    fixes: [
+      "Las horas de tus transacciones ya se muestran en hora de Bolivia, sin adelantarse.",
+    ],
+  },
+  {
     version: "0.8.0",
     date: "2026-09-27",
     title: "Entra con Passkey",
