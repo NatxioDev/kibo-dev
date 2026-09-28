@@ -68,7 +68,7 @@ export function BalanceHeroCard({
       variant="hero"
       className="relative overflow-hidden px-7 py-8"
     >
-      <div className="flex items-start justify-between gap-3">
+      <div className="flex items-center justify-between gap-3">
         <p className="text-sm font-semibold tracking-[0.14em] text-hero-muted uppercase">
           {`Balance · ${periodLabel}`}
         </p>
@@ -77,7 +77,7 @@ export function BalanceHeroCard({
           onClick={toggle}
           aria-label={visible ? "Ocultar balance" : "Mostrar balance"}
           aria-pressed={!visible}
-          className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-hero-muted transition-colors hover:bg-hero-foreground/10 hover:text-hero-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-hero-foreground"
+          className="-mr-1.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-hero-muted transition-colors hover:bg-hero-foreground/10 hover:text-hero-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-hero-foreground"
         >
           <EyeIcon open={visible} />
         </button>
