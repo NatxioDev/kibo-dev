@@ -1,35 +1,39 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { type ReactNode, useOptimistic, useTransition } from "react";
+import {
+  type ReactNode,
+  useOptimistic,
+  useState,
+  useTransition,
+} from "react";
 import { Reveal } from "@/components/motion/Reveal";
-import { Field, inputClassName, labelClassName } from "@/components/ui/Field";
 import { Segmented } from "@/components/ui/Segmented";
-import { accountIcon } from "@/features/accounts/components/accountIcon";
-import { todayDateInputValue } from "@/features/transactions/components/formatters";
-import type { Account } from "@/features/transactions/types";
-import type {
-  TransactionListAccountFilter,
-  TransactionListTypeFilter,
+import { AccountsFilterSheet } from "@/features/transactions/components/filters/AccountsFilterSheet";
+import { CategoryFilterSheet } from "@/features/transactions/components/filters/CategoryFilterSheet";
+import { PeriodFilterSheet } from "@/features/transactions/components/filters/PeriodFilterSheet";
+import type { Account, Category } from "@/features/transactions/types";
+import {
+  defaultTransactionListFilterState,
+  isTransactionListFiltered,
+  transactionFiltersToHref,
+  type TransactionListFilterState,
+  type TransactionListTypeFilter,
 } from "@/features/transactions/utils/listFilters";
-import { isTransactionListFiltered } from "@/features/transactions/utils/listFilters";
+import {
+  getPeriodChipLabel,
+  isDefaultTransactionPeriod,
+} from "@/features/transactions/utils/period";
 
 type TransactionListFiltersProps = {
-  type: TransactionListTypeFilter;
-  accountId: TransactionListAccountFilter;
-  from?: string;
-  to?: string;
+  filters: TransactionListFilterState;
   accounts: Account[];
+  categories: Category[];
   resultCount: number | null;
   children: ReactNode;
 };
 
-type Filters = {
-  type: TransactionListTypeFilter;
-  accountId: TransactionListAccountFilter;
-  from?: string;
-  to?: string;
-};
+type SheetId = "period" | "accounts" | "category" | null;
 
 const TYPE_OPTIONS: { value: TransactionListTypeFilter; label: string }[] = [
   { value: "all", label: "Todas" },
@@ -37,88 +41,121 @@ const TYPE_OPTIONS: { value: TransactionListTypeFilter; label: string }[] = [
   { value: "INCOME", label: "Ingresos" },
 ];
 
-function toHref({ type, accountId, from, to }: Filters): string {
-  const params = new URLSearchParams();
-  if (type !== "all") params.set("type", type);
-  if (accountId !== "all") params.set("account", accountId);
-  if (from) params.set("from", from);
-  if (to) params.set("to", to);
-  const query = params.toString();
-  return query ? `/transactions?${query}` : "/transactions";
-}
-
-function AccountPill({
-  selected,
-  onSelect,
-  icon,
-  muted = false,
-  children,
+function FilterChip({
+  label,
+  active,
+  onClick,
+  onClear,
+  clearLabel,
 }: {
-  selected: boolean;
-  onSelect: () => void;
-  icon?: string;
-  muted?: boolean;
-  children: ReactNode;
+  label: string;
+  active: boolean;
+  onClick: () => void;
+  onClear?: () => void;
+  clearLabel?: string;
 }) {
   return (
-    <button
-      type="button"
-      aria-pressed={selected}
-      onClick={onSelect}
-      className={`inline-flex h-9 shrink-0 items-center gap-1.5 rounded-full border px-3.5 text-sm font-semibold whitespace-nowrap transition-[transform,background-color,border-color,color] duration-200 active:scale-95 ${
-        selected
+    <div
+      className={`inline-flex h-9 shrink-0 items-center rounded-full border text-sm font-semibold whitespace-nowrap transition ${
+        active
           ? "border-transparent bg-primary text-primary-foreground"
-          : `glass border-border bg-surface hover:bg-surface-muted ${
-              muted ? "text-muted-foreground" : "text-foreground"
-            }`
+          : "glass border-border bg-surface text-foreground"
       }`}
     >
-      {icon ? <span aria-hidden>{icon}</span> : null}
-      {children}
-    </button>
+      <button
+        type="button"
+        onClick={onClick}
+        className="inline-flex h-full items-center gap-1 px-3.5 transition active:scale-95"
+      >
+        <span>{label}</span>
+        {!active ? (
+          <span aria-hidden className="text-muted-foreground">
+            ▾
+          </span>
+        ) : null}
+      </button>
+      {active && onClear ? (
+        <button
+          type="button"
+          onClick={onClear}
+          aria-label={clearLabel ?? `Quitar filtro ${label}`}
+          className="mr-1 inline-flex h-6 w-6 items-center justify-center rounded-full bg-primary-foreground/15 text-primary-foreground transition active:scale-95"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            aria-hidden
+            className="h-3 w-3"
+          >
+            <path d="M6 6l12 12M18 6L6 18" />
+          </svg>
+        </button>
+      ) : null}
+    </div>
   );
 }
 
+function accountsChipLabel(
+  accountsFilter: TransactionListFilterState["accounts"],
+  accounts: Account[],
+): string {
+  if (accountsFilter.mode === "all") return "Cuentas";
+  if (accountsFilter.mode === "none") return "Sin cuenta";
+  if (accountsFilter.ids.length === 1) {
+    return (
+      accounts.find((account) => account.id === accountsFilter.ids[0])?.name ??
+      "1 cuenta"
+    );
+  }
+  return `${accountsFilter.ids.length} cuentas`;
+}
+
 export function TransactionListFilters({
-  type,
-  accountId,
-  from,
-  to,
+  filters: initialFilters,
   accounts,
+  categories,
   resultCount,
   children,
 }: TransactionListFiltersProps) {
   const router = useRouter();
-  const [filters, setFilters] = useOptimistic<Filters>({
-    type,
-    accountId,
-    from,
-    to,
-  });
+  const [filters, setFilters] =
+    useOptimistic<TransactionListFilterState>(initialFilters);
   const [isPending, startTransition] = useTransition();
+  const [sheet, setSheet] = useState<SheetId>(null);
+
   const filtersActive = isTransactionListFiltered(filters);
-  const dateFilterActive = Boolean(filters.from || filters.to);
-  const today = todayDateInputValue();
+  const periodActive = !isDefaultTransactionPeriod(filters.period);
+  const accountsActive = filters.accounts.mode !== "all";
+  const categoryActive = Boolean(filters.categoryId);
 
-  const sortedAccounts = [...accounts].sort(
-    (a, b) => Number(b.is_active) - Number(a.is_active),
-  );
+  const periodLabel = getPeriodChipLabel(filters.period, {
+    from: filters.from ?? "",
+    to: filters.to ?? "",
+  });
+  const categoryLabel =
+    categories.find((category) => category.id === filters.categoryId)?.name ??
+    "Categoría";
 
-  function apply(next: Partial<Filters>) {
+  function apply(next: Partial<TransactionListFilterState>) {
     const merged = { ...filters, ...next };
     startTransition(() => {
       setFilters(merged);
-      router.replace(toHref(merged), { scroll: false });
+      router.replace(transactionFiltersToHref(merged), { scroll: false });
     });
   }
 
-  function updateDate(key: "from" | "to", value: string) {
-    apply({ [key]: value || undefined });
+  function clearAll() {
+    const defaults = defaultTransactionListFilterState();
+    apply(defaults);
   }
 
   return (
     <>
-      <Reveal className="flex flex-col gap-3">
+      <Reveal className="flex flex-col gap-2.5">
         <Segmented
           label="Filtrar por tipo"
           value={filters.type}
@@ -126,98 +163,77 @@ export function TransactionListFilters({
           onChange={(value) => apply({ type: value })}
         />
 
-        {accounts.length > 0 ? (
-          <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            <div role="group" aria-label="Filtrar por cuenta" className="flex gap-2">
-              <AccountPill
-                selected={filters.accountId === "all"}
-                onSelect={() => apply({ accountId: "all" })}
-              >
-                Todas las cuentas
-              </AccountPill>
-              {sortedAccounts.map((account) => (
-                <AccountPill
-                  key={account.id}
-                  icon={accountIcon(account.type)}
-                  muted={!account.is_active}
-                  selected={filters.accountId === account.id}
-                  onSelect={() => apply({ accountId: account.id })}
-                >
-                  {account.name}
-                </AccountPill>
-              ))}
-              <AccountPill
-                muted
-                selected={filters.accountId === "none"}
-                onSelect={() => apply({ accountId: "none" })}
-              >
-                Sin cuenta
-              </AccountPill>
-            </div>
-          </div>
-        ) : null}
-
-        <div className="flex flex-col gap-2">
-          <div className="flex items-center justify-between gap-3 px-1">
-            <span className={labelClassName}>Rango de fechas</span>
-            {dateFilterActive ? (
-              <button
-                type="button"
-                onClick={() => apply({ from: undefined, to: undefined })}
-                className="text-sm font-semibold text-primary transition-opacity hover:opacity-80"
-              >
-                Limpiar fechas
-              </button>
+        <div className="relative -mx-4">
+          <div
+            role="group"
+            aria-label="Filtros de transacciones"
+            className="flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          >
+            <FilterChip
+              label={periodLabel}
+              active={periodActive}
+              onClick={() => setSheet("period")}
+              onClear={
+                periodActive
+                  ? () => {
+                      const range = defaultTransactionListFilterState();
+                      apply({
+                        period: "this_month",
+                        from: range.from,
+                        to: range.to,
+                      });
+                    }
+                  : undefined
+              }
+              clearLabel="Quitar filtro de período"
+            />
+            {accounts.length > 0 ? (
+              <FilterChip
+                label={accountsChipLabel(filters.accounts, accounts)}
+                active={accountsActive}
+                onClick={() => setSheet("accounts")}
+                onClear={
+                  accountsActive
+                    ? () => apply({ accounts: { mode: "all" } })
+                    : undefined
+                }
+                clearLabel="Quitar filtro de cuentas"
+              />
+            ) : null}
+            {categories.length > 0 ? (
+              <FilterChip
+                label={categoryActive ? categoryLabel : "Categoría"}
+                active={categoryActive}
+                onClick={() => setSheet("category")}
+                onClear={
+                  categoryActive
+                    ? () => apply({ categoryId: undefined })
+                    : undefined
+                }
+                clearLabel="Quitar filtro de categoría"
+              />
             ) : null}
           </div>
-          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-            <Field label="Desde" htmlFor="filter-from">
-              <input
-                id="filter-from"
-                name="from"
-                type="date"
-                value={filters.from ?? ""}
-                max={filters.to && filters.to < today ? filters.to : today}
-                onChange={(event) => updateDate("from", event.target.value)}
-                className={inputClassName}
-              />
-            </Field>
-            <Field label="Hasta" htmlFor="filter-to">
-              <input
-                id="filter-to"
-                name="to"
-                type="date"
-                value={filters.to ?? ""}
-                min={filters.from}
-                max={today}
-                onChange={(event) => updateDate("to", event.target.value)}
-                className={inputClassName}
-              />
-            </Field>
-          </div>
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-background to-transparent"
+          />
         </div>
 
         {resultCount !== null && (resultCount > 0 || filtersActive) ? (
-          <div className="flex min-h-8 items-center justify-between gap-3 px-1 text-sm">
+          <div className="flex min-h-7 items-center justify-between gap-3 px-1 text-sm">
             <p className="text-muted-foreground tabular-nums" aria-live="polite">
               {isPending
                 ? "Filtrando…"
                 : `${resultCount} ${resultCount === 1 ? "movimiento" : "movimientos"}`}
             </p>
-            {filtersActive && resultCount > 0 ? (
+            {filtersActive ? (
               <button
                 type="button"
-                onClick={() =>
-                  apply({
-                    type: "all",
-                    accountId: "all",
-                    from: undefined,
-                    to: undefined,
-                  })
-                }
+                onClick={clearAll}
                 className="font-semibold text-primary transition-opacity hover:opacity-80"
               >
-                Limpiar filtros
+                Limpiar
               </button>
             ) : null}
           </div>
@@ -230,6 +246,34 @@ export function TransactionListFilters({
       >
         {children}
       </div>
+
+      <PeriodFilterSheet
+        open={sheet === "period"}
+        period={filters.period}
+        from={filters.from}
+        to={filters.to}
+        onClose={() => setSheet(null)}
+        onApply={(next) => {
+          apply(next);
+          setSheet(null);
+        }}
+      />
+
+      <AccountsFilterSheet
+        open={sheet === "accounts"}
+        accounts={accounts}
+        value={filters.accounts}
+        onClose={() => setSheet(null)}
+        onApply={(accountsNext) => apply({ accounts: accountsNext })}
+      />
+
+      <CategoryFilterSheet
+        open={sheet === "category"}
+        categories={categories}
+        value={filters.categoryId}
+        onClose={() => setSheet(null)}
+        onApply={(categoryId) => apply({ categoryId })}
+      />
     </>
   );
 }
