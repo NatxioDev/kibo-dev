@@ -14,6 +14,7 @@ export const RELEASES: Release[] = [
       "Crea y administra tus cuentas (ahorros, efectivo, bancos…) desde Ajustes → Cuentas.",
       "Al registrar un movimiento eliges de qué cuenta sale o entra el dinero.",
       "Puedes filtrar tus transacciones por cuenta; las antiguas aparecen como “Sin cuenta”.",
+      "Puedes filtrar tus transacciones por un rango de fechas (desde / hasta).",
       "Puedes ocultar o mostrar el balance del dashboard con un toque en el ícono del ojo.",
       "Kibo recuerda tu preferencia de visibilidad del balance en este dispositivo.",
     ],

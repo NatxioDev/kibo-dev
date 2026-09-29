@@ -263,7 +263,8 @@ Ideas pendientes (sin orden fijo):
 - [x] Passkeys (WebAuthn) para login sin contraseña
 - [ ] Paginación / infinite scroll en el listado de transacciones
 - [ ] Búsqueda por texto (comercio, descripción)
-- [ ] Filtro por moneda y por rango de fechas en `/transactions`
+- [ ] Filtro por moneda en `/transactions`
+- [x] Filtro por rango de fechas en `/transactions`
 - [ ] Captura no manual: imagen, texto o audio (`source = IMAGE | TEXT | AUDIO`)
 - [ ] Flujo de borradores (`status = DRAFT`) y confirmación
 - [ ] Color elegible por categoría: columna `color` en `categories` (Supabase) y selector en el formulario. Hoy el color se asigna automáticamente a partir del id (`features/categories/categoryColor.ts`); el valor guardado debería tener prioridad y usar el automático como fallback

@@ -3,17 +3,22 @@
 import { useRouter } from "next/navigation";
 import { type ReactNode, useOptimistic, useTransition } from "react";
 import { Reveal } from "@/components/motion/Reveal";
+import { Field, inputClassName, labelClassName } from "@/components/ui/Field";
 import { Segmented } from "@/components/ui/Segmented";
 import { accountIcon } from "@/features/accounts/components/accountIcon";
+import { todayDateInputValue } from "@/features/transactions/components/formatters";
 import type { Account } from "@/features/transactions/types";
 import type {
   TransactionListAccountFilter,
   TransactionListTypeFilter,
 } from "@/features/transactions/utils/listFilters";
+import { isTransactionListFiltered } from "@/features/transactions/utils/listFilters";
 
 type TransactionListFiltersProps = {
   type: TransactionListTypeFilter;
   accountId: TransactionListAccountFilter;
+  from?: string;
+  to?: string;
   accounts: Account[];
   resultCount: number | null;
   children: ReactNode;
@@ -22,6 +27,8 @@ type TransactionListFiltersProps = {
 type Filters = {
   type: TransactionListTypeFilter;
   accountId: TransactionListAccountFilter;
+  from?: string;
+  to?: string;
 };
 
 const TYPE_OPTIONS: { value: TransactionListTypeFilter; label: string }[] = [
@@ -30,10 +37,12 @@ const TYPE_OPTIONS: { value: TransactionListTypeFilter; label: string }[] = [
   { value: "INCOME", label: "Ingresos" },
 ];
 
-function toHref({ type, accountId }: Filters): string {
+function toHref({ type, accountId, from, to }: Filters): string {
   const params = new URLSearchParams();
   if (type !== "all") params.set("type", type);
   if (accountId !== "all") params.set("account", accountId);
+  if (from) params.set("from", from);
+  if (to) params.set("to", to);
   const query = params.toString();
   return query ? `/transactions?${query}` : "/transactions";
 }
@@ -73,14 +82,23 @@ function AccountPill({
 export function TransactionListFilters({
   type,
   accountId,
+  from,
+  to,
   accounts,
   resultCount,
   children,
 }: TransactionListFiltersProps) {
   const router = useRouter();
-  const [filters, setFilters] = useOptimistic<Filters>({ type, accountId });
+  const [filters, setFilters] = useOptimistic<Filters>({
+    type,
+    accountId,
+    from,
+    to,
+  });
   const [isPending, startTransition] = useTransition();
-  const filtersActive = filters.type !== "all" || filters.accountId !== "all";
+  const filtersActive = isTransactionListFiltered(filters);
+  const dateFilterActive = Boolean(filters.from || filters.to);
+  const today = todayDateInputValue();
 
   const sortedAccounts = [...accounts].sort(
     (a, b) => Number(b.is_active) - Number(a.is_active),
@@ -92,6 +110,10 @@ export function TransactionListFilters({
       setFilters(merged);
       router.replace(toHref(merged), { scroll: false });
     });
+  }
+
+  function updateDate(key: "from" | "to", value: string) {
+    apply({ [key]: value || undefined });
   }
 
   return (
@@ -135,6 +157,46 @@ export function TransactionListFilters({
           </div>
         ) : null}
 
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center justify-between gap-3 px-1">
+            <span className={labelClassName}>Rango de fechas</span>
+            {dateFilterActive ? (
+              <button
+                type="button"
+                onClick={() => apply({ from: undefined, to: undefined })}
+                className="text-sm font-semibold text-primary transition-opacity hover:opacity-80"
+              >
+                Limpiar fechas
+              </button>
+            ) : null}
+          </div>
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+            <Field label="Desde" htmlFor="filter-from">
+              <input
+                id="filter-from"
+                name="from"
+                type="date"
+                value={filters.from ?? ""}
+                max={filters.to && filters.to < today ? filters.to : today}
+                onChange={(event) => updateDate("from", event.target.value)}
+                className={inputClassName}
+              />
+            </Field>
+            <Field label="Hasta" htmlFor="filter-to">
+              <input
+                id="filter-to"
+                name="to"
+                type="date"
+                value={filters.to ?? ""}
+                min={filters.from}
+                max={today}
+                onChange={(event) => updateDate("to", event.target.value)}
+                className={inputClassName}
+              />
+            </Field>
+          </div>
+        </div>
+
         {resultCount !== null && (resultCount > 0 || filtersActive) ? (
           <div className="flex min-h-8 items-center justify-between gap-3 px-1 text-sm">
             <p className="text-muted-foreground tabular-nums" aria-live="polite">
@@ -145,7 +207,14 @@ export function TransactionListFilters({
             {filtersActive && resultCount > 0 ? (
               <button
                 type="button"
-                onClick={() => apply({ type: "all", accountId: "all" })}
+                onClick={() =>
+                  apply({
+                    type: "all",
+                    accountId: "all",
+                    from: undefined,
+                    to: undefined,
+                  })
+                }
                 className="font-semibold text-primary transition-opacity hover:opacity-80"
               >
                 Limpiar filtros
