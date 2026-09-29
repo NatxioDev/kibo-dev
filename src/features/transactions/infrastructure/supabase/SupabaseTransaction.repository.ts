@@ -42,7 +42,7 @@ export class SupabaseTransactionRepository implements TransactionRepository {
 
     if (filters.accountId === "none") {
       query = query.is("account_id", null);
-    } else if (filters.accountId) {
+    } else if (filters.accountId && filters.accountId !== "all") {
       query = query.eq("account_id", filters.accountId);
     }
 
