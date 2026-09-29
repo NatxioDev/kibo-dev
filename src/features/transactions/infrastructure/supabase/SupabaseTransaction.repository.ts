@@ -46,6 +46,13 @@ export class SupabaseTransactionRepository implements TransactionRepository {
       query = query.eq("account_id", filters.accountId);
     }
 
+    if (filters.from) {
+      query = query.gte("date", filters.from);
+    }
+    if (filters.to) {
+      query = query.lte("date", filters.to);
+    }
+
     const { data, error } = await query;
 
     if (error) {

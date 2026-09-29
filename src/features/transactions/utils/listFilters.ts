@@ -8,7 +8,11 @@ export type TransactionListAccountFilter = "all" | "none" | string;
 export type ListTransactionsFilters = {
   type?: TransactionListTypeFilter;
   accountId?: TransactionListAccountFilter;
+  from?: string;
+  to?: string;
 };
+
+const DATE_PARAM_RE = /^\d{4}-\d{2}-\d{2}$/;
 
 export function parseTransactionTypeFilter(
   value: string | undefined | null,
@@ -31,4 +35,44 @@ export function parseTransactionAccountFilter(
     return value;
   }
   return "all";
+}
+
+export function parseTransactionDateParam(
+  value: string | undefined | null,
+): string | undefined {
+  if (!value || !DATE_PARAM_RE.test(value)) return undefined;
+  const [year, month, day] = value.split("-").map(Number);
+  if (!year || !month || !day) return undefined;
+  const probe = new Date(Date.UTC(year, month - 1, day));
+  if (
+    probe.getUTCFullYear() !== year ||
+    probe.getUTCMonth() !== month - 1 ||
+    probe.getUTCDate() !== day
+  ) {
+    return undefined;
+  }
+  return value;
+}
+
+export function parseTransactionDateRange(params: {
+  from?: string | null;
+  to?: string | null;
+}): { from?: string; to?: string } {
+  let from = parseTransactionDateParam(params.from);
+  let to = parseTransactionDateParam(params.to);
+  if (from && to && from > to) {
+    [from, to] = [to, from];
+  }
+  return { from, to };
+}
+
+export function isTransactionListFiltered(
+  filters: ListTransactionsFilters,
+): boolean {
+  return (
+    (filters.type != null && filters.type !== "all") ||
+    (filters.accountId != null && filters.accountId !== "all") ||
+    Boolean(filters.from) ||
+    Boolean(filters.to)
+  );
 }

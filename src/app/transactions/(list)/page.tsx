@@ -9,12 +9,19 @@ import { ListTransactions } from "@/features/transactions/application/ListTransa
 import { TransactionList } from "@/features/transactions/components/TransactionList";
 import { TransactionListFilters } from "@/features/transactions/components/TransactionListFilters";
 import {
+  isTransactionListFiltered,
   parseTransactionAccountFilter,
+  parseTransactionDateRange,
   parseTransactionTypeFilter,
 } from "@/features/transactions/utils/listFilters";
 
 type TransactionsPageProps = {
-  searchParams: Promise<{ type?: string; account?: string }>;
+  searchParams: Promise<{
+    type?: string;
+    account?: string;
+    from?: string;
+    to?: string;
+  }>;
 };
 
 export default async function TransactionsPage({
@@ -23,14 +30,16 @@ export default async function TransactionsPage({
   const params = await searchParams;
   const type = parseTransactionTypeFilter(params.type);
   const accountId = parseTransactionAccountFilter(params.account);
-  const filtersActive = type !== "all" || accountId !== "all";
+  const { from, to } = parseTransactionDateRange({
+    from: params.from,
+    to: params.to,
+  });
+  const listFilters = { type, accountId, from, to };
+  const filtersActive = isTransactionListFiltered(listFilters);
   const { transactionRepository, accountRepository } =
     await createServerDependencies();
   const [result, accountsResult] = await Promise.all([
-    new ListTransactions(transactionRepository).execute({
-      type,
-      accountId,
-    }),
+    new ListTransactions(transactionRepository).execute(listFilters),
     new ListAccounts(accountRepository).execute(),
   ]);
   const accounts = accountsResult.success ? accountsResult.data : [];
@@ -66,6 +75,8 @@ export default async function TransactionsPage({
       <TransactionListFilters
         type={type}
         accountId={accountId}
+        from={from}
+        to={to}
         accounts={accounts}
         resultCount={result.success ? result.data.length : null}
       >
