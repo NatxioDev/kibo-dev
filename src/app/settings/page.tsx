@@ -52,6 +52,12 @@ export default async function SettingsPage() {
       <Reveal>
         <ListGroup title="Finanzas">
           <ListRow
+            icon="🏦"
+            title="Cuentas"
+            subtitle="Ahorros, efectivo, bancos…"
+            href="/settings/accounts"
+          />
+          <ListRow
             icon="🏷️"
             title="Categorías"
             subtitle="Organiza tus gastos e ingresos"

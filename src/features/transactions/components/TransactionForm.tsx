@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/Field";
 import { Segmented } from "@/components/ui/Segmented";
 import { Currency } from "@/core/domain/value-objects";
+import { accountIcon } from "@/features/accounts/components/accountIcon";
 import { AmountInput } from "@/features/transactions/components/AmountInput";
 import { todayDateInputValue } from "@/features/transactions/components/formatters";
 import { useTransactionFormWithActions } from "@/features/transactions/hooks/useTransactionFormWithActions";
@@ -41,6 +42,7 @@ const FIELD_ORDER = [
   "amount",
   "currency",
   "date",
+  "account_id",
   "category_id",
   "payment_method_id",
   "merchant",
@@ -85,12 +87,14 @@ export function TransactionForm({
     setFriendAmount,
     fieldErrors,
     formError,
+    accounts,
     categories,
     paymentMethods,
     loadingOptions,
     optionsError,
     loading,
     submit,
+    requiresAccount,
     amountLocked,
     typeLocked,
     showSplit,
@@ -210,6 +214,56 @@ export function TransactionForm({
             </button>
           ))}
         </div>
+      </Field>
+
+      <Field label="Cuenta" errorFor="account_id" error={fieldErrors.account_id}>
+        {loadingOptions ? (
+          <ChipSkeleton className="h-12 w-28" />
+        ) : accounts.length === 0 ? (
+          <div id="account_id" tabIndex={-1} className="flex flex-col gap-2">
+            <Alert>
+              {requiresAccount
+                ? "Necesitas al menos una cuenta activa para registrar movimientos."
+                : "No hay cuentas activas. Puedes dejar esta transacción sin cuenta."}
+            </Alert>
+            <Button href="/settings/accounts/new" variant="secondary" size="sm">
+              + Crear cuenta
+            </Button>
+          </div>
+        ) : (
+          <ChipScroller>
+            <div
+              id="account_id"
+              tabIndex={-1}
+              role="group"
+              aria-label="Cuenta"
+              className="flex gap-2"
+            >
+              {!requiresAccount ? (
+                <ChoiceChip
+                  selected={values.account_id === ""}
+                  disabled={loading}
+                  onSelect={() => updateField("account_id", "")}
+                  className="h-12 min-w-28 text-sm"
+                >
+                  Sin cuenta
+                </ChoiceChip>
+              ) : null}
+              {accounts.map((account) => (
+                <ChoiceChip
+                  key={account.id}
+                  icon={accountIcon(account.type)}
+                  selected={values.account_id === account.id}
+                  disabled={loading}
+                  onSelect={() => updateField("account_id", account.id)}
+                  className="h-12 min-w-28 px-4 text-sm"
+                >
+                  {account.name}
+                </ChoiceChip>
+              ))}
+            </div>
+          </ChipScroller>
+        )}
       </Field>
 
       <Field label="Categoría" errorFor="category_id" error={fieldErrors.category_id}>

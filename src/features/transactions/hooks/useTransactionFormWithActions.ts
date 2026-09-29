@@ -6,6 +6,7 @@ import type { FriendProfile } from "@/features/friends/domain/models/Friendship"
 import type { ExpenseEditContext, SplitDraft } from "@/features/splits/domain/models";
 import { resolveSplitDraft } from "@/features/splits/domain/resolveSplit";
 import { fromCents, splitEqual, toCents } from "@/features/splits/domain/splitAmount";
+import { listActiveAccountsAction } from "@/features/transactions/actions/listActiveAccounts.action";
 import { listActiveCategoriesByTypeAction } from "@/features/transactions/actions/listActiveCategoriesByType.action";
 import { listActivePaymentMethodsAction } from "@/features/transactions/actions/listActivePaymentMethods.action";
 import { createTransactionAction } from "@/features/transactions/actions/createTransaction.action";
@@ -15,6 +16,7 @@ import {
 } from "@/features/transactions/actions/updateTransaction.action";
 import { todayDateInputValue } from "@/features/transactions/components/formatters";
 import type {
+  Account,
   Category,
   PaymentMethod,
   Transaction,
@@ -29,6 +31,7 @@ type FormState = {
   amount: string;
   currency: TransactionCurrency;
   date: string;
+  account_id: string;
   category_id: string;
   payment_method_id: string;
   merchant: string;
@@ -61,6 +64,7 @@ function toFormState(transaction?: Transaction, bill?: ExpenseEditContext | null
       amount: String(bill.totalAmount),
       currency: bill.currency,
       date: bill.date,
+      account_id: "",
       category_id: bill.categoryId ?? "",
       payment_method_id: bill.paymentMethodId ?? "",
       merchant: bill.merchant ?? "",
@@ -74,6 +78,7 @@ function toFormState(transaction?: Transaction, bill?: ExpenseEditContext | null
       amount: "",
       currency: "BOB",
       date: todayDateInputValue(),
+      account_id: "",
       category_id: "",
       payment_method_id: "",
       merchant: "",
@@ -86,6 +91,7 @@ function toFormState(transaction?: Transaction, bill?: ExpenseEditContext | null
     amount: String(transaction.amount),
     currency: transaction.currency,
     date: transaction.date,
+    account_id: transaction.account_id ?? "",
     category_id: transaction.category_id ?? "",
     payment_method_id: transaction.payment_method_id ?? "",
     merchant: transaction.merchant ?? "",
@@ -140,15 +146,17 @@ export function useTransactionFormWithActions({
   const [split, setSplit] = useState<SplitState>(() => toSplitState(bill));
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [formError, setFormError] = useState<string | null>(null);
+  const [accounts, setAccounts] = useState<Account[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([]);
   const [loadingOptions, setLoadingOptions] = useState(true);
   const [optionsError, setOptionsError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
+  const requiresAccount = mode === "create";
 
   // Carga dinámica de opciones del formulario desde el cliente.
   // Se mantiene en el cliente porque las categorías cambian según el tipo de transacción
-  // seleccionado, requiriendo re-fetch reactivo. Los métodos de pago se cargan
+  // seleccionado, requiriendo re-fetch reactivo. Cuentas y métodos de pago se cargan
   // junto con las categorías para mantener el estado consistente.
   useEffect(() => {
     let cancelled = false;
@@ -157,10 +165,12 @@ export function useTransactionFormWithActions({
       setLoadingOptions(true);
       setOptionsError(null);
 
-      const [categoriesResult, paymentMethodsResult] = await Promise.all([
-        listActiveCategoriesByTypeAction(values.type),
-        listActivePaymentMethodsAction(),
-      ]);
+      const [categoriesResult, paymentMethodsResult, accountsResult] =
+        await Promise.all([
+          listActiveCategoriesByTypeAction(values.type),
+          listActivePaymentMethodsAction(),
+          listActiveAccountsAction(),
+        ]);
 
       if (cancelled) return;
 
@@ -176,8 +186,20 @@ export function useTransactionFormWithActions({
         return;
       }
 
+      if (!accountsResult.success) {
+        setOptionsError(accountsResult.error);
+        setLoadingOptions(false);
+        return;
+      }
+
       setCategories(categoriesResult.data);
       setPaymentMethods(paymentMethodsResult.data);
+      setAccounts(accountsResult.data);
+      setValues((prev) => {
+        if (prev.account_id) return prev;
+        if (mode !== "create" || accountsResult.data.length === 0) return prev;
+        return { ...prev, account_id: accountsResult.data[0].id };
+      });
       setLoadingOptions(false);
     }
 
@@ -186,7 +208,7 @@ export function useTransactionFormWithActions({
     return () => {
       cancelled = true;
     };
-  }, [values.type]);
+  }, [mode, values.type]);
 
   function updateField<K extends keyof FormState>(key: K, value: FormState[K]) {
     setValues((prev) => {
@@ -239,6 +261,17 @@ export function useTransactionFormWithActions({
           nextErrors[key as keyof FormState] = issue.message;
         }
       }
+      setFieldErrors(nextErrors);
+      return nextErrors;
+    }
+
+    if (requiresAccount && !parsed.data.account_id) {
+      const nextErrors = {
+        account_id:
+          accounts.length === 0
+            ? "Crea una cuenta en Ajustes antes de registrar."
+            : "Selecciona una cuenta.",
+      };
       setFieldErrors(nextErrors);
       return nextErrors;
     }
@@ -308,12 +341,14 @@ export function useTransactionFormWithActions({
     friends,
     fieldErrors,
     formError,
+    accounts,
     categories,
     paymentMethods,
     loadingOptions,
     optionsError,
     loading: isPending,
     submit,
+    requiresAccount,
     amountLocked: Boolean(shareLock) || Boolean(bill?.amountsLocked),
     typeLocked: Boolean(shareLock) || Boolean(bill),
     shareLock,

@@ -1,6 +1,7 @@
 import "server-only";
 
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { SupabaseAccountRepository } from "@/features/accounts/infrastructure/supabase/SupabaseAccount.repository";
 import { SupabaseCategoryRepository } from "@/features/categories/infrastructure/supabase/SupabaseCategory.repository";
 import { SupabaseDashboardRepository } from "@/features/dashboard/infrastructure/supabase/SupabaseDashboard.repository";
 import { SupabaseFeedbackRepository } from "@/features/feedback/infrastructure/supabase/SupabaseFeedback.repository";
@@ -24,6 +25,7 @@ export function createServerDependenciesWithFriendship(
   return {
     ...clientDeps,
     transactionRepository: new SupabaseTransactionRepository(supabase),
+    accountRepository: new SupabaseAccountRepository(supabase),
     categoryRepository: new SupabaseCategoryRepository(supabase),
     paymentMethodRepository: new SupabasePaymentMethodRepository(supabase),
     dashboardRepository: new SupabaseDashboardRepository(supabase),

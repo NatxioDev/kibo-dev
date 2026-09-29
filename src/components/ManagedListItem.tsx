@@ -9,6 +9,7 @@ type ManagedListItemProps = {
   /** Background for the icon tile; defaults to the muted surface. */
   iconBackground?: string;
   name: string;
+  subtitle?: string;
   href: string;
   isActive: boolean;
   /** Spanish agreement differs per catalog ("Desactivada" / "Desactivado"). */
@@ -24,6 +25,7 @@ export function ManagedListItem({
   icon,
   iconBackground,
   name,
+  subtitle,
   href,
   isActive,
   inactiveLabel,
@@ -58,6 +60,11 @@ export function ManagedListItem({
             >
               {name}
             </span>
+            {isActive && subtitle ? (
+              <span className="mt-0.5 block truncate text-xs text-muted-foreground">
+                {subtitle}
+              </span>
+            ) : null}
             {isActive ? null : (
               <span className="mt-0.5 block text-xs text-muted-foreground">
                 {inactiveLabel}

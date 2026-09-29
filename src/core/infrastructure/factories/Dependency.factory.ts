@@ -1,4 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
+import type { AccountRepository } from "@/features/accounts/domain/Account.repository";
 import type { AuthRepository } from "@/features/auth/domain/Auth.repository";
 import { SupabaseAuthRepository } from "@/features/auth/infrastructure/supabase/SupabaseAuth.repository";
 import type { CategoryRepository } from "@/features/categories/domain/Category.repository";
@@ -14,6 +15,7 @@ import type { TransactionRepository } from "@/features/transactions/domain/Trans
 export type AppDependencies = {
   authRepository: AuthRepository;
   transactionRepository: TransactionRepository;
+  accountRepository: AccountRepository;
   categoryRepository: CategoryRepository;
   paymentMethodRepository: PaymentMethodRepository;
   dashboardRepository: DashboardRepository;

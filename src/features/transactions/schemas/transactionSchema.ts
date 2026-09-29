@@ -41,6 +41,7 @@ export const transactionFormSchema = z.object({
     .string()
     .min(1, "La fecha es obligatoria.")
     .regex(/^\d{4}-\d{2}-\d{2}$/, "Fecha inválida."),
+  account_id: optionalUuid,
   category_id: optionalUuid,
   payment_method_id: optionalUuid,
   merchant: optionalText(MERCHANT_MAX_LENGTH),
