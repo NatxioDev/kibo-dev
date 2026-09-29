@@ -17,6 +17,9 @@ export const RELEASES: Release[] = [
       "Puedes ocultar o mostrar el balance del dashboard con un toque en el ícono del ojo.",
       "Kibo recuerda tu preferencia de visibilidad del balance en este dispositivo.",
     ],
+    improvements: [
+      "Nueva bienvenida en el login: descubre qué puedes hacer con Kibo tocando los emojis flotantes.",
+    ],
   },
   {
     version: "0.8.0",
