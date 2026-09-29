@@ -1,20 +1,12 @@
 import Link from "next/link";
-import { Reveal } from "@/components/motion/Reveal";
-import { Stagger } from "@/components/motion/Stagger";
 import { Card } from "@/components/ui/Card";
-import { KiboLogo } from "@/components/ui/KiboLogo";
 import { GoogleSignInButton } from "@/features/auth/components/GoogleSignInButton";
 import { PasskeySignInButton } from "@/features/auth/components/PasskeySignInButton";
+import { WelcomeScene } from "@/features/welcome/components/WelcomeScene";
 
 const ERROR_MESSAGES: Record<string, string> = {
   oauth: "No pudimos iniciar sesión con Google. Inténtalo de nuevo.",
 };
-
-const HIGHLIGHTS = [
-  { icon: "📊", text: "Tu balance del mes de un vistazo" },
-  { icon: "🏷️", text: "Gastos organizados por categoría" },
-  { icon: "💱", text: "Bolivianos y dólares" },
-];
 
 export default async function LoginPage({ searchParams }: PageProps<"/login">) {
   const { error } = await searchParams;
@@ -22,68 +14,26 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
   const initialError = errorKey ? (ERROR_MESSAGES[errorKey] ?? null) : null;
 
   return (
-    <main className="relative flex min-h-full flex-1 flex-col items-center justify-center overflow-hidden px-4 pt-[max(2.5rem,env(safe-area-inset-top))] pb-[max(2.5rem,env(safe-area-inset-bottom))]">
-      <Stagger
-        stagger={0.12}
-        className="relative flex w-full max-w-sm flex-col items-stretch gap-8"
-      >
-        <Reveal className="flex flex-col items-center gap-1 text-hero-foreground">
-          <KiboLogo className="h-24 w-auto sm:h-32" />
-          <p className="text-center text-[0.6875rem] font-semibold tracking-[0.22em] text-hero-muted uppercase">
-            Tu gestor personal de gastos
-          </p>
-        </Reveal>
-
-        <Reveal spring="bouncy">
-          <Card className="glass-lens flex flex-col gap-6 px-6 py-7">
-            <div>
-              <h2 className="font-display text-2xl font-extrabold tracking-[-0.04em] text-foreground">
-                Bienvenido 👋
-              </h2>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Inicia sesión para ver tu resumen financiero.
-              </p>
-            </div>
-
-            <ul className="flex flex-col gap-3">
-              {HIGHLIGHTS.map((item) => (
-                <li
-                  key={item.text}
-                  className="flex items-center gap-3 text-sm text-foreground"
-                >
-                  <span
-                    aria-hidden
-                    className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-surface-muted"
-                  >
-                    {item.icon}
-                  </span>
-                  {item.text}
-                </li>
-              ))}
-            </ul>
-
-            <div className="flex flex-col gap-3">
-              <GoogleSignInButton initialError={initialError} />
-              <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                <span className="h-px flex-1 bg-border" aria-hidden />
-                o
-                <span className="h-px flex-1 bg-border" aria-hidden />
-              </div>
-              <PasskeySignInButton />
-            </div>
-          </Card>
-        </Reveal>
-
-        <Reveal>
-          <p className="text-center text-xs text-muted-foreground">
-            Al continuar aceptas nuestra{" "}
-            <Link href="/privacy" className="underline hover:text-foreground">
-              política de privacidad
-            </Link>
-            .
-          </p>
-        </Reveal>
-      </Stagger>
-    </main>
+    <WelcomeScene
+      footer={
+        <p className="text-center text-xs text-muted-foreground">
+          Al continuar aceptas nuestra{" "}
+          <Link href="/privacy" className="underline hover:text-foreground">
+            política de privacidad
+          </Link>
+          .
+        </p>
+      }
+    >
+      <Card className="glass-lens flex flex-col gap-3 px-6 py-6">
+        <GoogleSignInButton initialError={initialError} />
+        <div className="flex items-center gap-3 text-xs text-muted-foreground">
+          <span className="h-px flex-1 bg-border" aria-hidden />
+          o
+          <span className="h-px flex-1 bg-border" aria-hidden />
+        </div>
+        <PasskeySignInButton />
+      </Card>
+    </WelcomeScene>
   );
 }

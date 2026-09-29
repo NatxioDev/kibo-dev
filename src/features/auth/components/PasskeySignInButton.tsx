@@ -1,7 +1,10 @@
 "use client";
 
+import { Pressable } from "@/components/motion/Pressable";
 import { Button } from "@/components/ui/Button";
 import { usePasskeySignIn } from "@/features/auth/hooks/usePasskeySignIn";
+import { AuthErrorMessage } from "./AuthErrorMessage";
+import { AuthSpinner } from "./AuthSpinner";
 
 function PasskeyIcon() {
   return (
@@ -24,27 +27,26 @@ export function PasskeySignInButton() {
   const { signIn, error, loading } = usePasskeySignIn();
 
   return (
-    <div className="flex w-full flex-col gap-3">
-      <Button
-        variant="secondary"
-        size="lg"
-        onClick={signIn}
-        disabled={loading}
-        className="w-full gap-3"
-      >
-        <PasskeyIcon />
-        <span className="inline-flex items-center gap-2">
-          {loading ? "Esperando Passkey…" : "Continuar con Passkey"}
-          <span className="text-[0.625rem] font-bold tracking-[0.12em] text-muted-foreground uppercase">
-            Beta
+    <div className="flex w-full flex-col">
+      <Pressable>
+        <Button
+          variant="secondary"
+          size="lg"
+          onClick={signIn}
+          disabled={loading}
+          aria-busy={loading}
+          className="w-full gap-3"
+        >
+          {loading ? <AuthSpinner /> : <PasskeyIcon />}
+          <span className="inline-flex items-center gap-2">
+            {loading ? "Esperando Passkey…" : "Continuar con Passkey"}
+            <span className="text-[0.625rem] font-bold tracking-[0.12em] text-muted-foreground uppercase">
+              Beta
+            </span>
           </span>
-        </span>
-      </Button>
-      {error ? (
-        <p className="text-center text-sm text-expense" role="alert">
-          {error}
-        </p>
-      ) : null}
+        </Button>
+      </Pressable>
+      <AuthErrorMessage message={error ?? null} />
     </div>
   );
 }
