@@ -8,11 +8,14 @@ import type { Release } from "@/features/changelog/types";
 export const RELEASES: Release[] = [
   {
     version: "0.9.0",
-    date: "2026-09-28",
-    title: "Balance a tu manera",
+    date: "2026-09-29",
+    title: "Tus cuentas en Kibo",
     new: [
+      "Crea y administra tus cuentas (ahorros, efectivo, bancos…) desde Ajustes → Cuentas.",
+      "Al registrar un movimiento eliges de qué cuenta sale o entra el dinero.",
+      "Puedes filtrar tus transacciones por cuenta; las antiguas aparecen como “Sin cuenta”.",
       "Puedes ocultar o mostrar el balance del dashboard con un toque en el ícono del ojo.",
-      "Kibo recuerda tu preferencia en este dispositivo al volver a abrir la app.",
+      "Kibo recuerda tu preferencia de visibilidad del balance en este dispositivo.",
     ],
   },
   {
