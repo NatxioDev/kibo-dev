@@ -22,9 +22,16 @@ export const RELEASES: Release[] = [
     ],
     fixes: [
       "Si aún no tienes movimientos en el período, el dashboard ya no muestra una barra de ingresos y gastos al 50%.",
-      ],
+    ],
     improvements: [
       "Nueva bienvenida en el login: descubre qué puedes hacer con Kibo tocando los emojis flotantes.",
+    ],
+  },
+  {
+    version: "0.8.1",
+    date: "2026-09-28",
+    fixes: [
+      "Las horas de tus transacciones ya se muestran en hora de Bolivia, sin adelantarse.",
     ],
   },
   {

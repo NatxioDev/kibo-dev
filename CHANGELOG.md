@@ -1,8 +1,8 @@
-## [0.9.0](https://github.com/NatxioDev/kibo-dev/compare/v0.8.0...v0.9.0) (unreleased)
+## [0.8.1](https://github.com/NatxioDev/kibo-dev/compare/v0.8.0...v0.8.1) (2026-09-28)
 
-### Features
+### Bug Fixes
 
-* **transactions:** filtros compactos para mobile con período, multi-cuenta y categoría (KIBO-77)
+* **transactions:** mostrar horas en America/La_Paz ([bf7b96a](https://github.com/NatxioDev/kibo-dev/commit/bf7b96af0edfdd6edae0af9bab73b2ce3238a3f4))
 
 ## [0.8.0](https://github.com/NatxioDev/kibo-dev/compare/v0.7.1...v0.8.0) (2026-09-27)
 
