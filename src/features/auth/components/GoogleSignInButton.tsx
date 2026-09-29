@@ -1,7 +1,10 @@
 "use client";
 
+import { Pressable } from "@/components/motion/Pressable";
 import { Button } from "@/components/ui/Button";
 import { useGoogleSignIn } from "@/features/auth/hooks/useGoogleSignIn";
+import { AuthErrorMessage } from "./AuthErrorMessage";
+import { AuthSpinner } from "./AuthSpinner";
 
 type GoogleSignInButtonProps = {
   initialError?: string | null;
@@ -35,22 +38,21 @@ export function GoogleSignInButton({ initialError }: GoogleSignInButtonProps) {
   const message = error ?? initialError ?? null;
 
   return (
-    <div className="flex w-full flex-col gap-3">
-      <Button
-        variant="secondary"
-        size="lg"
-        onClick={signIn}
-        disabled={loading}
-        className="w-full gap-3"
-      >
-        <GoogleIcon />
-        {loading ? "Redirigiendo…" : "Continuar con Google"}
-      </Button>
-      {message ? (
-        <p className="text-center text-sm text-expense" role="alert">
-          {message}
-        </p>
-      ) : null}
+    <div className="flex w-full flex-col">
+      <Pressable>
+        <Button
+          variant="secondary"
+          size="lg"
+          onClick={signIn}
+          disabled={loading}
+          aria-busy={loading}
+          className="w-full gap-3"
+        >
+          {loading ? <AuthSpinner /> : <GoogleIcon />}
+          {loading ? "Redirigiendo…" : "Continuar con Google"}
+        </Button>
+      </Pressable>
+      <AuthErrorMessage message={message} />
     </div>
   );
 }
