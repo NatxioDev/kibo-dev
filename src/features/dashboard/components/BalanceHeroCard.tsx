@@ -10,7 +10,7 @@ type BalanceHeroCardProps = {
   balance: number;
   currency: TransactionCurrency;
   periodLabel: string;
-  incomePercent: number;
+  incomePercent: number | null;
 };
 
 const MASK = "••••••";
@@ -98,19 +98,21 @@ export function BalanceHeroCard({
         </span>
       )}
 
-      <div className="mt-6 flex flex-col gap-2">
-        <div className="flex h-1.5 overflow-hidden rounded-full bg-hero-foreground/15">
-          <GrowBar
-            percent={incomePercent}
-            delay={0.35}
-            className="h-full rounded-full bg-hero-foreground/85"
-          />
+      {incomePercent !== null && (
+        <div className="mt-6 flex flex-col gap-2">
+          <div className="flex h-1.5 overflow-hidden rounded-full bg-hero-foreground/15">
+            <GrowBar
+              percent={incomePercent}
+              delay={0.35}
+              className="h-full rounded-full bg-hero-foreground/85"
+            />
+          </div>
+          <div className="flex justify-between text-xs text-hero-muted">
+            <span>Ingresos {incomePercent}%</span>
+            <span>Gastos {100 - incomePercent}%</span>
+          </div>
         </div>
-        <div className="flex justify-between text-xs text-hero-muted">
-          <span>Ingresos {incomePercent}%</span>
-          <span>Gastos {100 - incomePercent}%</span>
-        </div>
-      </div>
+      )}
     </Card>
   );
 }
