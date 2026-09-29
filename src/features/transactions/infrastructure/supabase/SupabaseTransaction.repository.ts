@@ -40,10 +40,15 @@ export class SupabaseTransactionRepository implements TransactionRepository {
       query = query.eq("type", filters.type);
     }
 
-    if (filters.accountId === "none") {
+    const accounts = filters.accounts;
+    if (accounts?.mode === "none") {
       query = query.is("account_id", null);
-    } else if (filters.accountId && filters.accountId !== "all") {
-      query = query.eq("account_id", filters.accountId);
+    } else if (accounts?.mode === "ids" && accounts.ids.length > 0) {
+      query = query.in("account_id", accounts.ids);
+    }
+
+    if (filters.categoryId) {
+      query = query.eq("category_id", filters.categoryId);
     }
 
     if (filters.from) {

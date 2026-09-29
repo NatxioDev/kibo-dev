@@ -24,7 +24,7 @@ export function TransactionList({
             description="No hay movimientos con estos filtros."
             action={
               <Button href="/transactions" variant="secondary" size="sm">
-                Limpiar filtros
+                Limpiar
               </Button>
             }
           />
@@ -52,9 +52,14 @@ export function TransactionList({
         >
           <h2
             id={`tx-day-${group.key}`}
-            className="px-4 text-[0.6875rem] font-semibold tracking-[0.14em] text-muted-foreground uppercase"
+            className="flex items-baseline justify-between gap-3 px-4 text-[0.6875rem] font-semibold tracking-[0.14em] text-muted-foreground uppercase"
           >
-            {group.label}
+            <span>{group.label}</span>
+            {group.dateLabel ? (
+              <span className="normal-case tracking-normal text-muted-foreground/80">
+                {group.dateLabel}
+              </span>
+            ) : null}
           </h2>
           <ul
             aria-labelledby={`tx-day-${group.key}`}
