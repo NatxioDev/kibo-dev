@@ -19,7 +19,7 @@ export function DashboardSummary({
   periodLabel,
 }: DashboardSummaryProps) {
   const total = income + expense;
-  const incomePercent = total > 0 ? Math.round((income / total) * 100) : 50;
+  const incomePercent = total > 0 ? Math.round((income / total) * 100) : null;
 
   return (
     <section className="flex flex-col gap-3">

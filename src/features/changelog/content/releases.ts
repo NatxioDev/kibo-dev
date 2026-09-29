@@ -17,6 +17,9 @@ export const RELEASES: Release[] = [
       "Puedes ocultar o mostrar el balance del dashboard con un toque en el ícono del ojo.",
       "Kibo recuerda tu preferencia de visibilidad del balance en este dispositivo.",
     ],
+    fixes: [
+      "Si aún no tienes movimientos en el período, el dashboard ya no muestra una barra de ingresos y gastos al 50%.",
+    ],
   },
   {
     version: "0.8.0",
