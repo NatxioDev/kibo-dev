@@ -13,7 +13,7 @@ export const RELEASES: Release[] = [
     new: [
       "Crea y administra tus cuentas (ahorros, efectivo, bancos…) desde Ajustes → Cuentas.",
       "Al registrar un movimiento eliges de qué cuenta sale o entra el dinero.",
-      "Puedes filtrar tus transacciones por cuenta; las antiguas aparecen como “Sin cuenta”.",
+      "Puedes filtrar tus transacciones por cuenta; las antiguas aparecen como "Sin cuenta".",
       "Los filtros de Transacciones en el celular son más compactos: período, cuentas y categoría en chips con hojas desde abajo.",
       "Al entrar a Transacciones ves Este mes por defecto, con atajos (mes pasado, últimos 7/30 días) o un rango personalizado.",
       "Puedes combinar tipo, período, varias cuentas y categoría, y limpiar todo con un solo toque.",

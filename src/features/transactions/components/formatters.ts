@@ -29,7 +29,7 @@ const WEEKDAYS = [
   "sábado",
 ] as const;
 
-/** App timezone (Bolivia). Avoids UTC server rendering showing the wrong day/time. */
+/** App timezone (Bolivia). Avoids UTC server rendering showing +4h. */
 export const APP_TIME_ZONE = "America/La_Paz";
 
 const transactionTimeFormatter = new Intl.DateTimeFormat("en-GB", {
@@ -45,6 +45,7 @@ const appDatePartsFormatter = new Intl.DateTimeFormat("en-CA", {
   month: "2-digit",
   day: "2-digit",
 });
+
 
 export function formatTransactionDate(date: string): string {
   const [year, month, day] = date.split("-").map(Number);
