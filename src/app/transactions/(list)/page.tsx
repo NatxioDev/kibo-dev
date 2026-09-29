@@ -1,29 +1,47 @@
-import { Suspense } from "react";
 import { PageHeader } from "@/components/PageHeader";
 import { PageShell } from "@/components/PageShell";
 import { Reveal } from "@/components/motion/Reveal";
 import { Alert } from "@/components/ui/Alert";
 import { Button } from "@/components/ui/Button";
 import { createServerDependencies } from "@/core/infrastructure/factories/createServerDependencies";
+import { ListAccounts } from "@/features/accounts/application/ListAccounts.application";
+import { ListCategories } from "@/features/categories/application/ListCategories.application";
 import { ListTransactions } from "@/features/transactions/application/ListTransactions.application";
 import { TransactionList } from "@/features/transactions/components/TransactionList";
 import { TransactionListFilters } from "@/features/transactions/components/TransactionListFilters";
-import { parseTransactionTypeFilter } from "@/features/transactions/utils/listFilters";
+import {
+  isTransactionListFiltered,
+  parseTransactionListFilterState,
+  toListTransactionsFilters,
+} from "@/features/transactions/utils/listFilters";
 
 type TransactionsPageProps = {
-  searchParams: Promise<{ type?: string }>;
+  searchParams: Promise<{
+    type?: string;
+    account?: string;
+    category?: string;
+    period?: string;
+    from?: string;
+    to?: string;
+  }>;
 };
 
 export default async function TransactionsPage({
   searchParams,
 }: TransactionsPageProps) {
   const params = await searchParams;
-  const type = parseTransactionTypeFilter(params.type);
-  const filtersActive = type !== "all";
-  const { transactionRepository } = await createServerDependencies();
-  const result = await new ListTransactions(transactionRepository).execute({
-    type,
-  });
+  const filterState = parseTransactionListFilterState(params);
+  const listFilters = toListTransactionsFilters(filterState);
+  const filtersActive = isTransactionListFiltered(filterState);
+  const { transactionRepository, accountRepository, categoryRepository } =
+    await createServerDependencies();
+  const [result, accountsResult, categoriesResult] = await Promise.all([
+    new ListTransactions(transactionRepository).execute(listFilters),
+    new ListAccounts(accountRepository).execute(),
+    new ListCategories(categoryRepository).execute(),
+  ]);
+  const accounts = accountsResult.success ? accountsResult.data : [];
+  const categories = categoriesResult.success ? categoriesResult.data : [];
 
   return (
     <PageShell>
@@ -53,26 +71,23 @@ export default async function TransactionsPage({
         />
       </Reveal>
 
-      <Reveal>
-        <Suspense
-          fallback={
-            <div className="h-11 animate-pulse rounded-control bg-surface-muted" />
-          }
-        >
-          <TransactionListFilters type={type} />
-        </Suspense>
-      </Reveal>
-
-      {!result.success ? (
-        <Reveal>
-          <Alert>{result.error}</Alert>
-        </Reveal>
-      ) : (
-        <TransactionList
-          transactions={result.data}
-          filtersActive={filtersActive}
-        />
-      )}
+      <TransactionListFilters
+        filters={filterState}
+        accounts={accounts}
+        categories={categories}
+        resultCount={result.success ? result.data.length : null}
+      >
+        {!result.success ? (
+          <Reveal>
+            <Alert>{result.error}</Alert>
+          </Reveal>
+        ) : (
+          <TransactionList
+            transactions={result.data}
+            filtersActive={filtersActive}
+          />
+        )}
+      </TransactionListFilters>
     </PageShell>
   );
 }

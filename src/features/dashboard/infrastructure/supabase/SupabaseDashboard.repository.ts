@@ -26,7 +26,9 @@ export class SupabaseDashboardRepository implements DashboardRepository {
       .select(
         `
       *,
-      category:categories(id, name, icon)
+      account:accounts(id, name, currency, type),
+      category:categories(id, name, icon),
+      payment_method:payment_methods(id, name)
     `,
       )
       .eq("status", "CONFIRMED")

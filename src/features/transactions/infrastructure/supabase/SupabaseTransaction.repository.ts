@@ -28,6 +28,7 @@ export class SupabaseTransactionRepository implements TransactionRepository {
       .select(
         `
       *,
+      account:accounts(id, name, currency, type),
       category:categories(id, name, icon),
       payment_method:payment_methods(id, name)
     `,
@@ -37,6 +38,24 @@ export class SupabaseTransactionRepository implements TransactionRepository {
 
     if (filters.type && filters.type !== "all") {
       query = query.eq("type", filters.type);
+    }
+
+    const accounts = filters.accounts;
+    if (accounts?.mode === "none") {
+      query = query.is("account_id", null);
+    } else if (accounts?.mode === "ids" && accounts.ids.length > 0) {
+      query = query.in("account_id", accounts.ids);
+    }
+
+    if (filters.categoryId) {
+      query = query.eq("category_id", filters.categoryId);
+    }
+
+    if (filters.from) {
+      query = query.gte("date", filters.from);
+    }
+    if (filters.to) {
+      query = query.lte("date", filters.to);
     }
 
     const { data, error } = await query;
@@ -81,6 +100,7 @@ export class SupabaseTransactionRepository implements TransactionRepository {
       .select(
         `
       *,
+      account:accounts(id, name, currency, type),
       category:categories(id, name, icon),
       payment_method:payment_methods(id, name)
     `,
@@ -121,6 +141,7 @@ export class SupabaseTransactionRepository implements TransactionRepository {
       .from("transactions")
       .insert({
         user_id: user.id,
+        account_id: values.account_id,
         category_id: values.category_id,
         payment_method_id: values.payment_method_id,
         type: values.type,
@@ -152,6 +173,7 @@ export class SupabaseTransactionRepository implements TransactionRepository {
     const { data, error } = await this.supabase
       .from("transactions")
       .update({
+        account_id: values.account_id,
         category_id: values.category_id,
         payment_method_id: values.payment_method_id,
         type: values.type,

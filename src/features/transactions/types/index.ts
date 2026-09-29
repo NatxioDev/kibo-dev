@@ -1,5 +1,7 @@
 export type { ServiceResult } from "@/core/domain/ServiceResult";
 export type {
+  Account,
+  AccountType,
   Category,
   PaymentMethod,
   Transaction,

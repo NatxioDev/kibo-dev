@@ -29,7 +29,25 @@ export async function createTransactionAction(
     };
   }
 
-  const { transactionRepository, splitRepository } = await createServerDependencies();
+  const { transactionRepository, splitRepository, accountRepository } =
+    await createServerDependencies();
+
+  // Nuevas transacciones deben asociarse a una cuenta activa cuando el usuario ya tiene cuentas.
+  const activeAccounts = await accountRepository.listActive();
+  if (activeAccounts.success && activeAccounts.data.length > 0) {
+    if (!parsed.data.account_id) {
+      return { success: false, error: "Selecciona una cuenta." };
+    }
+    const owned = activeAccounts.data.some(
+      (account) => account.id === parsed.data.account_id,
+    );
+    if (!owned) {
+      return {
+        success: false,
+        error: "La cuenta seleccionada no está disponible.",
+      };
+    }
+  }
 
   if (split && parsed.data.type === "EXPENSE") {
     const draft = splitDraftSchema.safeParse(split);

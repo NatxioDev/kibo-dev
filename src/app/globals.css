@@ -134,6 +134,40 @@
   will-change: transform;
 }
 
+@keyframes float {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate3d(var(--float-x), calc(var(--float-y) * -1), 0)
+      rotate(var(--float-rot));
+  }
+  100% {
+    transform: translate3d(calc(var(--float-x) * -0.6), var(--float-y), 0)
+      rotate(calc(var(--float-rot) * -1));
+  }
+}
+
+@utility animate-float {
+  animation: float var(--float-dur, 8s) ease-in-out var(--float-delay, 0s)
+    infinite alternate;
+  will-change: transform;
+}
+
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+
+@utility animate-twinkle {
+  animation: twinkle 5s ease-in-out infinite;
+}
+
 @utility glass {
   position: relative;
   -webkit-backdrop-filter: blur(var(--card-blur)) saturate(var(--glass-saturate));

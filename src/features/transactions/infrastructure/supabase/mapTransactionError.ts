@@ -9,7 +9,7 @@ export function mapTransactionError(error: {
   }
 
   if (message.includes("foreign key") || message.includes("violates")) {
-    return "La categoría o el método de pago no son válidos.";
+    return "La cuenta, categoría o método de pago no son válidos.";
   }
 
   if (message.includes("check constraint") || message.includes("amount")) {

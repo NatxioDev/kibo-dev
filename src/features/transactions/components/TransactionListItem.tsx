@@ -19,7 +19,12 @@ export function TransactionListItem({ transaction }: TransactionListItemProps) {
     transaction.category?.icon?.trim() || (isIncome ? "💰" : "📦");
   const categoryName = transaction.category?.name ?? "Sin categoría";
   const title = transaction.merchant?.trim() || categoryName;
+  const accountLabel = transaction.account?.name ?? "Sin cuenta";
   const paymentLabel = transaction.payment_method?.name ?? "Sin método";
+  const meta =
+    title === categoryName
+      ? `${accountLabel} · ${paymentLabel}`
+      : `${categoryName} · ${accountLabel}`;
 
   return (
     <li className="flex items-center gap-1 pr-2">
@@ -38,7 +43,7 @@ export function TransactionListItem({ transaction }: TransactionListItemProps) {
             {title}
           </span>
           <span className="mt-0.5 block truncate text-sm text-muted-foreground">
-            {title === categoryName ? paymentLabel : `${categoryName} · ${paymentLabel}`}
+            {meta}
           </span>
         </span>
         <span

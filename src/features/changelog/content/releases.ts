@@ -7,6 +7,27 @@ import type { Release } from "@/features/changelog/types";
  */
 export const RELEASES: Release[] = [
   {
+    version: "0.9.0",
+    date: "2026-09-29",
+    title: "Tus cuentas en Kibo",
+    new: [
+      "Crea y administra tus cuentas (ahorros, efectivo, bancos…) desde Ajustes → Cuentas.",
+      "Al registrar un movimiento eliges de qué cuenta sale o entra el dinero.",
+      "Puedes filtrar tus transacciones por cuenta; las antiguas aparecen como 'Sin cuenta'.",
+      "Los filtros de Transacciones en el celular son más compactos: período, cuentas y categoría en chips con hojas desde abajo.",
+      "Al entrar a Transacciones ves Este mes por defecto, con atajos (mes pasado, últimos 7/30 días) o un rango personalizado.",
+      "Puedes combinar tipo, período, varias cuentas y categoría, y limpiar todo con un solo toque.",
+      "Puedes ocultar o mostrar el balance del dashboard con un toque en el ícono del ojo.",
+      "Kibo recuerda tu preferencia de visibilidad del balance en este dispositivo.",
+    ],
+    fixes: [
+      "Si aún no tienes movimientos en el período, el dashboard ya no muestra una barra de ingresos y gastos al 50%.",
+    ],
+    improvements: [
+      "Nueva bienvenida en el login: descubre qué puedes hacer con Kibo tocando los emojis flotantes.",
+    ],
+  },
+  {
     version: "0.8.1",
     date: "2026-09-28",
     fixes: [
