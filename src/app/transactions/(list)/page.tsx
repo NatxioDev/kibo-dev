@@ -1,4 +1,3 @@
-import { Suspense } from "react";
 import { PageHeader } from "@/components/PageHeader";
 import { PageShell } from "@/components/PageShell";
 import { Reveal } from "@/components/motion/Reveal";
@@ -64,30 +63,23 @@ export default async function TransactionsPage({
         />
       </Reveal>
 
-      <Reveal>
-        <Suspense
-          fallback={
-            <div className="h-11 animate-pulse rounded-control bg-surface-muted" />
-          }
-        >
-          <TransactionListFilters
-            type={type}
-            accountId={accountId}
-            accounts={accounts}
+      <TransactionListFilters
+        type={type}
+        accountId={accountId}
+        accounts={accounts}
+        resultCount={result.success ? result.data.length : null}
+      >
+        {!result.success ? (
+          <Reveal>
+            <Alert>{result.error}</Alert>
+          </Reveal>
+        ) : (
+          <TransactionList
+            transactions={result.data}
+            filtersActive={filtersActive}
           />
-        </Suspense>
-      </Reveal>
-
-      {!result.success ? (
-        <Reveal>
-          <Alert>{result.error}</Alert>
-        </Reveal>
-      ) : (
-        <TransactionList
-          transactions={result.data}
-          filtersActive={filtersActive}
-        />
-      )}
+        )}
+      </TransactionListFilters>
     </PageShell>
   );
 }
