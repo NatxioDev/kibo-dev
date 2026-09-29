@@ -6,6 +6,7 @@ import type { FriendProfile } from "@/features/friends/domain/models/Friendship"
 import type { ExpenseEditContext, SplitDraft } from "@/features/splits/domain/models";
 import { resolveSplitDraft } from "@/features/splits/domain/resolveSplit";
 import { fromCents, splitEqual, toCents } from "@/features/splits/domain/splitAmount";
+import { getAccountAction } from "@/features/transactions/actions/getAccount.action";
 import { listActiveAccountsAction } from "@/features/transactions/actions/listActiveAccounts.action";
 import { listActiveCategoriesByTypeAction } from "@/features/transactions/actions/listActiveCategoriesByType.action";
 import { listActivePaymentMethodsAction } from "@/features/transactions/actions/listActivePaymentMethods.action";
@@ -194,7 +195,22 @@ export function useTransactionFormWithActions({
 
       setCategories(categoriesResult.data);
       setPaymentMethods(paymentMethodsResult.data);
-      setAccounts(accountsResult.data);
+
+      let nextAccounts = accountsResult.data;
+      const currentAccountId = transaction?.account_id;
+      if (
+        currentAccountId &&
+        !nextAccounts.some((account) => account.id === currentAccountId)
+      ) {
+        const current = await getAccountAction(currentAccountId);
+        if (!cancelled && current.success) {
+          nextAccounts = [current.data, ...nextAccounts];
+        }
+      }
+
+      if (cancelled) return;
+
+      setAccounts(nextAccounts);
       setValues((prev) => {
         if (prev.account_id) return prev;
         if (mode !== "create" || accountsResult.data.length === 0) return prev;
@@ -208,7 +224,7 @@ export function useTransactionFormWithActions({
     return () => {
       cancelled = true;
     };
-  }, [mode, values.type]);
+  }, [mode, transaction?.account_id, values.type]);
 
   function updateField<K extends keyof FormState>(key: K, value: FormState[K]) {
     setValues((prev) => {
