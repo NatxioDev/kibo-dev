@@ -1,3 +1,23 @@
+## [0.9.0](https://github.com/NatxioDev/kibo-dev/compare/v0.8.1...v0.9.0) (2026-09-29)
+
+### Features
+
+* **accounts:** modelar cuentas y asociarlas a transacciones (KIBO-72) ([7ad3e5d](https://github.com/NatxioDev/kibo-dev/commit/7ad3e5d0147584bdb1b15efdf0715070c90fa4b0))
+* **accounts:** pulir registro con cuentas y sugerencias completas ([b43033a](https://github.com/NatxioDev/kibo-dev/commit/b43033a4996f4e8e7f7f6e45746bf31823ccd71b))
+* **dashboard:** allow hiding balance with eye toggle ([7fb9dca](https://github.com/NatxioDev/kibo-dev/commit/7fb9dcaea254e30e533bdad69b1e2f5278de94fc))
+* **login:** experiencia de bienvenida con emojis de funcionalidades ([caf4f24](https://github.com/NatxioDev/kibo-dev/commit/caf4f243979af8f8f11164bdc7906417c4da1773))
+* **transactions:** filtro por rango de fechas en /transactions (KIBO-23) ([551ea2d](https://github.com/NatxioDev/kibo-dev/commit/551ea2de2d31f4567e3291f04c77d02e74211abf))
+* **transactions:** filtros compactos para mobile (KIBO-77) ([b67180a](https://github.com/NatxioDev/kibo-dev/commit/b67180a36b27e6305ee1e117ec4f3eff7c3783fc))
+* **transactions:** filtros más claros con contador y limpiar ([1adedce](https://github.com/NatxioDev/kibo-dev/commit/1adedce11eb48a72279c6deb1313111b4a09395c))
+
+### Bug Fixes
+
+* **dashboard:** center balance visibility eye with label ([b6ca96c](https://github.com/NatxioDev/kibo-dev/commit/b6ca96ca54dc663e6a284b600ae197b799ee5ea8))
+* **dashboard:** ocultar barra de ingresos vs gastos sin movimientos ([7e4418c](https://github.com/NatxioDev/kibo-dev/commit/7e4418c26cd3173fab95370051caff23ab3495ee))
+* replace curly quotes with straight quotes in releases.ts ([15ac330](https://github.com/NatxioDev/kibo-dev/commit/15ac33060bd827265eea1c9a4863940205308405))
+* **transactions:** conservar cuenta inactiva al editar movimientos ([13dd075](https://github.com/NatxioDev/kibo-dev/commit/13dd075ceedcc0e38506e0c00d2d76650a43ce8c))
+* **transactions:** no filtrar por cuenta cuando se eligen todas ([39133f4](https://github.com/NatxioDev/kibo-dev/commit/39133f4fec2524c8bcf9347282b58c52d124307d))
+
 ## [0.8.1](https://github.com/NatxioDev/kibo-dev/compare/v0.8.0...v0.8.1) (2026-09-28)
 
 ### Bug Fixes
