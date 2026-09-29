@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { type FormEvent } from "react";
 import { Alert } from "@/components/ui/Alert";
@@ -81,6 +82,7 @@ export function TransactionForm({
   const {
     values,
     updateField,
+    selectAccount,
     split,
     updateSplit,
     toggleFriend,
@@ -220,16 +222,19 @@ export function TransactionForm({
         {loadingOptions ? (
           <ChipSkeleton className="h-12 w-28" />
         ) : accounts.length === 0 ? (
-          <div id="account_id" tabIndex={-1} className="flex flex-col gap-2">
-            <Alert>
-              {requiresAccount
-                ? "Necesitas al menos una cuenta activa para registrar movimientos."
-                : "No hay cuentas activas. Puedes dejar esta transacción sin cuenta."}
-            </Alert>
-            <Button href="/settings/accounts/new" variant="secondary" size="sm">
-              + Crear cuenta
-            </Button>
-          </div>
+          <p
+            id="account_id"
+            tabIndex={-1}
+            className="rounded-2xl border border-dashed border-border px-4 py-3 text-sm text-muted-foreground"
+          >
+            Aún no tienes cuentas; este movimiento se guardará sin cuenta.{" "}
+            <Link
+              href="/settings/accounts/new"
+              className="font-semibold text-primary hover:opacity-80"
+            >
+              Crear una cuenta
+            </Link>
+          </p>
         ) : (
           <ChipScroller>
             <div
@@ -255,7 +260,7 @@ export function TransactionForm({
                   icon={accountIcon(account.type)}
                   selected={values.account_id === account.id}
                   disabled={loading}
-                  onSelect={() => updateField("account_id", account.id)}
+                  onSelect={() => selectAccount(account.id)}
                   className="h-12 min-w-28 px-4 text-sm"
                 >
                   {account.name}

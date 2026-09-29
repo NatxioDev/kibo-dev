@@ -16,6 +16,7 @@ import {
   ACCOUNT_NAME_MAX_LENGTH,
   ACCOUNT_TYPE_LABELS,
   ACCOUNT_TYPES,
+  type AccountFormValues,
 } from "@/features/accounts/schemas/accountSchema";
 import type { Account } from "@/features/transactions/types";
 
@@ -24,11 +25,15 @@ type AccountFormProps = {
   account?: Account;
 };
 
-const NAME_SUGGESTIONS = [
-  "BCP Ahorros",
-  "Efectivo",
-  "Banco USD",
-  "Gastos diarios",
+const SUGGESTIONS: {
+  name: string;
+  type: AccountFormValues["type"];
+  currency: AccountFormValues["currency"];
+}[] = [
+  { name: "BancoSol", type: "SAVINGS", currency: "BOB" },
+  { name: "Efectivo", type: "CASH", currency: "BOB" },
+  { name: "Banco USD", type: "SAVINGS", currency: "USD" },
+  { name: "Gastos diarios", type: "EXPENSES", currency: "BOB" },
 ];
 
 export function AccountForm({ mode, account }: AccountFormProps) {
@@ -54,21 +59,26 @@ export function AccountForm({ mode, account }: AccountFormProps) {
           onChange={(event) => updateField("name", event.target.value)}
           {...errorProps("name", fieldErrors.name)}
           className={inputClassName}
-          placeholder="Ej. BCP Ahorros BOB…"
+          placeholder="Ej. Banco Sol Ahorros BOB…"
         />
       </Field>
 
       {mode === "create" ? (
         <div className="flex flex-wrap gap-2" role="group" aria-label="Sugerencias">
-          {NAME_SUGGESTIONS.map((suggestion) => (
+          {SUGGESTIONS.map((suggestion) => (
             <button
-              key={suggestion}
+              key={suggestion.name}
               type="button"
               disabled={loading}
-              onClick={() => updateField("name", suggestion)}
-              className="glass h-9 rounded-control border border-border bg-surface px-3.5 text-sm font-semibold text-foreground transition-colors hover:bg-surface-muted"
+              onClick={() => {
+                updateField("name", suggestion.name);
+                updateField("type", suggestion.type);
+                updateField("currency", suggestion.currency);
+              }}
+              className="glass flex h-9 items-center gap-1.5 rounded-control border border-border bg-surface px-3.5 text-sm font-semibold text-foreground transition-colors hover:bg-surface-muted"
             >
-              {suggestion}
+              <span aria-hidden>{accountIcon(suggestion.type)}</span>
+              {suggestion.name}
             </button>
           ))}
         </div>

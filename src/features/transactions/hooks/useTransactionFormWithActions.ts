@@ -153,7 +153,8 @@ export function useTransactionFormWithActions({
   const [loadingOptions, setLoadingOptions] = useState(true);
   const [optionsError, setOptionsError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
-  const requiresAccount = mode === "create";
+  // Sin cuentas creadas no bloqueamos el registro; el servidor aplica la misma regla.
+  const requiresAccount = mode === "create" && accounts.length > 0;
 
   // Carga dinámica de opciones del formulario desde el cliente.
   // Se mantiene en el cliente porque las categorías cambian según el tipo de transacción
@@ -214,7 +215,8 @@ export function useTransactionFormWithActions({
       setValues((prev) => {
         if (prev.account_id) return prev;
         if (mode !== "create" || accountsResult.data.length === 0) return prev;
-        return { ...prev, account_id: accountsResult.data[0].id };
+        const first = accountsResult.data[0];
+        return { ...prev, account_id: first.id, currency: first.currency };
       });
       setLoadingOptions(false);
     }
@@ -237,6 +239,18 @@ export function useTransactionFormWithActions({
       setSplit((prev) => ({ ...prev, enabled: false }));
     }
     setFieldErrors((prev) => ({ ...prev, [key]: undefined }));
+    setFormError(null);
+  }
+
+  function selectAccount(accountId: string) {
+    const account = accounts.find((item) => item.id === accountId);
+    setValues((prev) => ({
+      ...prev,
+      account_id: accountId,
+      currency:
+        mode === "create" && account && !shareLock ? account.currency : prev.currency,
+    }));
+    setFieldErrors((prev) => ({ ...prev, account_id: undefined, currency: undefined }));
     setFormError(null);
   }
 
@@ -282,12 +296,7 @@ export function useTransactionFormWithActions({
     }
 
     if (requiresAccount && !parsed.data.account_id) {
-      const nextErrors = {
-        account_id:
-          accounts.length === 0
-            ? "Crea una cuenta en Ajustes antes de registrar."
-            : "Selecciona una cuenta.",
-      };
+      const nextErrors = { account_id: "Selecciona una cuenta." };
       setFieldErrors(nextErrors);
       return nextErrors;
     }
@@ -350,6 +359,7 @@ export function useTransactionFormWithActions({
   return {
     values,
     updateField,
+    selectAccount,
     split,
     updateSplit,
     toggleFriend,
