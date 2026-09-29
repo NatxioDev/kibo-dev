@@ -1,17 +1,20 @@
-import { Suspense } from "react";
 import { PageHeader } from "@/components/PageHeader";
 import { PageShell } from "@/components/PageShell";
 import { Reveal } from "@/components/motion/Reveal";
 import { Alert } from "@/components/ui/Alert";
 import { Button } from "@/components/ui/Button";
 import { createServerDependencies } from "@/core/infrastructure/factories/createServerDependencies";
+import { ListAccounts } from "@/features/accounts/application/ListAccounts.application";
 import { ListTransactions } from "@/features/transactions/application/ListTransactions.application";
 import { TransactionList } from "@/features/transactions/components/TransactionList";
 import { TransactionListFilters } from "@/features/transactions/components/TransactionListFilters";
-import { parseTransactionTypeFilter } from "@/features/transactions/utils/listFilters";
+import {
+  parseTransactionAccountFilter,
+  parseTransactionTypeFilter,
+} from "@/features/transactions/utils/listFilters";
 
 type TransactionsPageProps = {
-  searchParams: Promise<{ type?: string }>;
+  searchParams: Promise<{ type?: string; account?: string }>;
 };
 
 export default async function TransactionsPage({
@@ -19,11 +22,18 @@ export default async function TransactionsPage({
 }: TransactionsPageProps) {
   const params = await searchParams;
   const type = parseTransactionTypeFilter(params.type);
-  const filtersActive = type !== "all";
-  const { transactionRepository } = await createServerDependencies();
-  const result = await new ListTransactions(transactionRepository).execute({
-    type,
-  });
+  const accountId = parseTransactionAccountFilter(params.account);
+  const filtersActive = type !== "all" || accountId !== "all";
+  const { transactionRepository, accountRepository } =
+    await createServerDependencies();
+  const [result, accountsResult] = await Promise.all([
+    new ListTransactions(transactionRepository).execute({
+      type,
+      accountId,
+    }),
+    new ListAccounts(accountRepository).execute(),
+  ]);
+  const accounts = accountsResult.success ? accountsResult.data : [];
 
   return (
     <PageShell>
@@ -53,26 +63,23 @@ export default async function TransactionsPage({
         />
       </Reveal>
 
-      <Reveal>
-        <Suspense
-          fallback={
-            <div className="h-11 animate-pulse rounded-control bg-surface-muted" />
-          }
-        >
-          <TransactionListFilters type={type} />
-        </Suspense>
-      </Reveal>
-
-      {!result.success ? (
-        <Reveal>
-          <Alert>{result.error}</Alert>
-        </Reveal>
-      ) : (
-        <TransactionList
-          transactions={result.data}
-          filtersActive={filtersActive}
-        />
-      )}
+      <TransactionListFilters
+        type={type}
+        accountId={accountId}
+        accounts={accounts}
+        resultCount={result.success ? result.data.length : null}
+      >
+        {!result.success ? (
+          <Reveal>
+            <Alert>{result.error}</Alert>
+          </Reveal>
+        ) : (
+          <TransactionList
+            transactions={result.data}
+            filtersActive={filtersActive}
+          />
+        )}
+      </TransactionListFilters>
     </PageShell>
   );
 }

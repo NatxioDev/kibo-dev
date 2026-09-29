@@ -21,10 +21,10 @@ export function TransactionList({
           <EmptyState
             icon="🔎"
             title="Sin resultados"
-            description="No hay transacciones de este tipo. Prueba con otro filtro."
+            description="No hay movimientos con estos filtros."
             action={
               <Button href="/transactions" variant="secondary" size="sm">
-                Ver todas
+                Limpiar filtros
               </Button>
             }
           />

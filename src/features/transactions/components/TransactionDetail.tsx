@@ -40,6 +40,7 @@ export function TransactionDetail({
 
   const isIncome = transaction.type === "INCOME";
   const categoryLabel = formatCategoryLabel(transaction.category);
+  const accountLabel = transaction.account?.name ?? "Sin cuenta";
   const paymentLabel = transaction.payment_method?.name ?? "Sin método";
   const description = transaction.description?.trim();
   const merchant = transaction.merchant?.trim() || "—";
@@ -77,6 +78,7 @@ export function TransactionDetail({
       <Reveal>
         <Card as="dl" className="flex flex-col divide-y divide-track py-1">
           <DetailRow label="Tipo" value={isIncome ? "Ingreso" : "Gasto"} />
+          <DetailRow label="Cuenta" value={accountLabel} />
           <DetailRow label="Categoría" value={categoryLabel} />
           <DetailRow label="Método de pago" value={paymentLabel} />
           <DetailRow label="Comercio" value={merchant} />
