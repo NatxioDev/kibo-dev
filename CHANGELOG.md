@@ -1,3 +1,10 @@
+## [0.9.1](https://github.com/NatxioDev/kibo-dev/compare/v0.9.0...v0.9.1) (2026-10-03)
+
+### Bug Fixes
+
+* **dashboard:** function for default date time range ([7fc6426](https://github.com/NatxioDev/kibo-dev/commit/7fc6426519033e53e47c2afe2a9ee5fc2e45696a))
+* **dashboard:** set last three months as default date range ([aacc32c](https://github.com/NatxioDev/kibo-dev/commit/aacc32ceedd1ac72a8c85ad95fe2f478af848d5b))
+
 ## [0.9.0](https://github.com/NatxioDev/kibo-dev/compare/v0.8.1...v0.9.0) (2026-09-29)
 
 ### Features
