@@ -29,7 +29,7 @@ export const DASHBOARD_PERIODS: {
   value: DashboardPeriod;
   label: string;
 }[] = [
+  { value: "last_3_months", label: "Últimos 3 meses" },
   { value: "this_month", label: "Este mes" },
   { value: "last_month", label: "Mes pasado" },
-  { value: "last_3_months", label: "Últimos 3 meses" },
 ];

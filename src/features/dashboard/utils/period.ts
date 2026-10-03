@@ -42,7 +42,7 @@ export function parseDashboardPeriod(
   ) {
     return value;
   }
-  return "this_month";
+  return "last_3_months";
 }
 
 export function getPeriodRange(
