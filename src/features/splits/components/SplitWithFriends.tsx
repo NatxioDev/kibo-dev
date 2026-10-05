@@ -14,6 +14,7 @@ type SplitWithFriendsProps = {
   enabled: boolean;
   onEnabledChange: (value: boolean) => void;
   showToggle: boolean;
+  hidePayerConsumes?: boolean;
   payerConsumes: boolean;
   onPayerConsumesChange: (value: boolean) => void;
   mode: "equal" | "custom";
@@ -36,6 +37,7 @@ export function SplitWithFriends({
   enabled,
   onEnabledChange,
   showToggle,
+  hidePayerConsumes = false,
   payerConsumes,
   onPayerConsumesChange,
   mode,
@@ -146,17 +148,19 @@ export function SplitWithFriends({
             </ul>
           </fieldset>
 
-          <label className="flex min-h-12 cursor-pointer items-center gap-3 focus-within:ring-2 focus-within:ring-primary/50">
-            <input
-              type="checkbox"
-              name="payer-consumes"
-              className="h-5 w-5 accent-primary"
-              checked={payerConsumes}
-              disabled={disabled || amountsLocked}
-              onChange={(event) => onPayerConsumesChange(event.target.checked)}
-            />
-            <span className="text-sm text-foreground">Yo también consumí</span>
-          </label>
+          {hidePayerConsumes ? null : (
+            <label className="flex min-h-12 cursor-pointer items-center gap-3 focus-within:ring-2 focus-within:ring-primary/50">
+              <input
+                type="checkbox"
+                name="payer-consumes"
+                className="h-5 w-5 accent-primary"
+                checked={payerConsumes}
+                disabled={disabled || amountsLocked}
+                onChange={(event) => onPayerConsumesChange(event.target.checked)}
+              />
+              <span className="text-sm text-foreground">Yo también consumí</span>
+            </label>
+          )}
 
           <Segmented
             label="Tipo de reparto"
