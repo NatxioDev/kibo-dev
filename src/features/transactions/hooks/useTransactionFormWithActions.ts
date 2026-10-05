@@ -56,6 +56,7 @@ type UseTransactionFormOptions = {
   friends?: FriendProfile[];
   bill?: ExpenseEditContext | null;
   shareLock?: { payerName: string } | null;
+  preset?: "debt";
 };
 
 function toFormState(transaction?: Transaction, bill?: ExpenseEditContext | null): FormState {
@@ -100,11 +101,12 @@ function toFormState(transaction?: Transaction, bill?: ExpenseEditContext | null
   };
 }
 
-function toSplitState(bill?: ExpenseEditContext | null): SplitState {
+function toSplitState(bill?: ExpenseEditContext | null, preset?: "debt"): SplitState {
   if (!bill) {
+    const debt = preset === "debt";
     return {
-      enabled: false,
-      payerConsumes: true,
+      enabled: debt,
+      payerConsumes: !debt,
       mode: "equal",
       friendIds: [],
       payerAmount: "",
@@ -141,10 +143,12 @@ export function useTransactionFormWithActions({
   friends = [],
   bill = null,
   shareLock = null,
+  preset,
 }: UseTransactionFormOptions) {
   const router = useRouter();
+  const isDebt = preset === "debt";
   const [values, setValues] = useState<FormState>(() => toFormState(transaction, bill));
-  const [split, setSplit] = useState<SplitState>(() => toSplitState(bill));
+  const [split, setSplit] = useState<SplitState>(() => toSplitState(bill, preset));
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [formError, setFormError] = useState<string | null>(null);
   const [accounts, setAccounts] = useState<Account[]>([]);
@@ -346,7 +350,7 @@ export function useTransactionFormWithActions({
         return;
       }
 
-      if (result.data.id) {
+      if (result.data.id && !isDebt) {
         router.push(mode === "create" ? "/" : `/transactions/${result.data.id}`);
       } else {
         router.push("/friends");
@@ -376,9 +380,10 @@ export function useTransactionFormWithActions({
     submit,
     requiresAccount,
     amountLocked: Boolean(shareLock) || Boolean(bill?.amountsLocked),
-    typeLocked: Boolean(shareLock) || Boolean(bill),
+    typeLocked: Boolean(shareLock) || Boolean(bill) || isDebt,
     shareLock,
     showSplit: values.type === "EXPENSE" && !shareLock,
-    splitRequired: Boolean(bill),
+    splitRequired: Boolean(bill) || isDebt,
+    isDebt,
   };
 }

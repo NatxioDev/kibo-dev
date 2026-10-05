@@ -38,6 +38,7 @@ export default async function FriendsPage() {
   const friendIds = new Set(
     result.success ? result.data.friends.map((friendship) => friendship.friend.id) : [],
   );
+  const hasFriends = friendIds.size > 0;
   const incoming = result.success ? result.data.incoming.length : 0;
   const outgoing = result.success ? result.data.outgoing.length : 0;
   const people = balances.success ? balances.data : [];
@@ -53,22 +54,29 @@ export default async function FriendsPage() {
           back={{ href: "/", label: "Inicio" }}
           title="Amigos"
           actions={
-            <Button
-              href="/friends/requests"
-              size="sm"
-              aria-label={requestsLabel(incoming, outgoing)}
-              className="relative"
-            >
-              + Agregar
-              {incoming > 0 ? (
-                <span
-                  aria-hidden
-                  className="absolute -top-1.5 -right-1.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-expense px-1 text-[0.6875rem] leading-none font-bold text-white tabular-nums ring-2 ring-background"
-                >
-                  {incoming > 9 ? "9+" : incoming}
-                </span>
+            <>
+              {hasFriends ? (
+                <Button href="/friends/debts/new" size="sm" variant="secondary">
+                  Añadir deuda
+                </Button>
               ) : null}
-            </Button>
+              <Button
+                href="/friends/requests"
+                size="sm"
+                aria-label={requestsLabel(incoming, outgoing)}
+                className="relative"
+              >
+                + Agregar
+                {incoming > 0 ? (
+                  <span
+                    aria-hidden
+                    className="absolute -top-1.5 -right-1.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-expense px-1 text-[0.6875rem] leading-none font-bold text-white tabular-nums ring-2 ring-background"
+                  >
+                    {incoming > 9 ? "9+" : incoming}
+                  </span>
+                ) : null}
+              </Button>
+            </>
           }
         />
       </Reveal>

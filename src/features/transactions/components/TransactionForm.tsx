@@ -36,6 +36,7 @@ type TransactionFormProps = {
   friends?: FriendProfile[];
   bill?: ExpenseEditContext | null;
   shareLock?: { payerName: string } | null;
+  preset?: "debt";
 };
 
 const FIELD_ORDER = [
@@ -77,6 +78,7 @@ export function TransactionForm({
   friends = [],
   bill = null,
   shareLock = null,
+  preset,
 }: TransactionFormProps) {
   const router = useRouter();
   const {
@@ -101,7 +103,8 @@ export function TransactionForm({
     typeLocked,
     showSplit,
     splitRequired,
-  } = useTransactionFormWithActions({ mode, transaction, friends, bill, shareLock });
+    isDebt,
+  } = useTransactionFormWithActions({ mode, transaction, friends, bill, shareLock, preset });
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -112,7 +115,7 @@ export function TransactionForm({
     const fallback =
       mode === "edit" && transaction
         ? `/transactions/${transaction.id}`
-        : mode === "edit-bill"
+        : mode === "edit-bill" || isDebt
           ? "/friends"
           : "/transactions";
     if (window.history.length > 1) router.back();
@@ -417,6 +420,7 @@ export function TransactionForm({
           enabled={split.enabled}
           onEnabledChange={(enabled) => updateSplit({ enabled })}
           showToggle={!splitRequired}
+          hidePayerConsumes={isDebt}
           payerConsumes={split.payerConsumes}
           onPayerConsumesChange={(payerConsumes) => updateSplit({ payerConsumes })}
           mode={split.mode}
@@ -445,9 +449,11 @@ export function TransactionForm({
             ? mode === "create"
               ? "Guardando…"
               : "Actualizando…"
-            : mode === "create"
-              ? "Guardar transacción"
-              : "Guardar cambios"}
+            : isDebt
+              ? "Guardar deuda"
+              : mode === "create"
+                ? "Guardar transacción"
+                : "Guardar cambios"}
         </Button>
       </div>
       <Button variant="ghost" onClick={handleCancel} disabled={loading} className="-mt-3">
