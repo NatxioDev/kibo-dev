@@ -1,3 +1,9 @@
+## [0.10.0](https://github.com/NatxioDev/kibo-dev/compare/v0.9.1...v0.10.0) (2026-10-05)
+
+### Features
+
+* **transactions:** add preset option for debt handling in transaction forms ([ffe24fd](https://github.com/NatxioDev/kibo-dev/commit/ffe24fd4348586e3596523f23c92417ffc4be2f9))
+
 ## [0.9.1](https://github.com/NatxioDev/kibo-dev/compare/v0.9.0...v0.9.1) (2026-10-03)
 
 ### Bug Fixes
