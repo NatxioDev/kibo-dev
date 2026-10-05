@@ -8,6 +8,7 @@ import type { FeedbackRepository } from "@/features/feedback/domain/Feedback.rep
 import type { FriendshipRepository } from "@/features/friends/domain/Friendship.repository";
 import type { PaymentMethodRepository } from "@/features/payment-methods/domain/PaymentMethod.repository";
 import type { ProfileRepository } from "@/features/profile/domain/Profile.repository";
+import type { ReportesRepository } from "@/features/reportes/domain/Reportes.repository";
 import type { SplitRepository } from "@/features/splits/domain/Split.repository";
 import type { TransactionRepository } from "@/features/transactions/domain/Transaction.repository";
 
@@ -19,6 +20,7 @@ export type AppDependencies = {
   categoryRepository: CategoryRepository;
   paymentMethodRepository: PaymentMethodRepository;
   dashboardRepository: DashboardRepository;
+  reportesRepository: ReportesRepository;
   feedbackRepository: FeedbackRepository;
   profileRepository: ProfileRepository;
   friendshipRepository: FriendshipRepository;

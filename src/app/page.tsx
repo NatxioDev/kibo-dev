@@ -50,6 +50,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
         >
           <DashboardHeader displayName={displayName} />
           <div className="grid shrink-0 grid-cols-2 gap-2 sm:flex">
+            <Button href="/reportes">Reportes</Button>
             <Button href="/transactions/new">+ Registrar</Button>
             <Button href="/transactions" variant="secondary">
               Transacciones
