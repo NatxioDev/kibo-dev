@@ -357,12 +357,12 @@ nombres para invalidar caché.
 y devuelve `{ unexpectedIncome, manyExpensesToday }` según los umbrales de la spec.
 
 **Acceptance criteria:**
-- [ ] Ingreso de los últimos 3 días > 1.5× el promedio de los 90 días previos → `unexpectedIncome`; con menos de 3 ingresos de historial → `false`.
-- [ ] ≥ 5 gastos con fecha de hoy → `manyExpensesToday`.
-- [ ] Tests cubren: historial insuficiente, borde 1.5×, borde 3 días, exactamente 4 y 5 gastos.
+- [x] Ingreso de los últimos 3 días > 1.5× el promedio de los 90 días previos → `unexpectedIncome`; con menos de 3 ingresos de historial → `false`.
+- [x] ≥ 5 gastos con fecha de hoy → `manyExpensesToday`.
+- [x] Tests cubren: historial insuficiente, borde 1.5×, borde 3 días, exactamente 4 y 5 gastos.
 
 **Verification:**
-- [ ] Tests pass: `bun run test`
+- [x] Tests pass: `bun run test`
 
 **Dependencies:** Task 2
 
