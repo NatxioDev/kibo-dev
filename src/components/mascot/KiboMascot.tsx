@@ -1,8 +1,9 @@
 "use client";
 
 import { motion } from "motion/react";
+import { useState, type AnimationEvent } from "react";
 import { usePrefersReducedMotion } from "@/components/motion/usePrefersReducedMotion";
-import { MOODS, type EyeConfig } from "./moods";
+import { CALMING_MOODS, MOODS, type EyeConfig } from "./moods";
 import {
   BODY_INK_HALF,
   BODY_RING,
@@ -20,6 +21,7 @@ import styles from "./KiboMascot.module.css";
 const DETAIL_MIN_SIZE = 33;
 
 type KiboMascotProps = {
+  /** Los estados expresivos se reproducen 2 ciclos y vuelven a `idle`. */
   mood?: MascotMood;
   /** Lado de la caja de la "o" en px; saltos, sombra y extras se dibujan por fuera. */
   size?: number;
@@ -59,6 +61,28 @@ function Extras({ mood }: { mood: MascotMood }) {
     );
   }
 
+  if (mood === "preocupado") {
+    return (
+      <path
+        className={styles.drop}
+        d="M90 14C90 14 85.5 20.5 85.5 23.7A4.5 4.5 0 0 0 94.5 23.7C94.5 20.5 90 14 90 14Z"
+        fill="#8DB8DE"
+      />
+    );
+  }
+
+  if (mood === "guino") {
+    return (
+      <g fill={MASCOT_GOLD}>
+        <path className={styles.spark} d="M94 6L96.2 12.8L103 15L96.2 17.2L94 24L91.8 17.2L85 15L91.8 12.8Z" />
+        <path
+          className={`${styles.spark} ${styles.spark2}`}
+          d="M106 26L107.1 29.4L110.5 30.5L107.1 31.6L106 35L104.9 31.6L101.5 30.5L104.9 29.4Z"
+        />
+      </g>
+    );
+  }
+
   if (mood === "pensando") {
     return (
       <g fill="var(--mascot-extra)">
@@ -79,18 +103,30 @@ export function KiboMascot({
   className = "",
 }: KiboMascotProps) {
   const reduceMotion = usePrefersReducedMotion();
-  const config = MOODS[mood];
+  const [prevMood, setPrevMood] = useState(mood);
+  const [calmed, setCalmed] = useState(false);
+  if (prevMood !== mood) {
+    setPrevMood(mood);
+    setCalmed(false);
+  }
+
+  const shown = calmed ? "idle" : mood;
+  const config = MOODS[shown];
   const detailed = size >= DETAIL_MIN_SIZE;
+
+  function handleBodyAnimationEnd(event: AnimationEvent<SVGGElement>) {
+    if (event.target === event.currentTarget && CALMING_MOODS.has(shown)) setCalmed(true);
+  }
 
   return (
     <svg
-      key={mood}
+      key={shown}
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 100 100"
       width={size}
       height={size}
       aria-hidden
-      data-mood={mood}
+      data-mood={shown}
       className={`${styles.mascot} shrink-0 ${className}`}
     >
       {shadow && detailed ? (
@@ -103,19 +139,23 @@ export function KiboMascot({
           fill="var(--mascot-shadow)"
         />
       ) : null}
-      <g className={styles.body}>
+      <g className={styles.body} onAnimationEnd={handleBodyAnimationEnd}>
         <path d={BODY_RING} fill={MASCOT_GOLD} fillRule="evenodd" />
         <path d={BODY_INK_HALF} fill={MASCOT_INK} />
         <g className={styles.eyes}>
           <g transform={`translate(${EYE_LEFT.x} ${EYE_LEFT.y})`}>
-            <Eye eye={config.left} fill={MASCOT_EYE_INK} still={reduceMotion} />
+            <g className={styles.eyeL}>
+              <Eye eye={config.left} fill={MASCOT_EYE_INK} still={reduceMotion} />
+            </g>
           </g>
           <g transform={`translate(${EYE_RIGHT.x} ${EYE_RIGHT.y})`}>
-            <Eye eye={config.right} fill={MASCOT_EYE_CREAM} still={reduceMotion} />
+            <g className={styles.eyeR}>
+              <Eye eye={config.right} fill={MASCOT_EYE_CREAM} still={reduceMotion} />
+            </g>
           </g>
         </g>
       </g>
-      {detailed ? <Extras mood={mood} /> : null}
+      {detailed ? <Extras mood={shown} /> : null}
     </svg>
   );
 }

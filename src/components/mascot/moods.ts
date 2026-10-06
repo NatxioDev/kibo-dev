@@ -1,11 +1,15 @@
 import {
   EYE_BLINK,
+  EYE_DIZZY,
   EYE_HAPPY,
   EYE_HAPPY_SQUEEZE,
   EYE_PILL,
   EYE_SLEEP,
   EYE_SMALL,
   EYE_SQUASH,
+  EYE_TALL,
+  EYE_WIDE,
+  EYE_WORRY,
 } from "./shapes";
 import type { MascotMood } from "./types";
 
@@ -88,9 +92,69 @@ const PENSANDO_EYE = track(4, [
   [1, EYE_SMALL],
 ]);
 
+const SORPRENDIDO_EYE = track(3, [
+  [0, EYE_PILL],
+  [0.12, EYE_PILL, OUT],
+  [0.18, EYE_SQUASH, OUT],
+  [0.25, EYE_TALL, IN_OUT],
+  [0.33, EYE_WIDE],
+  [0.6, EYE_WIDE, IN],
+  [0.615, EYE_BLINK, OUT],
+  [0.635, EYE_WIDE],
+  [0.76, EYE_WIDE, IN_OUT],
+  [0.88, EYE_PILL],
+  [1, EYE_PILL],
+]);
+
+const PREOCUPADO_EYE = track(3, [
+  [0, EYE_PILL],
+  [0.1, EYE_PILL, OUT],
+  [0.2, EYE_WORRY],
+  [0.74, EYE_WORRY, IN],
+  [0.755, EYE_BLINK, OUT],
+  [0.775, EYE_WORRY],
+  [0.86, EYE_WORRY, IN_OUT],
+  [0.96, EYE_PILL],
+  [1, EYE_PILL],
+]);
+
+const GUINO_EYE = track(3, [
+  [0, EYE_PILL],
+  [0.14, EYE_PILL, IN],
+  [0.18, EYE_BLINK, BACK],
+  [0.24, EYE_HAPPY],
+  [0.7, EYE_HAPPY, IN_OUT],
+  [0.8, EYE_PILL],
+  [1, EYE_PILL],
+]);
+
+const MAREADO_EYE = track(1.2, [
+  [0, EYE_DIZZY, IN_OUT],
+  [0.25, EYE_SMALL, IN_OUT],
+  [0.5, EYE_DIZZY, IN_OUT],
+  [0.75, EYE_SQUASH, IN_OUT],
+  [1, EYE_DIZZY],
+]);
+
 export const MOODS: Record<MascotMood, MoodConfig> = {
   idle: bothEyes({ pose: EYE_PILL, track: IDLE_BLINK }),
   feliz: bothEyes({ pose: EYE_HAPPY, track: FELIZ_EYE }),
+  sorprendido: bothEyes({ pose: EYE_WIDE, track: SORPRENDIDO_EYE }),
+  preocupado: bothEyes({ pose: EYE_WORRY, track: PREOCUPADO_EYE }),
   durmiendo: bothEyes({ pose: EYE_SLEEP }),
+  guino: {
+    left: { pose: EYE_PILL },
+    right: { pose: EYE_HAPPY, track: GUINO_EYE },
+  },
   pensando: bothEyes({ pose: EYE_SMALL, track: PENSANDO_EYE }),
+  mareado: bothEyes({ pose: EYE_DIZZY, track: MAREADO_EYE }),
 };
+
+/** Estados que reproducen 2 ciclos y vuelven a `idle`; el resto queda en loop. */
+export const CALMING_MOODS: ReadonlySet<MascotMood> = new Set([
+  "feliz",
+  "sorprendido",
+  "preocupado",
+  "guino",
+  "mareado",
+]);

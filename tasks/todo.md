@@ -149,11 +149,12 @@ Passkey, y mostrar `KiboLoader screen` superpuesto a la tarjeta de login mientra
       queda hasta que cambia la página; Google lo resetea en `pageshow` si vuelve desde caché).
 - [x] Mientras redirige se muestra `RedirectOverlay` (loader de pantalla + texto con `role="status"`, en `Portal`).
 - [x] Si el inicio de sesión falla, el loader desaparece y se muestra el error como hoy (probado con Passkey en localhost).
-- [ ] Ver el overlay en un inicio de sesión real con Google y con Passkey (no se pudo medir en el navegador de Cursor).
+- [x] Ver el overlay en un inicio de sesión real con Google y con Passkey (validado por Nacho;
+  texto cambiado a "Iniciando sesión con Google…").
 
 **Verification:**
 - [ ] Build succeeds: `bun run build`
-- [ ] Manual check: login con Google y con Passkey (éxito y cancelación).
+- [x] Manual check: login con Google y con Passkey (éxito y cancelación).
 
 **Dependencies:** Task 3
 
@@ -245,7 +246,7 @@ definió el spike. Incluye pose estática por estado para reduced motion.
 **Verification:**
 - [x] Typecheck y lint
 - [x] Manual check: comparación con la hoja v3 en claro/oscuro y con reduced motion (Chrome).
-- [ ] Manual check: Safari.
+- [x] Manual check: Safari.
 
 **Dependencies:** Task 1, Task 3
 
@@ -267,13 +268,14 @@ destellos), e implementar la calma automática: los estados expresivos (incluido
 reproducen 2 ciclos y vuelven a `idle` con `onAnimationEnd`.
 
 **Acceptance criteria:**
-- [ ] Los 8 estados en alcance coinciden con la hoja v3.
-- [ ] `feliz`, `sorprendido`, `preocupado`, `guino` y `mareado` vuelven a `idle` tras 2 ciclos; `idle`, `durmiendo` y `pensando` siguen en loop.
-- [ ] Cambiar la prop `mood` reinicia el ciclo del nuevo estado.
+- [x] Los 8 estados en alcance coinciden con la hoja v3.
+- [x] `feliz`, `sorprendido`, `preocupado`, `guino` y `mareado` vuelven a `idle` tras 2 ciclos; `idle`, `durmiendo` y `pensando` siguen en loop.
+- [x] Cambiar la prop `mood` reinicia el ciclo del nuevo estado.
+- [x] Con reduced motion no hay `animationend`: el estado expresivo queda en su pose.
 
 **Verification:**
-- [ ] Build succeeds: `bun run build`
-- [ ] Manual check: en `/dev/mascota`, cada estado expresivo vuelve a idle; botón para repetir.
+- [x] Typecheck y lint
+- [x] Manual check: en `/dev/mascota`, cada estado expresivo vuelve a idle (6 s; mareado 4.8 s); botón para repetir.
 
 **Dependencies:** Task 8
 

@@ -5,8 +5,8 @@ import { PageHeader } from "@/components/PageHeader";
 import { PageShell } from "@/components/PageShell";
 import { KiboLoader } from "@/components/mascot/KiboLoader";
 import { KiboMascot } from "@/components/mascot/KiboMascot";
-import type { MascotMood } from "@/components/mascot/types";
 import { Button } from "@/components/ui/Button";
+import { MascotGallery } from "./MascotGallery";
 
 export const metadata: Metadata = {
   title: "Mascota · Dev · Kibo",
@@ -14,8 +14,6 @@ export const metadata: Metadata = {
 
 const SIZES = [48, 32, 24, 20];
 const MASCOT_SIZES = [64, 40, 32, 24];
-const MOODS: MascotMood[] = ["idle", "feliz", "durmiendo", "pensando"];
-
 const THEMES: { name: string; className: string; style?: CSSProperties }[] = [
   { name: "Tema actual", className: "" },
   {
@@ -59,14 +57,7 @@ export default function MascotaDevPage() {
             className={`flex flex-col gap-8 rounded-card px-5 pt-12 pb-5 ${theme.className || "bg-surface"}`}
             style={theme.style}
           >
-            <div className="grid grid-cols-2 gap-x-6 gap-y-14 sm:grid-cols-4">
-              {MOODS.map((mood) => (
-                <div key={mood} className="flex flex-col items-center gap-4">
-                  <KiboMascot mood={mood} size={88} />
-                  <span className="text-xs font-semibold">{mood}</span>
-                </div>
-              ))}
-            </div>
+            <MascotGallery />
             <div className="flex items-end gap-5">
               <span className="w-20 text-xs font-semibold uppercase opacity-60">Tamaños</span>
               {MASCOT_SIZES.map((size) => (

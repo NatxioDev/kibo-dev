@@ -74,7 +74,7 @@ en los demás lugares donde hoy hay spinner o un texto de espera:
 | Lugar | Hoy | Pasa a |
 |---|---|---|
 | `GoogleSignInButton`, `PasskeySignInButton` | `AuthSpinner` | `compact` en el botón |
-| Login mientras redirige a Google / tras Passkey OK | texto "Redirigiendo…" | `screen` superpuesto a la tarjeta de login |
+| Login mientras redirige a Google / tras Passkey OK | texto "Redirigiendo…" → "Iniciando sesión con Google…" | `screen` superpuesto a la tarjeta de login |
 | `Button` (todas las variantes) | solo texto pendiente | prop `loading` → `compact` + texto |
 | `ConfirmDialog` (todos los diálogos de baja/borrado) | texto `pendingLabel` | `Button loading` |
 | `ExportReportButton` | spinner `animate-spin` | `compact` en la fila + `pensando` en el encabezado del sheet |
