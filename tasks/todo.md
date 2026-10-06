@@ -487,6 +487,6 @@ saber nada de auth.
 ## Checkpoint D: Completo
 
 - [ ] Todos los Success Criteria de la spec marcados
-- [ ] lint + test + build en verde
+- [x] lint + test + build en verde
 - [ ] Prueba en Safari iOS (PWA), Chrome y Firefox, claro/oscuro y reduced motion
-- [ ] PR abierto referenciando KIBO-84 y la spec
+- [x] PR abierto referenciando KIBO-84 y la spec
