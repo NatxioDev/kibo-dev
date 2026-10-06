@@ -8,7 +8,6 @@ import { SupabaseFeedbackRepository } from "@/features/feedback/infrastructure/s
 import { SupabaseFriendshipRepository } from "@/features/friends/infrastructure/supabase/SupabaseFriendship.repository";
 import { SupabasePaymentMethodRepository } from "@/features/payment-methods/infrastructure/supabase/SupabasePaymentMethod.repository";
 import { SupabaseProfileRepository } from "@/features/profile/infrastructure/supabase/SupabaseProfile.repository";
-import { SupabaseReportesRepository } from "@/features/reportes/infrastructure/supabase/SupabaseReportes.repository";
 import { SupabaseSplitRepository } from "@/features/splits/infrastructure/supabase/SupabaseSplit.repository";
 import { SupabaseTransactionRepository } from "@/features/transactions/infrastructure/supabase/SupabaseTransaction.repository";
 import { DependencyFactory } from "./Dependency.factory";
@@ -30,7 +29,6 @@ export function createServerDependenciesWithFriendship(
     categoryRepository: new SupabaseCategoryRepository(supabase),
     paymentMethodRepository: new SupabasePaymentMethodRepository(supabase),
     dashboardRepository: new SupabaseDashboardRepository(supabase),
-    reportesRepository: new SupabaseReportesRepository(supabase),
     feedbackRepository: new SupabaseFeedbackRepository(supabase),
     profileRepository: new SupabaseProfileRepository(supabase),
     friendshipRepository: new SupabaseFriendshipRepository(supabase),
