@@ -17,19 +17,19 @@ export default function manifest(): MetadataRoute.Manifest {
     categories: ["finance"],
     icons: [
       {
-        src: "/brand/app-icon-192.png",
+        src: "/brand/app-icon-192-v3.png",
         sizes: "192x192",
         type: "image/png",
         purpose: "any",
       },
       {
-        src: "/brand/app-icon-512.png",
+        src: "/brand/app-icon-512-v3.png",
         sizes: "512x512",
         type: "image/png",
         purpose: "any",
       },
       {
-        src: "/brand/app-icon-maskable-512.png",
+        src: "/brand/app-icon-maskable-512-v3.png",
         sizes: "512x512",
         type: "image/png",
         purpose: "maskable",

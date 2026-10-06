@@ -15,6 +15,7 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
 
   return (
     <WelcomeScene
+      initialMascotMood={initialError ? "mareado" : undefined}
       footer={
         <p className="text-center text-xs text-muted-foreground">
           Al continuar aceptas nuestra{" "}

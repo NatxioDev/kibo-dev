@@ -2,6 +2,7 @@ import type {
   TransactionCurrency,
   TransactionWithRelations,
 } from "@/features/transactions/types";
+import type { MascotSignals } from "@/features/mascot/types";
 
 export type DashboardPeriod = "this_month" | "last_month" | "last_3_months";
 
@@ -23,6 +24,7 @@ export type DashboardData = {
   expensesByCategory: CategoryExpense[];
   recent: TransactionWithRelations[];
   isEmpty: boolean;
+  mascot: MascotSignals;
 };
 
 export const DASHBOARD_PERIODS: {

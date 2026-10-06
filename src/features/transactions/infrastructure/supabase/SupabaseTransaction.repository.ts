@@ -6,6 +6,8 @@ import type { ServiceResult } from "@/core/domain/ServiceResult";
 import type {
   Transaction,
   TransactionFormValues,
+  TransactionPage,
+  TransactionPageCursor,
   TransactionWithRelations,
 } from "@/features/transactions/domain/models";
 import {
@@ -17,24 +19,28 @@ import {
 import { mapTransactionError } from "@/features/transactions/infrastructure/supabase/mapTransactionError";
 import type { ListTransactionsFilters } from "@/features/transactions/utils/listFilters";
 
-export class SupabaseTransactionRepository implements TransactionRepository {
-  constructor(private readonly supabase: SupabaseClient) {}
-
-  async list(
-    filters: ListTransactionsFilters = {},
-  ): Promise<ServiceResult<TransactionWithRelations[]>> {
-    let query = this.supabase
-      .from("transactions")
-      .select(
-        `
+const TRANSACTION_WITH_RELATIONS_SELECT = `
       *,
       account:accounts(id, name, currency, type),
       category:categories(id, name, icon),
       payment_method:payment_methods(id, name)
-    `,
-      )
+    `;
+
+/** PostgREST `or()` values containing `,`, `:` or `+` must be double-quoted. */
+function quoteFilterValue(value: string): string {
+  return `"${value.replace(/["\\]/g, "\\$&")}"`;
+}
+
+export class SupabaseTransactionRepository implements TransactionRepository {
+  constructor(private readonly supabase: SupabaseClient) {}
+
+  private listQuery(filters: ListTransactionsFilters) {
+    let query = this.supabase
+      .from("transactions")
+      .select(TRANSACTION_WITH_RELATIONS_SELECT)
       .order("date", { ascending: false })
-      .order("created_at", { ascending: false });
+      .order("created_at", { ascending: false })
+      .order("id", { ascending: false });
 
     if (filters.type && filters.type !== "all") {
       query = query.eq("type", filters.type);
@@ -51,6 +57,14 @@ export class SupabaseTransactionRepository implements TransactionRepository {
       query = query.eq("category_id", filters.categoryId);
     }
 
+    if (filters.currency) {
+      query = query.eq("currency", filters.currency);
+    }
+
+    if (filters.status) {
+      query = query.eq("status", filters.status);
+    }
+
     if (filters.from) {
       query = query.gte("date", filters.from);
     }
@@ -58,7 +72,13 @@ export class SupabaseTransactionRepository implements TransactionRepository {
       query = query.lte("date", filters.to);
     }
 
-    const { data, error } = await query;
+    return query;
+  }
+
+  async list(
+    filters: ListTransactionsFilters = {},
+  ): Promise<ServiceResult<TransactionWithRelations[]>> {
+    const { data, error } = await this.listQuery(filters);
 
     if (error) {
       return { success: false, error: mapTransactionError(error) };
@@ -68,6 +88,48 @@ export class SupabaseTransactionRepository implements TransactionRepository {
     return {
       success: true,
       data: rows.map(toTransactionWithRelations),
+    };
+  }
+
+  async listPage(
+    filters: ListTransactionsFilters,
+    cursor: TransactionPageCursor | null,
+    limit: number,
+  ): Promise<ServiceResult<TransactionPage>> {
+    let query = this.listQuery(filters).limit(limit);
+
+    if (cursor) {
+      const date = quoteFilterValue(cursor.date);
+      const createdAt = quoteFilterValue(cursor.created_at);
+      const id = quoteFilterValue(cursor.id);
+      query = query.or(
+        [
+          `date.lt.${date}`,
+          `and(date.eq.${date},created_at.lt.${createdAt})`,
+          `and(date.eq.${date},created_at.eq.${createdAt},id.lt.${id})`,
+        ].join(","),
+      );
+    }
+
+    const { data, error } = await query;
+
+    if (error) {
+      return { success: false, error: mapTransactionError(error) };
+    }
+
+    const items = ((data ?? []) as TransactionWithRelationsRow[]).map(
+      toTransactionWithRelations,
+    );
+    const last = items.at(-1);
+    return {
+      success: true,
+      data: {
+        items,
+        nextCursor:
+          last && items.length === limit
+            ? { date: last.date, created_at: last.created_at, id: last.id }
+            : null,
+      },
     };
   }
 
@@ -97,14 +159,7 @@ export class SupabaseTransactionRepository implements TransactionRepository {
   ): Promise<ServiceResult<TransactionWithRelations>> {
     const { data, error } = await this.supabase
       .from("transactions")
-      .select(
-        `
-      *,
-      account:accounts(id, name, currency, type),
-      category:categories(id, name, icon),
-      payment_method:payment_methods(id, name)
-    `,
-      )
+      .select(TRANSACTION_WITH_RELATIONS_SELECT)
       .eq("id", id)
       .maybeSingle();
 

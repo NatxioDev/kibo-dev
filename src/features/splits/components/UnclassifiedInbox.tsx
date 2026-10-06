@@ -136,7 +136,7 @@ function ClassifyCard({
         {formatMoneyAmount(item.amount, item.currency)}
       </p>
       <fieldset className="flex flex-col gap-2">
-        <legend className="text-sm font-semibold text-foreground">Tu categoría</legend>
+        <legend className="text-sm font-semibold text-foreground mb-2">Tu categoría</legend>
         {categories.length === 0 ? (
           <p className="text-sm text-muted-foreground">
             No tienes categorías de gasto activas. Crea una en Ajustes para clasificarlo.
@@ -174,7 +174,7 @@ function ClassifyCard({
         ) : null}
       </fieldset>
       {error ? <Alert>{error}</Alert> : null}
-      <div className="flex flex-col gap-2 sm:flex-row">
+      <div className="flex flex-row gap-2">
         <Button type="button" disabled={pending} onClick={classify} className="flex-1">
           {pending && !confirmOpen ? "Guardando…" : "Clasificar"}
         </Button>

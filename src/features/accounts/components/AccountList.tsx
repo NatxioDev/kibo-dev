@@ -14,7 +14,6 @@ export function AccountList({ accounts }: AccountListProps) {
     return (
       <Reveal>
         <EmptyState
-          icon="🏦"
           title="Sin cuentas"
           description="Crea tus cuentas de ahorro, efectivo u otras para organizar de dónde sale el dinero."
           action={<Button href="/settings/accounts/new">+ Nueva cuenta</Button>}

@@ -1,0 +1,92 @@
+.loader {
+  overflow: visible;
+}
+
+.spin,
+.breathe,
+.arc,
+.eyes {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+}
+
+/* Rueda: una vuelta por ciclo; los ojos quedan corridos 4u hacia adelante en el mundo. */
+.screen .spin {
+  animation: roll 1.5s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+}
+
+.screen .eyes {
+  animation: look-forward 1.5s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+}
+
+.screen .breathe {
+  animation: squash 1.5s ease-in-out infinite;
+}
+
+/* Arco: los ojos siguen la punta, que está 117° por delante del inicio del trazo. */
+.compact .arc {
+  animation: roll 1s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+}
+
+.compact .eyes {
+  animation: follow-tip 1s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+}
+
+@keyframes roll {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes look-forward {
+  from {
+    transform: rotate(0deg) translate(4px, 0) rotate(0deg);
+  }
+  to {
+    transform: rotate(-360deg) translate(4px, 0) rotate(360deg);
+  }
+}
+
+@keyframes follow-tip {
+  from {
+    transform: rotate(0deg) translate(-1.91px, 3.74px) rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg) translate(-1.91px, 3.74px) rotate(-360deg);
+  }
+}
+
+@keyframes squash {
+  0%,
+  50%,
+  100% {
+    transform: scale(1, 1);
+  }
+  25%,
+  75% {
+    transform: scale(1.035, 0.97);
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loader * {
+    animation: none !important;
+  }
+
+  .loader {
+    animation: pulse 2s ease-in-out infinite;
+  }
+}

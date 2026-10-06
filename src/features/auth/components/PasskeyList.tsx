@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { KiboLoader } from "@/components/mascot/KiboLoader";
+import { KiboMascot } from "@/components/mascot/KiboMascot";
 import { Button } from "@/components/ui/Button";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { Field, errorProps, inputClassName } from "@/components/ui/Field";
@@ -44,9 +46,16 @@ export function PasskeyList() {
     null,
   );
   const [deleteIndex, setDeleteIndex] = useState(0);
+  const [registered, setRegistered] = useState(false);
+
+  function registerPasskey() {
+    setRegistered(false);
+    register(undefined, () => setRegistered(true));
+  }
 
   function startRename(passkey: PasskeyCredential, index: number) {
     setError(null);
+    setRegistered(false);
     setEditingId(passkey.id);
     setDraftName(passkey.friendlyName ?? `Passkey ${index + 1}`);
   }
@@ -66,7 +75,10 @@ export function PasskeyList() {
 
   if (loading) {
     return (
-      <p className="px-1 text-sm text-muted-foreground">Cargando Passkeys…</p>
+      <p role="status" className="flex items-center gap-2 px-1 text-sm text-muted-foreground">
+        <KiboLoader size={16} label={null} />
+        Cargando Passkeys…
+      </p>
     );
   }
 
@@ -79,7 +91,7 @@ export function PasskeyList() {
           description="Registra una Passkey en este dispositivo para entrar sin Google la próxima vez."
           action={
             <RegisterPasskeyButton
-              onClick={() => register()}
+              onClick={registerPasskey}
               loading={pending}
             />
           }
@@ -152,6 +164,7 @@ export function PasskeyList() {
                         className="text-expense"
                         onClick={() => {
                           setError(null);
+                          setRegistered(false);
                           setDeleteTarget(passkey);
                           setDeleteIndex(index);
                         }}
@@ -167,11 +180,21 @@ export function PasskeyList() {
           </ListGroup>
 
           <RegisterPasskeyButton
-            onClick={() => register()}
+            onClick={registerPasskey}
             loading={pending}
           />
         </>
       )}
+
+      {registered ? (
+        <p
+          role="status"
+          className="flex items-center justify-center gap-2 text-sm text-income"
+        >
+          <KiboMascot mood="guino" size={24} className="shrink-0" />
+          Passkey registrada.
+        </p>
+      ) : null}
 
       {error && !deleteTarget ? (
         <p className="text-center text-sm text-expense" role="alert">

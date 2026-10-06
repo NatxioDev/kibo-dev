@@ -8,6 +8,7 @@ import {
   useTransition,
 } from "react";
 import { Reveal } from "@/components/motion/Reveal";
+import { KiboLoader } from "@/components/mascot/KiboLoader";
 import { Segmented } from "@/components/ui/Segmented";
 import { AccountsFilterSheet } from "@/features/transactions/components/filters/AccountsFilterSheet";
 import { CategoryFilterSheet } from "@/features/transactions/components/filters/CategoryFilterSheet";
@@ -222,10 +223,18 @@ export function TransactionListFilters({
 
         {resultCount !== null && (resultCount > 0 || filtersActive) ? (
           <div className="flex min-h-7 items-center justify-between gap-3 px-1 text-sm">
-            <p className="text-muted-foreground tabular-nums" aria-live="polite">
-              {isPending
-                ? "Filtrando…"
-                : `${resultCount} ${resultCount === 1 ? "movimiento" : "movimientos"}`}
+            <p
+              className="inline-flex items-center gap-2 text-muted-foreground tabular-nums"
+              aria-live="polite"
+            >
+              {isPending ? (
+                <>
+                  <KiboLoader size={16} label={null} />
+                  Filtrando…
+                </>
+              ) : (
+                `${resultCount} ${resultCount === 1 ? "movimiento" : "movimientos"}`
+              )}
             </p>
             {filtersActive ? (
               <button

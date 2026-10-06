@@ -131,7 +131,7 @@ export function CategoryForm({ mode, category }: CategoryFormProps) {
       {formError ? <Alert>{formError}</Alert> : null}
 
       <div className="flex flex-col gap-2">
-        <Button type="submit" size="lg" disabled={loading} className="w-full">
+        <Button type="submit" size="lg" loading={loading} className="w-full">
           {loading
             ? mode === "create"
               ? "Guardando…"

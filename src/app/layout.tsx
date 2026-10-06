@@ -26,15 +26,30 @@ const interTight = Inter_Tight({
   weight: ["400", "500", "600", "700", "800"],
 });
 
+const DESCRIPTION = "Tu gestor personal de gastos: registra, divide con amigos y entiende a dónde va tu dinero.";
+
 export const metadata: Metadata = {
   title: "Kibo",
-  description: "Gestor personal de gastos",
+  description: DESCRIPTION,
+  applicationName: "Kibo",
+  openGraph: {
+    type: "website",
+    siteName: "Kibo",
+    title: "Kibo",
+    description: DESCRIPTION,
+    locale: "es_BO",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Kibo",
+    description: DESCRIPTION,
+  },
   icons: {
     icon: [
-      { url: "/brand/favicon.svg", type: "image/svg+xml" },
-      { url: "/brand/favicon-32.png", sizes: "32x32", type: "image/png" },
+      { url: "/brand/favicon-v3.svg", type: "image/svg+xml" },
+      { url: "/brand/favicon-32-v3.png", sizes: "32x32", type: "image/png" },
     ],
-    apple: { url: "/brand/app-icon-180.png", sizes: "180x180" },
+    apple: { url: "/brand/app-icon-180-v3.png", sizes: "180x180" },
   },
   appleWebApp: {
     capable: true,

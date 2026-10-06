@@ -1,7 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-const PUBLIC_PREFIXES = ["/privacy"];
+const PUBLIC_PREFIXES = ["/privacy", "/opengraph-image"];
 
 export async function updateSession(request: NextRequest) {
   if (

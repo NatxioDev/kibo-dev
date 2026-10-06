@@ -1,4 +1,8 @@
-import type { TransactionType } from "@/features/transactions/types";
+import type {
+  TransactionCurrency,
+  TransactionStatus,
+  TransactionType,
+} from "@/features/transactions/types";
 import {
   getTransactionPeriodRange,
   isDefaultTransactionPeriod,
@@ -22,6 +26,8 @@ export type ListTransactionsFilters = {
   type?: TransactionListTypeFilter;
   accounts?: TransactionListAccountsFilter;
   categoryId?: string;
+  currency?: TransactionCurrency;
+  status?: TransactionStatus;
   from?: string;
   to?: string;
 };
