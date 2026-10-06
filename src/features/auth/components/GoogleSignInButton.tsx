@@ -48,11 +48,11 @@ export function GoogleSignInButton({ initialError }: GoogleSignInButtonProps) {
           className="w-full gap-3"
         >
           {loading ? null : <GoogleIcon />}
-          {loading ? "Redirigiendo…" : "Continuar con Google"}
+          {loading ? "Iniciando sesión…" : "Continuar con Google"}
         </Button>
       </Pressable>
       <AuthErrorMessage message={message} />
-      {redirecting ? <RedirectOverlay label="Redirigiendo a Google…" /> : null}
+      {redirecting ? <RedirectOverlay label="Iniciando sesión con Google…" /> : null}
     </div>
   );
 }
