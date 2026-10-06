@@ -9,6 +9,7 @@ import {
   BODY_RING,
   EYE_LEFT,
   EYE_RIGHT,
+  EYE_SWIRL_STROKE,
   MASCOT_EYE_CREAM,
   MASCOT_EYE_INK,
   MASCOT_GOLD,
@@ -31,6 +32,17 @@ type KiboMascotProps = {
 
 function Eye({ eye, fill, still }: { eye: EyeConfig; fill: string; still: boolean }) {
   const { track } = eye;
+  if (eye.swirl) {
+    return (
+      <path
+        d={eye.pose}
+        fill="none"
+        stroke={fill}
+        strokeWidth={EYE_SWIRL_STROKE}
+        strokeLinecap="round"
+      />
+    );
+  }
   if (still || !track) return <path d={eye.pose} fill={fill} />;
 
   return (

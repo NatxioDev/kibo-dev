@@ -29,8 +29,10 @@ export const EYE_WIDE =
   "M-10.2 0C-10.2 -10.2 -6.94 -15 0 -15C6.94 -15 10.2 -10.2 10.2 0C10.2 10.2 6.94 15 0 15C-6.94 15 -10.2 10.2 -10.2 0Z";
 export const EYE_WORRY =
   "M-9.2 -2C-9.2 -2.77 -5.89 -3.2 0 -3.2C5.89 -3.2 9.2 -2.77 9.2 -2C9.2 6.06 5.89 10.6 0 10.6C-5.89 10.6 -9.2 6.06 -9.2 -2Z";
-export const EYE_DIZZY =
-  "M-8.6 0C-8.6 -5.95 -5.33 -9.6 0 -9.6C5.33 -9.6 8.6 -5.95 8.6 0C8.6 5.95 5.33 9.6 0 9.6C-5.33 9.6 -8.6 5.95 -8.6 0Z";
+/** Espiral de semicírculos centrada en el ojo; se dibuja con trazo, no con relleno. */
+export const EYE_SWIRL =
+  "M0 -1.1A2.2 2.2 0 0 1 4.4 -1.1A4.4 4.4 0 0 1 -4.4 -1.1A6.6 6.6 0 0 1 8.8 -1.1A8.8 8.8 0 0 1 -8.8 -1.1";
+export const EYE_SWIRL_STROKE = 2.4;
 export const EYE_HAPPY_SQUEEZE =
   "M-11.6 4C-11.6 -3.2 -6.96 -8 0 -8C6.96 -8 11.6 -3.2 11.6 4C11.6 0.16 6.96 -2.4 0 -2.4C-6.96 -2.4 -11.6 0.16 -11.6 4Z";
 export const EYE_HAPPY =

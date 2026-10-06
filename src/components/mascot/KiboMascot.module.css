@@ -789,7 +789,7 @@
   }
 }
 
-/* mareado: se tambalea como un trompo y cada ojo orbita en sentido opuesto */
+/* mareado: se tambalea como un trompo y cada ojo-espiral gira en sentido opuesto */
 
 .mascot[data-mood="mareado"] .body {
   animation: mareado-body 2.4s cubic-bezier(0.45, 0, 0.55, 1) 2;
@@ -800,11 +800,20 @@
 }
 
 .mascot[data-mood="mareado"] .eyeL {
-  animation: mareado-orbit-left 2.4s linear infinite;
+  animation: mareado-swirl 1.2s linear infinite;
 }
 
 .mascot[data-mood="mareado"] .eyeR {
-  animation: mareado-orbit-right 2.4s linear infinite;
+  animation: mareado-swirl 1.2s linear infinite reverse;
+}
+
+@keyframes mareado-swirl {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes mareado-body {
@@ -824,25 +833,6 @@
   }
   50% {
     transform: translate(2px, 0);
-  }
-}
-
-/* rotate(θ) translate(r) recorre el círculo de radio r girando el ojo a la vez. */
-@keyframes mareado-orbit-left {
-  from {
-    transform: rotate(0deg) translate(3px, 0);
-  }
-  to {
-    transform: rotate(360deg) translate(3px, 0);
-  }
-}
-
-@keyframes mareado-orbit-right {
-  from {
-    transform: rotate(0deg) translate(-3px, 0);
-  }
-  to {
-    transform: rotate(-360deg) translate(-3px, 0);
   }
 }
 

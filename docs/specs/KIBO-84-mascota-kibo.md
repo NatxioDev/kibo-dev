@@ -52,7 +52,7 @@ ajeno al diseño) y **tinta elevada**.
 | `durmiendo` | 4 s | Estados vacíos: dashboard sin movimientos y `EmptyState` de listas |
 | `guino` | 3 s | Confirmaciones: feedback enviado, nombre actualizado, Passkey registrada; bienvenida en el login |
 | `pensando` | 4 s | Procesos con espera larga: generación del export de reportes; login con Google o Passkey en curso |
-| `mareado` | 2.4 s | Errores (`DashboardErrorState`, login fallido) o muchos gastos seguidos (ver reglas) |
+| `mareado` | 2.4 s | Errores (`DashboardErrorState`, login fallido) o muchos gastos seguidos (ver reglas). Ojos en espiral que giran |
 | ~~`celebrando`~~ | — | **Fuera de alcance por ahora.** Se diseñó pero no se implementa todavía |
 
 **Calma automática (decisión):** los estados expresivos (`feliz`, `sorprendido`, `preocupado`,

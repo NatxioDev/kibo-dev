@@ -1,12 +1,12 @@
 import {
   EYE_BLINK,
-  EYE_DIZZY,
   EYE_HAPPY,
   EYE_HAPPY_SQUEEZE,
   EYE_PILL,
   EYE_SLEEP,
   EYE_SMALL,
   EYE_SQUASH,
+  EYE_SWIRL,
   EYE_TALL,
   EYE_WIDE,
   EYE_WORRY,
@@ -35,6 +35,8 @@ export type EyeConfig = {
   /** Forma quieta del estado: es la que se ve con reduced motion. */
   pose: string;
   track?: EyeTrack;
+  /** `pose` es un trazo (espiral) en vez de una forma rellena. */
+  swirl?: boolean;
 };
 
 export type MoodConfig = {
@@ -128,14 +130,6 @@ const GUINO_EYE = track(3, [
   [1, EYE_PILL],
 ]);
 
-const MAREADO_EYE = track(1.2, [
-  [0, EYE_DIZZY, IN_OUT],
-  [0.25, EYE_SMALL, IN_OUT],
-  [0.5, EYE_DIZZY, IN_OUT],
-  [0.75, EYE_SQUASH, IN_OUT],
-  [1, EYE_DIZZY],
-]);
-
 export const MOODS: Record<MascotMood, MoodConfig> = {
   idle: bothEyes({ pose: EYE_PILL, track: IDLE_BLINK }),
   feliz: bothEyes({ pose: EYE_HAPPY, track: FELIZ_EYE }),
@@ -147,7 +141,7 @@ export const MOODS: Record<MascotMood, MoodConfig> = {
     right: { pose: EYE_HAPPY, track: GUINO_EYE },
   },
   pensando: bothEyes({ pose: EYE_SMALL, track: PENSANDO_EYE }),
-  mareado: bothEyes({ pose: EYE_DIZZY, track: MAREADO_EYE }),
+  mareado: bothEyes({ pose: EYE_SWIRL, swirl: true }),
 };
 
 /** Estados que reproducen 2 ciclos y vuelven a `idle`; el resto queda en loop. */
