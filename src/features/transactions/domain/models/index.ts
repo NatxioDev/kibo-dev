@@ -67,6 +67,17 @@ export type TransactionWithRelations = Transaction & {
   payment_method: Pick<PaymentMethod, "id" | "name"> | null;
 };
 
+/** Keyset position matching the list order: date, created_at, id (all desc). */
+export type TransactionPageCursor = Pick<
+  Transaction,
+  "date" | "created_at" | "id"
+>;
+
+export type TransactionPage = {
+  items: TransactionWithRelations[];
+  nextCursor: TransactionPageCursor | null;
+};
+
 export type TransactionFormValues = {
   type: TransactionType;
   amount: number;
