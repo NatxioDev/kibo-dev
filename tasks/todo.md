@@ -435,12 +435,12 @@ de `selectMascotMood` en el header, `durmiendo` en `DashboardEmptyState` y `mare
 `pensando` aparece en el encabezado del sheet de export mientras se genera el archivo.
 
 **Acceptance criteria:**
-- [ ] Listas vacías (cuentas, categorías, métodos de pago, transacciones, novedades) muestran Kibo durmiendo, salvo las que pasan un `icon` propio a propósito.
-- [ ] Las 3 confirmaciones muestran el guiño una vez (2 ciclos) y vuelven a idle.
-- [ ] El export muestra `pensando` mientras `pending` y lo quita al terminar.
+- [x] Listas vacías (cuentas, categorías, métodos de pago, transacciones, novedades) muestran Kibo durmiendo, salvo las que pasan un `icon` propio a propósito.
+- [x] Las 3 confirmaciones muestran el guiño una vez (2 ciclos) y vuelven a idle.
+- [x] El export muestra `pensando` mientras `pending` y lo quita al terminar.
 
 **Verification:**
-- [ ] Build succeeds: `bun run build`
+- [x] Build succeeds: `bun run build`
 - [ ] Manual check: cada pantalla mencionada.
 
 **Dependencies:** Task 9, Task 6

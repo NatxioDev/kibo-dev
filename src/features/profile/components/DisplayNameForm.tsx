@@ -1,6 +1,7 @@
 "use client";
 
 import { type FormEvent } from "react";
+import { KiboMascot } from "@/components/mascot/KiboMascot";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { inputClassName, labelClassName } from "@/components/ui/Field";
@@ -53,8 +54,9 @@ export function DisplayNameForm({ initialValue }: DisplayNameFormProps) {
         </p>
       ) : null}
       {success ? (
-        <p className="text-sm text-income" role="status">
-          ✓ Nombre actualizado.
+        <p className="flex items-center gap-2 text-sm text-income" role="status">
+          <KiboMascot mood="guino" size={24} className="shrink-0" />
+          Nombre actualizado.
         </p>
       ) : null}
     </Card>

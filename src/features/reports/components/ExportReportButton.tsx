@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { KiboLoader } from "@/components/mascot/KiboLoader";
+import { KiboMascot } from "@/components/mascot/KiboMascot";
 import { Alert } from "@/components/ui/Alert";
 import { BottomSheet } from "@/components/ui/BottomSheet";
 import { buttonClassName } from "@/components/ui/Button";
@@ -149,6 +150,7 @@ export function ExportReportButton({
         title="Exportar movimientos"
         description={`${rangeLabel} · ${currencyName(currency)}`}
         onClose={() => setOpen(false)}
+        headerAccessory={pending ? <KiboMascot mood="pensando" size={36} /> : null}
       >
         <div className="flex flex-col gap-3 pb-2">
           <p aria-live="polite" className="sr-only">

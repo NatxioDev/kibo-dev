@@ -30,7 +30,6 @@ export function TransactionList({
           />
         ) : (
           <EmptyState
-            icon="🧾"
             title="Todavía no hay movimientos"
             description="Registra tu primer gasto o ingreso y aparecerá aquí."
             action={<Button href="/transactions/new">+ Registrar</Button>}

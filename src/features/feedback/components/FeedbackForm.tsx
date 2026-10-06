@@ -1,6 +1,7 @@
 "use client";
 
 import { type FormEvent } from "react";
+import { KiboMascot } from "@/components/mascot/KiboMascot";
 import { Alert } from "@/components/ui/Alert";
 import { Button } from "@/components/ui/Button";
 import {
@@ -65,7 +66,10 @@ export function FeedbackForm() {
 
       {formError ? <Alert>{formError}</Alert> : null}
       {success ? (
-        <Alert tone="success">¡Gracias! Recibimos tu feedback.</Alert>
+        <Alert tone="success" className="flex items-center gap-3">
+          <KiboMascot mood="guino" size={36} className="shrink-0" />
+          ¡Gracias! Recibimos tu feedback.
+        </Alert>
       ) : null}
 
       <Button type="submit" size="lg" loading={loading} className="w-full">

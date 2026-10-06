@@ -16,6 +16,8 @@ type BottomSheetProps = {
   onClose: () => void;
   children: ReactNode;
   footer?: ReactNode;
+  /** Se muestra junto al botón de cerrar. */
+  headerAccessory?: ReactNode;
 };
 
 const DISMISS_OFFSET_PX = 96;
@@ -28,6 +30,7 @@ export function BottomSheet({
   onClose,
   children,
   footer,
+  headerAccessory,
 }: BottomSheetProps) {
   const titleId = useId();
   const descriptionId = useId();
@@ -139,6 +142,9 @@ export function BottomSheet({
                       </p>
                     ) : null}
                   </div>
+                  {headerAccessory ? (
+                    <div className="ml-auto shrink-0">{headerAccessory}</div>
+                  ) : null}
                   <button
                     ref={closeRef}
                     type="button"
