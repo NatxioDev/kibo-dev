@@ -1,4 +1,8 @@
-import type { TransactionType } from "@/features/transactions/types";
+import type {
+  TransactionCurrency,
+  TransactionStatus,
+  TransactionType,
+} from "@/features/transactions/types";
 import {
   getTransactionPeriodRange,
   isDefaultTransactionPeriod,
@@ -22,6 +26,8 @@ export type ListTransactionsFilters = {
   type?: TransactionListTypeFilter;
   accounts?: TransactionListAccountsFilter;
   categoryId?: string;
+  currency?: TransactionCurrency;
+  status?: TransactionStatus;
   from?: string;
   to?: string;
 };
@@ -175,13 +181,6 @@ export function accountsFilterToParam(
 export function transactionFiltersToHref(
   state: TransactionListFilterState,
 ): string {
-  const query = transactionFiltersToSearchParams(state).toString();
-  return query ? `/transactions?${query}` : "/transactions";
-}
-
-export function transactionFiltersToSearchParams(
-  state: TransactionListFilterState,
-): URLSearchParams {
   const params = new URLSearchParams();
   if (state.type !== "all") params.set("type", state.type);
   if (!isDefaultTransactionPeriod(state.period)) {
@@ -194,7 +193,8 @@ export function transactionFiltersToSearchParams(
   const accountParam = accountsFilterToParam(state.accounts);
   if (accountParam) params.set("account", accountParam);
   if (state.categoryId) params.set("category", state.categoryId);
-  return params;
+  const query = params.toString();
+  return query ? `/transactions?${query}` : "/transactions";
 }
 
 export function defaultTransactionListFilterState(): TransactionListFilterState {

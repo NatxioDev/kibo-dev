@@ -7,7 +7,6 @@ import { createServerDependencies } from "@/core/infrastructure/factories/create
 import { ListAccounts } from "@/features/accounts/application/ListAccounts.application";
 import { ListCategories } from "@/features/categories/application/ListCategories.application";
 import { ListTransactions } from "@/features/transactions/application/ListTransactions.application";
-import { ExportTransactionsButton } from "@/features/transactions/components/ExportTransactionsButton";
 import { TransactionList } from "@/features/transactions/components/TransactionList";
 import { TransactionListFilters } from "@/features/transactions/components/TransactionListFilters";
 import {
@@ -43,7 +42,6 @@ export default async function TransactionsPage({
   ]);
   const accounts = accountsResult.success ? accountsResult.data : [];
   const categories = categoriesResult.success ? categoriesResult.data : [];
-  const resultCount = result.success ? result.data.length : null;
 
   return (
     <PageShell>
@@ -52,31 +50,23 @@ export default async function TransactionsPage({
           back={{ href: "/", label: "Inicio" }}
           title="Transacciones"
           actions={
-            <>
-              <ExportTransactionsButton
-                filters={filterState}
-                resultCount={resultCount}
-                accounts={accounts}
-                categories={categories}
-              />
-              <Button href="/transactions/new" aria-label="Nueva transacción">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.25"
-                  strokeLinecap="round"
-                  aria-hidden
-                  className="h-4 w-4"
-                >
-                  <path d="M12 5v14M5 12h14" />
-                </svg>
-                <span aria-hidden className="hidden sm:inline">
-                  Registrar
-                </span>
-              </Button>
-            </>
+            <Button href="/transactions/new" aria-label="Nueva transacción">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.25"
+                strokeLinecap="round"
+                aria-hidden
+                className="h-4 w-4"
+              >
+                <path d="M12 5v14M5 12h14" />
+              </svg>
+              <span aria-hidden className="hidden sm:inline">
+                Registrar
+              </span>
+            </Button>
           }
         />
       </Reveal>
@@ -85,7 +75,7 @@ export default async function TransactionsPage({
         filters={filterState}
         accounts={accounts}
         categories={categories}
-        resultCount={resultCount}
+        resultCount={result.success ? result.data.length : null}
       >
         {!result.success ? (
           <Reveal>

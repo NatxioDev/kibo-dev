@@ -4,13 +4,14 @@ import { useRouter } from "next/navigation";
 import { useOptimistic, useTransition, type ReactNode } from "react";
 import { Reveal } from "@/components/motion/Reveal";
 import { Stagger } from "@/components/motion/Stagger";
-import { Button, buttonClassName } from "@/components/ui/Button";
+import { Button } from "@/components/ui/Button";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { Segmented } from "@/components/ui/Segmented";
 import {
   CategoryBreakdown,
   type ColoredReportCategory,
 } from "@/features/reports/components/CategoryBreakdown";
+import { ExportReportButton } from "@/features/reports/components/ExportReportButton";
 import { IncomeExpenseChart } from "@/features/reports/components/IncomeExpenseChart";
 import { PeriodNavigator } from "@/features/reports/components/PeriodNavigator";
 import { HeroStat, SummaryCards } from "@/features/reports/components/ReportSummary";
@@ -72,6 +73,7 @@ export function ReportsScreen({ period, offset, currency, today, report }: Repor
   }
 
   const range = getReportRange(selected.period, selected.offset, today);
+  const rangeLabel = formatRangeLabel(selected.period, range);
   const relativeLabel = formatRelativeLabel(selected.period, selected.offset);
   const currencySwitch = (
     <Segmented
@@ -90,14 +92,20 @@ export function ReportsScreen({ period, offset, currency, today, report }: Repor
           <h1 className="font-display text-4xl font-black tracking-[-0.045em] text-foreground sm:text-5xl">
             Reportes
           </h1>
-          <ExportButton />
+          <ExportReportButton
+            period={selected.period}
+            offset={selected.offset}
+            currency={selected.currency}
+            rangeLabel={rangeLabel}
+            disabled={pending || report === null || report.isEmpty}
+          />
         </Reveal>
 
         <Reveal>
           <PeriodNavigator
             period={selected.period}
             offset={selected.offset}
-            rangeLabel={formatRangeLabel(selected.period, range)}
+            rangeLabel={rangeLabel}
             relativeLabel={relativeLabel}
             onPeriodChange={(next) => navigate({ period: next, offset: 0 })}
             onStep={(direction) => navigate({ offset: selected.offset + direction })}
@@ -277,36 +285,6 @@ function SectionHeading({
       </h2>
       <span className="shrink-0 text-xs text-muted-foreground">{caption}</span>
     </div>
-  );
-}
-
-function ExportButton() {
-  return (
-    <button
-      type="button"
-      disabled
-      className={buttonClassName({ variant: "secondary", size: "sm", className: "shrink-0" })}
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        className="h-4 w-4"
-        aria-hidden
-      >
-        <path d="M12 4v11" />
-        <path d="m7 10 5 5 5-5" />
-        <path d="M5 20h14" />
-      </svg>
-      Exportar
-      <span className="rounded-md bg-track px-1.5 py-0.5 text-[0.625rem] font-bold tracking-[0.06em] text-muted-foreground uppercase">
-        Pronto
-      </span>
-    </button>
   );
 }
 

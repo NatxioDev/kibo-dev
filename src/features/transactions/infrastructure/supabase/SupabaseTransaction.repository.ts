@@ -57,6 +57,14 @@ export class SupabaseTransactionRepository implements TransactionRepository {
       query = query.eq("category_id", filters.categoryId);
     }
 
+    if (filters.currency) {
+      query = query.eq("currency", filters.currency);
+    }
+
+    if (filters.status) {
+      query = query.eq("status", filters.status);
+    }
+
     if (filters.from) {
       query = query.gte("date", filters.from);
     }
