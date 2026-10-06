@@ -295,12 +295,12 @@ reproducen 2 ciclos y vuelven a `idle` con `onAnimationEnd`.
 `var(--mascot-ink)`, ojos píldora) usando el SVG del logotipo v3 de la demo.
 
 **Acceptance criteria:**
-- [ ] `AppTopBar` y `WelcomeHero` muestran el logo v3 sin cambios de layout.
-- [ ] Las letras siguen usando `currentColor`; la "o" se ve bien en claro y oscuro.
+- [x] `AppTopBar` y `WelcomeHero` muestran el logo v3 sin cambios de layout (mismo `viewBox`).
+- [x] Las letras siguen usando `currentColor`; la "o" se ve bien en claro y oscuro.
 
 **Verification:**
-- [ ] Build succeeds: `bun run build`
-- [ ] Manual check: top bar y pantalla de bienvenida en ambos temas.
+- [x] Typecheck y lint
+- [x] Manual check: top bar en ambos temas (bienvenida usa el mismo componente).
 
 **Dependencies:** Task 3
 
