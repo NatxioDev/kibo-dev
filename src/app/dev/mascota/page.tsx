@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { PageHeader } from "@/components/PageHeader";
 import { PageShell } from "@/components/PageShell";
 import { KiboLoader } from "@/components/mascot/KiboLoader";
+import { Button } from "@/components/ui/Button";
 import { EyeMorphProbe } from "./EyeMorphProbe";
 
 export const metadata: Metadata = {
@@ -52,6 +53,21 @@ export default function MascotaDevPage() {
             El ojo debería pasar de píldora a arco ^ y volver en cualquier
             navegador, incluido Safari.
           </p>
+        </div>
+      </Section>
+
+      <Section title="Botones con loading">
+        <div className="flex flex-wrap items-center gap-3 rounded-card bg-surface p-4">
+          <Button size="sm" loading>
+            Guardando…
+          </Button>
+          <Button loading>Guardando…</Button>
+          <Button size="lg" variant="secondary" loading>
+            Cargando reportes
+          </Button>
+          <Button variant="danger" loading>
+            Eliminando…
+          </Button>
         </div>
       </Section>
 

@@ -30,7 +30,7 @@ reconfirmar en Safari.
 **Acceptance criteria:**
 - [x] Hay evidencia del comportamiento en Safari (macOS: CSS `d` no anima ni dibuja el path).
 - [x] La decisión (`motion`) queda anotada en la sección "Decisión técnica" de la spec.
-- [ ] Safari confirma que la versión con `motion` anima (`EyeMorphProbe` en `/dev/mascota`).
+- [x] Safari confirma que la versión con `motion` anima (`EyeMorphProbe` en `/dev/mascota`).
 - [ ] El código del spike se descarta o se convierte en la base de la tarea 8.
 
 **Verification:**
@@ -117,9 +117,11 @@ la variable `--mascot-ink`. Crear la página de showcase que muestra el loader e
 compact` y pone `disabled` y `aria-busy`. `ConfirmDialog` pasa `loading` a su botón de confirmar.
 
 **Acceptance criteria:**
-- [ ] `loading` es opcional; los usos actuales de `Button` no cambian.
-- [ ] El loader toma un tamaño acorde al `size` del botón (sm 16, md 18, lg 20 px).
-- [ ] Todos los diálogos que usan `ConfirmDialog` muestran el loader mientras confirman.
+- [x] `loading` es opcional; los usos actuales de `Button` no cambian.
+- [x] El loader toma un tamaño acorde al `size` del botón (sm 16, md 18, lg 20 px).
+- [x] Todos los diálogos que usan `ConfirmDialog` muestran el loader mientras confirman.
+- [x] Test `Button.test.tsx`: `disabled`, `aria-busy` y loader decorativo (sin `role="status"` anidado).
+- [ ] Revisión visual en `/dev/mascota` → "Botones con loading" (pendiente: requiere sesión).
 
 **Verification:**
 - [ ] Build succeeds: `bun run build`
