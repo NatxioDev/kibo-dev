@@ -7,6 +7,7 @@ import { useWhatsNew } from "@/features/changelog/hooks/useWhatsNew";
 import { FriendsLink } from "@/features/friends/components/FriendsLink";
 import { useFriendAlerts } from "@/features/friends/hooks/usePendingFriendRequests";
 import type { CurrentProfile } from "@/features/profile/domain/models/Profile";
+import { ReportsLink } from "@/features/reports/components/ReportsLink";
 import { ProfileLink } from "@/features/settings/components/ProfileLink";
 
 const HIDDEN_PREFIXES = ["/login", "/auth", "/onboarding", "/settings", "/privacy"];
@@ -32,6 +33,7 @@ export function AppTopBar({ profile }: AppTopBarProps) {
           <KiboLogo className="h-7" />
         </Link>
         <div className="flex items-center gap-2">
+          <ReportsLink active={pathname.startsWith("/reportes")} />
           <FriendsLink
             active={pathname.startsWith("/friends")}
             requests={friendAlerts.requests}
