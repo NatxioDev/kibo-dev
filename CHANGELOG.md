@@ -1,3 +1,34 @@
+## [0.11.0](https://github.com/NatxioDev/kibo-dev/compare/v0.10.0...v0.11.0) (2026-10-06)
+
+### Features
+
+* **auth:** use the Kibo loader on sign-in and show it full screen on redirect ([3db8822](https://github.com/NatxioDev/kibo-dev/commit/3db882225af634806d7a8f7f60705d41a5f49aee))
+* **brand:** regenerate brand assets and favicon with the v3 mascot face ([313bb10](https://github.com/NatxioDev/kibo-dev/commit/313bb1043bd209b0e77c20f0f115038dab9a8520))
+* **brand:** use the v3 mascot face as the o in the Kibo logo ([785be0a](https://github.com/NatxioDev/kibo-dev/commit/785be0ade78248de10f31cd9774350b381d2c299))
+* **dashboard:** show Kibo mood from balance and recent signals ([34700e6](https://github.com/NatxioDev/kibo-dev/commit/34700e65b62e6102e3fcf44fc27b7f7dad2320fb))
+* implement KIBO-29 reportes screen ([fddbf7f](https://github.com/NatxioDev/kibo-dev/commit/fddbf7fde229cfba5c989a59f2bcd6085e65385a))
+* **mascot:** add expressive states that calm down to idle after two cycles ([1dc29b0](https://github.com/NatxioDev/kibo-dev/commit/1dc29b0700847292d3c1245ddd9f592ba3de51c1))
+* **mascot:** add KiboLoader with screen and compact variants ([15e9174](https://github.com/NatxioDev/kibo-dev/commit/15e9174f665e24b6c4f249c4e04bd5ce304a59d8))
+* **mascot:** add KiboMascot with idle, feliz, durmiendo and pensando states ([9a28aaa](https://github.com/NatxioDev/kibo-dev/commit/9a28aaa00aad1a1d3f6f1f0973f1f0198fd44016))
+* **mascot:** animate eye shapes with motion for Safari support ([cd8fb51](https://github.com/NatxioDev/kibo-dev/commit/cd8fb51b7b42ae68a2dfbec955f513f9641b9abc))
+* **mascot:** compute mascot signals from recent transactions ([5e9db58](https://github.com/NatxioDev/kibo-dev/commit/5e9db585596cd3f78e7a2fa6288b1ccfbdb857bc))
+* **mascot:** select dashboard mood from balance and signals ([6204f0d](https://github.com/NatxioDev/kibo-dev/commit/6204f0da2b7df524b94b982caaa6c2602fdde8ad))
+* **mascot:** sleep in empty lists, wink on confirmations, think on export ([c97fe29](https://github.com/NatxioDev/kibo-dev/commit/c97fe291838b24ab5d9c508022650992152d8db2))
+* **mascot:** swirl eyes for the dizzy state ([330c4dc](https://github.com/NatxioDev/kibo-dev/commit/330c4dc85aefde5c4aa71d32e8e08f6d004ad0ee))
+* **reports:** move transactions export to reportes screen ([e82e357](https://github.com/NatxioDev/kibo-dev/commit/e82e35756d05650dc9df9d5962b65d55afc74772))
+* **seo:** add Open Graph and Twitter cards with the Kibo mascot and logo ([b9805de](https://github.com/NatxioDev/kibo-dev/commit/b9805ded71c9cca2a2b9881eb8ac84e2e262b2b2))
+* **transactions:** add keyset-paginated listPage to transaction repository ([39c3254](https://github.com/NatxioDev/kibo-dev/commit/39c3254bb4420bf00931b7bdb9feb5ab2031705c))
+* **transactions:** export transactions to CSV and XLSX (KIBO-30) ([06954e7](https://github.com/NatxioDev/kibo-dev/commit/06954e790d73d76207cb35698e05b6b9134b202b))
+* **ui:** add loading state to Button with the compact Kibo loader ([c04c5b4](https://github.com/NatxioDev/kibo-dev/commit/c04c5b4ae821d7eeaecee3be7dd2e2184108b9e0))
+* **ui:** show the Kibo loader while loading passkeys and searching friends ([1f06f27](https://github.com/NatxioDev/kibo-dev/commit/1f06f2799b14c975ee63fa10b96db1090c49639a))
+* **ui:** use the Kibo loader in exports, filters and form submits ([52cc4e7](https://github.com/NatxioDev/kibo-dev/commit/52cc4e7b34015889acd7ff9ddf8efa64b84036a4))
+* **welcome:** animate Kibo in the login logo ([d622527](https://github.com/NatxioDev/kibo-dev/commit/d622527f739bc19670195b04fcee8adaab11e553))
+
+### Bug Fixes
+
+* **auth:** say 'Iniciando sesión con Google' while redirecting ([f2cfa2a](https://github.com/NatxioDev/kibo-dev/commit/f2cfa2aa0c275e80862b214bfa966976e759bab1))
+* **friends:** unclassified button options style ([9d4dc6d](https://github.com/NatxioDev/kibo-dev/commit/9d4dc6dc4450ac1026a6dd1046e1bba85ef5cc89))
+
 ## [0.10.0](https://github.com/NatxioDev/kibo-dev/compare/v0.9.1...v0.10.0) (2026-10-05)
 
 ### Features
