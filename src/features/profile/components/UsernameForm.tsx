@@ -101,7 +101,8 @@ export function UsernameForm({
         <Button
           type="submit"
           size="lg"
-          disabled={loading || status !== "available"}
+          loading={loading}
+          disabled={status !== "available"}
           className="flex-1"
         >
           {loading ? "Guardando…" : submitLabel}

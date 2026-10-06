@@ -174,12 +174,14 @@ el loader inline en `TransactionForm` (`loadingOptions`) y junto al contador de
 `TransactionListFilters` (`isPending`), manteniendo la opacidad actual de la lista.
 
 **Acceptance criteria:**
-- [ ] Ningún `animate-spin` en estos archivos.
-- [ ] Los `aria-live` / `aria-busy` existentes se conservan.
-- [ ] Los botones de submit de los formularios de cuentas, categorías y métodos de pago usan `Button loading`.
+- [x] Ningún `animate-spin` en estos archivos.
+- [x] Los `aria-live` / `aria-busy` existentes se conservan.
+- [x] Los botones de submit de los formularios de cuentas, categorías y métodos de pago usan `Button loading`
+  (también transacciones, feedback, perfil y liquidaciones).
+- [x] `TransactionForm` (`loadingOptions`) mantiene `ChipSkeleton`: se decidió conservar los skeletons.
 
 **Verification:**
-- [ ] Build succeeds: `bun run build`
+- [x] Typecheck y lint: `bunx tsc --noEmit -p .`, `bun run lint`
 - [ ] Manual check: exportar CSV/XLSX, abrir "nueva transacción", cambiar filtros.
 
 **Dependencies:** Task 4

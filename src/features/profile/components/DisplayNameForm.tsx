@@ -43,7 +43,7 @@ export function DisplayNameForm({ initialValue }: DisplayNameFormProps) {
           aria-describedby={error ? "display_name-error" : undefined}
           className={`${inputClassName} min-w-0 flex-1 shadow-none`}
         />
-        <Button type="submit" size="lg" disabled={loading || !dirty}>
+        <Button type="submit" size="lg" loading={loading} disabled={!dirty}>
           {loading ? "Guardando…" : "Guardar"}
         </Button>
       </div>

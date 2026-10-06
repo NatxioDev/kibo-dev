@@ -444,7 +444,7 @@ export function TransactionForm({
       {formError ? <Alert>{formError}</Alert> : null}
 
       <div className="sticky bottom-[max(1rem,env(safe-area-inset-bottom))] z-10 flex flex-col gap-2">
-        <Button type="submit" size="lg" disabled={loading} className="w-full">
+        <Button type="submit" size="lg" loading={loading} className="w-full">
           {loading
             ? mode === "create"
               ? "Guardando…"

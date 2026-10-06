@@ -111,7 +111,13 @@ function PendingSettlement({
       {error ? <Alert>{error}</Alert> : null}
       {theyPayMe ? (
         <div className="flex gap-2">
-          <Button type="button" disabled={pending} onClick={confirm} className="flex-1">
+          <Button
+            type="button"
+            loading={pending && !rejectOpen}
+            disabled={pending}
+            onClick={confirm}
+            className="flex-1"
+          >
             {pending && !rejectOpen ? "Confirmando…" : "Recibido"}
           </Button>
           <Button
@@ -216,7 +222,7 @@ function PayForm({
         />
       </label>
       {error ? <Alert>{error}</Alert> : null}
-      <Button type="submit" disabled={pending}>
+      <Button type="submit" loading={pending}>
         {pending ? "Guardando…" : iPay ? "Ya pagué" : "Registrar pago recibido"}
       </Button>
     </form>
