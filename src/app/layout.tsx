@@ -31,10 +31,10 @@ export const metadata: Metadata = {
   description: "Gestor personal de gastos",
   icons: {
     icon: [
-      { url: "/brand/favicon.svg", type: "image/svg+xml" },
-      { url: "/brand/favicon-32.png", sizes: "32x32", type: "image/png" },
+      { url: "/brand/favicon-v3.svg", type: "image/svg+xml" },
+      { url: "/brand/favicon-32-v3.png", sizes: "32x32", type: "image/png" },
     ],
-    apple: { url: "/brand/app-icon-180.png", sizes: "180x180" },
+    apple: { url: "/brand/app-icon-180-v3.png", sizes: "180x180" },
   },
   appleWebApp: {
     capable: true,

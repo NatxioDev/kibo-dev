@@ -1,4 +1,9 @@
 import {
+  ISOLOGO_FACE_TRANSFORM,
+  ISOLOGO_LETTERS,
+  ISOLOGO_VIEWBOX,
+} from "@/components/brand/logoPaths";
+import {
   BODY_INK_HALF,
   BODY_RING,
   EYE_LEFT,
@@ -18,17 +23,14 @@ export function KiboLogo({ className = "" }: KiboLogoProps) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 202.98 84.15"
+      viewBox={ISOLOGO_VIEWBOX}
       role="img"
       aria-label="Kibo"
       className={className}
     >
       <title>Kibo</title>
-      <path
-        fill="currentColor"
-        d="M18 66.7 18.15 45.45H20.6L36.25 25.45H56.45L33.1 54.15H28.4ZM2 81.35V6.85H19.8V81.35ZM36.7 81.35 22.1 58.15 33.8 45.5 57.2 81.35ZM59.35 81.35V25.45H77.15V81.35ZM68.2 19.05Q64.45 19.05 61.75 16.55Q59.05 14.05 59.05 10.5Q59.05 6.95 61.75 4.48Q64.45 2 68.2 2Q72 2 74.67 4.48Q77.35 6.95 77.35 10.5Q77.35 14.05 74.67 16.55Q72 19.05 68.2 19.05ZM118.8 82.15Q114.6 82.15 111.5 80.75Q108.4 79.35 106.33 77.1Q104.25 74.85 103.15 72.25H102.55V81.35H84.95V6.85H102.75V35.05H103.15Q104.2 32.5 106.22 30.13Q108.25 27.75 111.38 26.25Q114.5 24.75 118.95 24.75Q124.8 24.75 129.85 27.83Q134.9 30.9 138.03 37.25Q141.15 43.6 141.15 53.45Q141.15 62.95 138.15 69.35Q135.15 75.75 130.07 78.95Q125 82.15 118.8 82.15ZM112.65 68.3Q115.95 68.3 118.22 66.45Q120.5 64.6 121.67 61.25Q122.85 57.9 122.85 53.45Q122.85 48.95 121.67 45.63Q120.5 42.3 118.25 40.45Q116 38.6 112.65 38.6Q109.4 38.6 107.1 40.4Q104.8 42.2 103.57 45.53Q102.35 48.85 102.35 53.45Q102.35 57.95 103.57 61.28Q104.8 64.6 107.1 66.45Q109.4 68.3 112.65 68.3Z"
-      />
-      <g transform="translate(142.337 23.037) scale(0.61087)">
+      <path fill="currentColor" d={ISOLOGO_LETTERS} />
+      <g transform={ISOLOGO_FACE_TRANSFORM}>
         <path d={BODY_RING} fill={MASCOT_GOLD} fillRule="evenodd" />
         <path d={BODY_INK_HALF} fill={MASCOT_INK} />
         <path transform={`translate(${EYE_LEFT.x} ${EYE_LEFT.y})`} d={EYE_PILL} fill={MASCOT_EYE_INK} />

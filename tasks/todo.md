@@ -318,13 +318,15 @@ que rasteriza PNG e ICO con `sharp` o `rsvg-convert`, regenerar todos los ícono
 nombres para invalidar caché.
 
 **Acceptance criteria:**
-- [ ] SVG actualizados: `favicon`, `app-icon`, `app-icon-maskable`, `imagotipo*`, `isologo*`.
-- [ ] `favicon.svg` elige la tinta con `@media (prefers-color-scheme: dark)`; íconos con fondo tinta usan `#2b2619` en la mitad de la cara.
-- [ ] PNG regenerados (32, 180, 192, 512, maskable 512) y `src/app/favicon.ico` reemplazado.
-- [ ] `layout.tsx` y `manifest.ts` apuntan a los nombres nuevos.
+- [x] SVG actualizados: `favicon`, `app-icon`, `app-icon-maskable`, `isotipo`, `imagotipo*`, `isologo*`
+  (generados desde `shapes.ts` y `brand/logoPaths.ts`; `logotipo*` no lleva cara y no cambia).
+- [x] `favicon-v3.svg` elige la tinta con `@media (prefers-color-scheme: dark)`; íconos con fondo tinta usan `#2b2619` en la mitad de la cara.
+- [x] PNG regenerados (32, 180, 192, 512, maskable 512) con sufijo `-v3` y `src/app/favicon.ico` (16/32/48) reemplazado.
+- [x] `layout.tsx` y `manifest.ts` apuntan a los nombres nuevos.
+- [x] Rasteriza con `rsvg-convert`: `sharp` solo llega transitivo por Next y con scripts ignorados.
 
 **Verification:**
-- [ ] Build succeeds: `bun run build`
+- [x] Build succeeds: `bun run build`
 - [ ] Manual check: favicon en pestaña clara y oscura; reinstalar la PWA y ver el ícono nuevo.
 
 **Dependencies:** Task 10

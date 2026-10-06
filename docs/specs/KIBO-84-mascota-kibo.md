@@ -98,8 +98,9 @@ en los demás lugares donde hoy hay spinner o un texto de espera:
    (`"Cargando…"` por defecto, configurable); el contenedor que carga mantiene `aria-busy`; los
    botones con `loading` quedan `disabled` y con `aria-busy`.
 6. `KiboLogo` usa el wordmark v3 (anillo más fino, ojos más grandes) en `AppTopBar` y `WelcomeHero`.
-7. Los assets de marca usan la "o" v3: `favicon.svg`, `favicon-32.png`, `src/app/favicon.ico`,
-   `app-icon.svg`, `app-icon-180/192/512.png`, `app-icon-maskable.svg/-512.png`,
+7. Los assets de marca usan la "o" v3 y se generan con `bun run brand:icons`: `favicon-v3.svg`,
+   `favicon-32-v3.png`, `src/app/favicon.ico`, `app-icon.svg`, `app-icon-180/192/512-v3.png`,
+   `app-icon-maskable.svg`, `app-icon-maskable-512-v3.png`,
    `imagotipo*.svg` e `isologo*.svg`. El favicon nuevo se ve en la pestaña del navegador y el
    ícono nuevo al instalar la PWA.
 8. Los estados se eligen con `selectMascotMood`, función pura cubierta por tests de Vitest.
