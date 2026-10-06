@@ -121,7 +121,7 @@ compact` y pone `disabled` y `aria-busy`. `ConfirmDialog` pasa `loading` a su bo
 - [x] El loader toma un tamaño acorde al `size` del botón (sm 16, md 18, lg 20 px).
 - [x] Todos los diálogos que usan `ConfirmDialog` muestran el loader mientras confirman.
 - [x] Test `Button.test.tsx`: `disabled`, `aria-busy` y loader decorativo (sin `role="status"` anidado).
-- [ ] Revisión visual en `/dev/mascota` → "Botones con loading" (pendiente: requiere sesión).
+- [x] Revisión visual en `/dev/mascota` → "Botones con loading".
 
 **Verification:**
 - [ ] Build succeeds: `bun run build`
@@ -144,9 +144,12 @@ compact` y pone `disabled` y `aria-busy`. `ConfirmDialog` pasa `loading` a su bo
 Passkey, y mostrar `KiboLoader screen` superpuesto a la tarjeta de login mientras se redirige.
 
 **Acceptance criteria:**
-- [ ] `AuthSpinner.tsx` eliminado y sin referencias.
-- [ ] Mientras redirige, el loader de pantalla aparece con el texto "Redirigiendo…" visible y anunciado.
-- [ ] Si el inicio de sesión falla, el loader desaparece y se muestra el error como hoy.
+- [x] `AuthSpinner.tsx` eliminado y sin referencias.
+- [x] Botones con `Button loading`; los hooks exponen `redirecting` (se activa al tener éxito y
+      queda hasta que cambia la página; Google lo resetea en `pageshow` si vuelve desde caché).
+- [x] Mientras redirige se muestra `RedirectOverlay` (loader de pantalla + texto con `role="status"`, en `Portal`).
+- [x] Si el inicio de sesión falla, el loader desaparece y se muestra el error como hoy (probado con Passkey en localhost).
+- [ ] Ver el overlay en un inicio de sesión real con Google y con Passkey (no se pudo medir en el navegador de Cursor).
 
 **Verification:**
 - [ ] Build succeeds: `bun run build`

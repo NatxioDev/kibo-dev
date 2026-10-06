@@ -4,7 +4,7 @@ import { Pressable } from "@/components/motion/Pressable";
 import { Button } from "@/components/ui/Button";
 import { useGoogleSignIn } from "@/features/auth/hooks/useGoogleSignIn";
 import { AuthErrorMessage } from "./AuthErrorMessage";
-import { AuthSpinner } from "./AuthSpinner";
+import { RedirectOverlay } from "./RedirectOverlay";
 
 type GoogleSignInButtonProps = {
   initialError?: string | null;
@@ -34,7 +34,7 @@ function GoogleIcon() {
 }
 
 export function GoogleSignInButton({ initialError }: GoogleSignInButtonProps) {
-  const { signIn, error, loading } = useGoogleSignIn();
+  const { signIn, error, loading, redirecting } = useGoogleSignIn();
   const message = error ?? initialError ?? null;
 
   return (
@@ -44,15 +44,15 @@ export function GoogleSignInButton({ initialError }: GoogleSignInButtonProps) {
           variant="secondary"
           size="lg"
           onClick={signIn}
-          disabled={loading}
-          aria-busy={loading}
+          loading={loading}
           className="w-full gap-3"
         >
-          {loading ? <AuthSpinner /> : <GoogleIcon />}
+          {loading ? null : <GoogleIcon />}
           {loading ? "Redirigiendo…" : "Continuar con Google"}
         </Button>
       </Pressable>
       <AuthErrorMessage message={message} />
+      {redirecting ? <RedirectOverlay label="Redirigiendo a Google…" /> : null}
     </div>
   );
 }

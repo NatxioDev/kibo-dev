@@ -4,7 +4,7 @@ import { Pressable } from "@/components/motion/Pressable";
 import { Button } from "@/components/ui/Button";
 import { usePasskeySignIn } from "@/features/auth/hooks/usePasskeySignIn";
 import { AuthErrorMessage } from "./AuthErrorMessage";
-import { AuthSpinner } from "./AuthSpinner";
+import { RedirectOverlay } from "./RedirectOverlay";
 
 function PasskeyIcon() {
   return (
@@ -24,7 +24,7 @@ function PasskeyIcon() {
 }
 
 export function PasskeySignInButton() {
-  const { signIn, error, loading } = usePasskeySignIn();
+  const { signIn, error, loading, redirecting } = usePasskeySignIn();
 
   return (
     <div className="flex w-full flex-col">
@@ -33,11 +33,10 @@ export function PasskeySignInButton() {
           variant="secondary"
           size="lg"
           onClick={signIn}
-          disabled={loading}
-          aria-busy={loading}
+          loading={loading}
           className="w-full gap-3"
         >
-          {loading ? <AuthSpinner /> : <PasskeyIcon />}
+          {loading ? null : <PasskeyIcon />}
           <span className="inline-flex items-center gap-2">
             {loading ? "Esperando Passkey…" : "Continuar con Passkey"}
             <span className="text-[0.625rem] font-bold tracking-[0.12em] text-muted-foreground uppercase">
@@ -47,6 +46,7 @@ export function PasskeySignInButton() {
         </Button>
       </Pressable>
       <AuthErrorMessage message={error ?? null} />
+      {redirecting ? <RedirectOverlay label="Entrando a Kibo…" /> : null}
     </div>
   );
 }

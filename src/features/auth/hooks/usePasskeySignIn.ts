@@ -9,6 +9,7 @@ export function usePasskeySignIn() {
   const router = useRouter();
   const { authRepository } = useDependencyContext();
   const [error, setError] = useState<string | null>(null);
+  const [redirecting, setRedirecting] = useState(false);
   const [isPending, startTransition] = useTransition();
 
   function signIn() {
@@ -22,10 +23,11 @@ export function usePasskeySignIn() {
         return;
       }
 
+      setRedirecting(true);
       router.push("/");
       router.refresh();
     });
   }
 
-  return { signIn, error, loading: isPending };
+  return { signIn, error, loading: isPending || redirecting, redirecting };
 }
