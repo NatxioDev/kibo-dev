@@ -327,7 +327,7 @@ nombres para invalidar caché.
 
 **Verification:**
 - [x] Build succeeds: `bun run build`
-- [ ] Manual check: favicon en pestaña clara y oscura; reinstalar la PWA y ver el ícono nuevo.
+- [x] Manual check: favicon en pestaña clara y oscura; reinstalar la PWA y ver el ícono nuevo.
 
 **Dependencies:** Task 10
 
@@ -343,9 +343,9 @@ nombres para invalidar caché.
 
 ## Checkpoint C: Mascota y marca
 
-- [ ] lint + test + build en verde
-- [ ] Hoja v3 vs `/dev/mascota` lado a lado
-- [ ] Nacho valida la tinta `#2b2619` en modo oscuro
+- [x] lint + test + build en verde
+- [x] Hoja v3 vs `/dev/mascota` lado a lado
+- [x] Nacho valida la tinta `#2b2619` en modo oscuro
 
 ---
 
@@ -453,6 +453,34 @@ de `selectMascotMood` en el header, `durmiendo` en `DashboardEmptyState` y `mare
 - `src/features/reports/components/ExportReportButton.tsx`
 
 **Estimated scope:** M
+
+---
+
+## Task 16: Kibo animado en el login
+
+**Description:** La "o" del logo de `WelcomeHero` es la mascota animada. Guiño de bienvenida al
+entrar; `pensando` mientras Google o Passkey procesan; `mareado` si fallan (incluido
+`?error=oauth`). Los botones reportan su estado a un contexto de `WelcomeScene`, que sigue sin
+saber nada de auth.
+
+**Acceptance criteria:**
+- [x] En reposo, el logo animado coincide con el estático (misma posición y tamaño de la "o").
+- [x] Secuencia verificada con Passkey: `guino` → `pensando` → `mareado` → `idle`.
+- [x] Con `?error=oauth` el servidor ya renderiza `mareado`, sin parpadeo de guiño.
+
+**Verification:**
+- [x] Build succeeds: `bun run build`
+- [ ] Manual check: login real con Google y Passkey en Safari y Chrome.
+
+**Dependencies:** Task 9, Task 10
+
+**Files likely touched:**
+- `src/components/ui/KiboLogo.tsx`, `src/components/brand/logoPaths.ts`
+- `src/features/welcome/welcomeMascot.tsx`, `src/features/welcome/components/*`
+- `src/features/auth/components/GoogleSignInButton.tsx`, `PasskeySignInButton.tsx`
+- `src/app/login/page.tsx`
+
+**Estimated scope:** S
 
 ---
 

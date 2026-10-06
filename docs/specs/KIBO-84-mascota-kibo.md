@@ -45,14 +45,14 @@ ajeno al diseño) y **tinta elevada**.
 
 | Estado | Loop | Dónde se usa |
 |---|---|---|
-| `idle` | 6 s | Reposo: header del dashboard cuando no aplica otro estado |
+| `idle` | 6 s | Reposo: header del dashboard cuando no aplica otro estado; logo del login tras el guiño |
 | `feliz` | 3 s | Balance del período positivo con margen (ver reglas) |
 | `sorprendido` | 3 s | Ingreso inesperado reciente (ver reglas) |
 | `preocupado` | 3 s | Gastos > ingresos en el período |
 | `durmiendo` | 4 s | Estados vacíos: dashboard sin movimientos y `EmptyState` de listas |
-| `guino` | 3 s | Confirmaciones: feedback enviado, nombre actualizado, Passkey registrada |
-| `pensando` | 4 s | Procesos con espera larga: generación del export de reportes |
-| `mareado` | 2.4 s | Errores (`DashboardErrorState`) o muchos gastos seguidos (ver reglas) |
+| `guino` | 3 s | Confirmaciones: feedback enviado, nombre actualizado, Passkey registrada; bienvenida en el login |
+| `pensando` | 4 s | Procesos con espera larga: generación del export de reportes; login con Google o Passkey en curso |
+| `mareado` | 2.4 s | Errores (`DashboardErrorState`, login fallido) o muchos gastos seguidos (ver reglas) |
 | ~~`celebrando`~~ | — | **Fuera de alcance por ahora.** Se diseñó pero no se implementa todavía |
 
 **Calma automática (decisión):** los estados expresivos (`feliz`, `sorprendido`, `preocupado`,
@@ -98,6 +98,7 @@ en los demás lugares donde hoy hay spinner o un texto de espera:
    (`"Cargando…"` por defecto, configurable); el contenedor que carga mantiene `aria-busy`; los
    botones con `loading` quedan `disabled` y con `aria-busy`.
 6. `KiboLogo` usa el wordmark v3 (anillo más fino, ojos más grandes) en `AppTopBar` y `WelcomeHero`.
+   En el login la "o" es la mascota animada (prop `mood`) y reacciona al estado del login.
 7. Los assets de marca usan la "o" v3 y se generan con `bun run brand:icons`: `favicon-v3.svg`,
    `favicon-32-v3.png`, `src/app/favicon.ico`, `app-icon.svg`, `app-icon-180/192/512-v3.png`,
    `app-icon-maskable.svg`, `app-icon-maskable-512-v3.png`,

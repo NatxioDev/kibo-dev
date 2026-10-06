@@ -3,6 +3,7 @@
 import { Pressable } from "@/components/motion/Pressable";
 import { Button } from "@/components/ui/Button";
 import { useGoogleSignIn } from "@/features/auth/hooks/useGoogleSignIn";
+import { useReportWelcomeActivity } from "@/features/welcome/welcomeMascot";
 import { AuthErrorMessage } from "./AuthErrorMessage";
 import { RedirectOverlay } from "./RedirectOverlay";
 
@@ -36,6 +37,7 @@ function GoogleIcon() {
 export function GoogleSignInButton({ initialError }: GoogleSignInButtonProps) {
   const { signIn, error, loading, redirecting } = useGoogleSignIn();
   const message = error ?? initialError ?? null;
+  useReportWelcomeActivity(loading ? "busy" : message ? "error" : "idle");
 
   return (
     <div className="flex w-full flex-col">

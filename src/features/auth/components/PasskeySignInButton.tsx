@@ -3,6 +3,7 @@
 import { Pressable } from "@/components/motion/Pressable";
 import { Button } from "@/components/ui/Button";
 import { usePasskeySignIn } from "@/features/auth/hooks/usePasskeySignIn";
+import { useReportWelcomeActivity } from "@/features/welcome/welcomeMascot";
 import { AuthErrorMessage } from "./AuthErrorMessage";
 import { RedirectOverlay } from "./RedirectOverlay";
 
@@ -25,6 +26,7 @@ function PasskeyIcon() {
 
 export function PasskeySignInButton() {
   const { signIn, error, loading, redirecting } = usePasskeySignIn();
+  useReportWelcomeActivity(loading ? "busy" : error ? "error" : "idle");
 
   return (
     <div className="flex w-full flex-col">
