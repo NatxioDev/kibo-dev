@@ -7,6 +7,30 @@ import type { Release } from "@/features/changelog/types";
  */
 export const RELEASES: Release[] = [
   {
+    version: "0.11.0",
+    date: "2026-10-06",
+    title: "Conoce a Kibo",
+    new: [
+      "Kibo, nuestra mascota, te acompaña en el dashboard y cambia de ánimo según cómo van tus finanzas.",
+      "Nueva sección Reportes para ver tus gastos por período y categoría.",
+      "Exporta tus transacciones a Excel o CSV desde Reportes.",
+    ],
+    improvements: [
+      "Logo e ícono renovados con la carita de Kibo.",
+      "Kibo aparece mientras algo carga, así sabes que está trabajando.",
+    ],
+    fixes: [
+      "Los botones para clasificar gastos compartidos se ven bien de nuevo.",
+    ],
+  },
+  {
+    version: "0.10.0",
+    date: "2026-10-05",
+    new: [
+      "Registra una deuda directo desde Amigos cuando pagaste por alguien.",
+    ],
+  },
+  {
     version: "0.9.0",
     date: "2026-09-29",
     title: "Tus cuentas en Kibo",
