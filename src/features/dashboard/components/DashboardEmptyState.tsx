@@ -1,16 +1,12 @@
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
+import { KiboMascot } from "@/components/mascot/KiboMascot";
 
 export function DashboardEmptyState() {
   return (
     <Card className="flex flex-col items-center px-6 py-10 text-center">
-      <span
-        aria-hidden
-        className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-surface-muted text-2xl"
-      >
-        🌱
-      </span>
-      <p className="mt-4 text-base font-medium text-foreground">
+      <KiboMascot mood="durmiendo" size={64} />
+      <p className="mt-6 text-base font-medium text-foreground">
         Aún no tienes movimientos este período.
       </p>
       <p className="mt-1 text-sm text-muted-foreground">

@@ -9,6 +9,12 @@ import {
   getPeriodRange,
   parseDashboardPeriod,
 } from "@/features/dashboard/utils/period";
+import {
+  computeMascotSignals,
+  getMascotSignalsRange,
+  toLocalDateString,
+} from "@/features/mascot/computeMascotSignals";
+import { NO_MASCOT_SIGNALS } from "@/features/mascot/types";
 import type { ServiceResult } from "@/core/domain/ServiceResult";
 import type {
   TransactionCurrency,
@@ -27,17 +33,28 @@ export class GetDashboardData {
   async execute(options: {
     period?: string | null;
     currency?: string | null;
+    now?: Date;
   }): Promise<ServiceResult<DashboardData>> {
+    const now = options.now ?? new Date();
     const period: DashboardPeriod = parseDashboardPeriod(options.period);
     const currency = parseDashboardCurrency(options.currency);
-    const range = getPeriodRange(period);
-    const periodLabel = getPeriodLabel(period);
+    const range = getPeriodRange(period, now);
+    const periodLabel = getPeriodLabel(period, now);
+    const today = toLocalDateString(now);
+    const signalsRange = getMascotSignalsRange(today);
 
-    const result = await this.dashboardRepository.listConfirmedInRange({
-      currency,
-      from: range.from,
-      to: range.to,
-    });
+    const [result, signalsResult] = await Promise.all([
+      this.dashboardRepository.listConfirmedInRange({
+        currency,
+        from: range.from,
+        to: range.to,
+      }),
+      this.dashboardRepository.listConfirmedInRange({
+        currency,
+        from: signalsRange.from,
+        to: signalsRange.to,
+      }),
+    ]);
 
     if (!result.success) {
       return result;
@@ -45,12 +62,12 @@ export class GetDashboardData {
 
     return {
       success: true,
-      data: aggregateDashboardData(
-        result.data,
-        period,
-        currency,
-        periodLabel,
-      ),
+      data: {
+        ...aggregateDashboardData(result.data, period, currency, periodLabel),
+        mascot: signalsResult.success
+          ? computeMascotSignals(signalsResult.data, { today, currency })
+          : NO_MASCOT_SIGNALS,
+      },
     };
   }
 }

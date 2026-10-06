@@ -406,13 +406,13 @@ de `selectMascotMood` en el header, `durmiendo` en `DashboardEmptyState` y `mare
 `DashboardErrorState`.
 
 **Acceptance criteria:**
-- [ ] Si la consulta de 90 días falla, las señales quedan en `false` y el dashboard carga igual.
-- [ ] Las dos consultas corren con `Promise.all`.
-- [ ] Datos de prueba producen cada estado esperado (vacío, gastos > ingresos, buen balance, ingreso inesperado, 5+ gastos hoy).
+- [x] Si la consulta de 90 días falla, las señales quedan en `false` y el dashboard carga igual.
+- [x] Las dos consultas corren con `Promise.all`.
+- [x] Datos de prueba producen cada estado esperado (vacío, gastos > ingresos, buen balance, ingreso inesperado, 5+ gastos hoy).
 
 **Verification:**
-- [ ] Tests pass: `bun run test`
-- [ ] Build succeeds: `bun run build`
+- [x] Tests pass: `bun run test`
+- [x] Build succeeds: `bun run build`
 - [ ] Manual check: dashboard con cuentas de prueba en cada escenario.
 
 **Dependencies:** Task 9, Task 13
