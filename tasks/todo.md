@@ -382,11 +382,11 @@ durmiendo, muchos gastos → mareado, ingreso inesperado → sorprendido, gastos
 preocupado, buen balance → feliz, resto → idle).
 
 **Acceptance criteria:**
-- [ ] Cada rama tiene un test, incluida la prioridad entre reglas que coinciden.
-- [ ] Empates cubiertos: ingresos = gastos, ingresos 0, balance 0.
+- [x] Cada rama tiene un test, incluida la prioridad entre reglas que coinciden.
+- [x] Empates cubiertos: ingresos = gastos, ingresos 0, balance 0.
 
 **Verification:**
-- [ ] Tests pass: `bun run test`
+- [x] Tests pass: `bun run test`
 
 **Dependencies:** Task 12
 
