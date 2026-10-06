@@ -17,6 +17,7 @@ import { DashboardSummary } from "@/features/dashboard/components/DashboardSumma
 import { ExpensesByCategory } from "@/features/dashboard/components/ExpensesByCategory";
 import { RecentTransactions } from "@/features/dashboard/components/RecentTransactions";
 import { parseDashboardPeriod } from "@/features/dashboard/utils/period";
+import { selectMascotMood } from "@/features/mascot/selectMascotMood";
 import { GetCurrentProfile } from "@/features/profile/application/GetCurrentProfile.application";
 
 type HomePageProps = {
@@ -40,6 +41,10 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   const colors = categoryColors(
     categoriesResult.success ? categoriesResult.data : [],
   );
+  const headerMood =
+    result.success && !result.data.isEmpty
+      ? selectMascotMood({ ...result.data, signals: result.data.mascot })
+      : null;
 
   return (
     <main className="flex min-h-full flex-1 flex-col px-4 pt-10 pb-16">
@@ -48,7 +53,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
           as="header"
           className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between"
         >
-          <DashboardHeader displayName={displayName} />
+          <DashboardHeader displayName={displayName} mood={headerMood} />
           <div className="grid shrink-0 grid-cols-2 gap-2 sm:flex">
             <Button href="/transactions/new">+ Registrar</Button>
             <Button href="/transactions" variant="secondary">

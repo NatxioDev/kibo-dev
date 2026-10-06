@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { KiboLoader } from "@/components/mascot/KiboLoader";
+import { KiboMascot } from "@/components/mascot/KiboMascot";
 import { Alert } from "@/components/ui/Alert";
 import { BottomSheet } from "@/components/ui/BottomSheet";
 import { buttonClassName } from "@/components/ui/Button";
@@ -148,6 +150,7 @@ export function ExportReportButton({
         title="Exportar movimientos"
         description={`${rangeLabel} · ${currencyName(currency)}`}
         onClose={() => setOpen(false)}
+        headerAccessory={pending ? <KiboMascot mood="pensando" size={36} /> : null}
       >
         <div className="flex flex-col gap-3 pb-2">
           <p aria-live="polite" className="sr-only">
@@ -181,10 +184,7 @@ export function ExportReportButton({
                       </span>
                     </span>
                     {isPending ? (
-                      <span
-                        aria-hidden
-                        className="h-5 w-5 shrink-0 rounded-full border-2 border-track border-t-primary motion-safe:animate-spin"
-                      />
+                      <KiboLoader size={22} label={null} />
                     ) : (
                       <svg
                         xmlns="http://www.w3.org/2000/svg"

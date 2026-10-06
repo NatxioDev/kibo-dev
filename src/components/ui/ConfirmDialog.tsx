@@ -122,7 +122,7 @@ export function ConfirmDialog({
             <div className="mt-6 flex flex-col gap-2">
               <Button
                 onClick={onConfirm}
-                disabled={loading}
+                loading={loading}
                 variant="danger"
                 size="lg"
                 className="w-full"

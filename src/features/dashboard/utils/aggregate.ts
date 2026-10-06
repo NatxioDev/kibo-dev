@@ -13,7 +13,7 @@ export function aggregateDashboardData(
   period: DashboardPeriod,
   currency: TransactionCurrency,
   periodLabel: string,
-): DashboardData {
+): Omit<DashboardData, "mascot"> {
   let income = 0;
   let expense = 0;
 

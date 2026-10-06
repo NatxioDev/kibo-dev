@@ -7,6 +7,10 @@
   --background: #f3ecd9;
   --foreground: #0b0b0f;
 
+  --mascot-ink: #14120d;
+  --mascot-shadow: rgb(20 18 13 / 0.16);
+  --mascot-extra: #14120d;
+
   --income: #1f9d4c;
   --expense: #ff3b30;
   --expense-solid: #ef4444;
@@ -52,6 +56,10 @@
   color-scheme: dark;
   --background: #14120d;
   --foreground: #ffffff;
+
+  --mascot-ink: #2b2619;
+  --mascot-shadow: rgb(0 0 0 / 0.4);
+  --mascot-extra: #fbf1da;
 
   --income: #30d158;
   --expense: #ff453a;

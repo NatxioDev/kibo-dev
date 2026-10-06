@@ -1,5 +1,6 @@
 "use client";
 
+import { KiboLoader } from "@/components/mascot/KiboLoader";
 import { Alert } from "@/components/ui/Alert";
 import { ListGroup } from "@/components/ui/ListGroup";
 import { labelClassName } from "@/components/ui/Field";
@@ -54,8 +55,9 @@ export function FriendSearch({ syncKey }: FriendSearchProps) {
         <p
           id="friend-search-hint"
           aria-live="polite"
-          className="min-h-5 px-1 text-sm text-muted-foreground"
+          className="flex min-h-5 items-center gap-2 px-1 text-sm text-muted-foreground"
         >
+          {status === "searching" ? <KiboLoader size={16} label={null} /> : null}
           {hint}
         </p>
       </div>

@@ -1,7 +1,9 @@
 import type { ReactNode } from "react";
+import { KiboMascot } from "@/components/mascot/KiboMascot";
 import { Card } from "@/components/ui/Card";
 
 type EmptyStateProps = {
+  /** Sin `icon` se muestra Kibo durmiendo. */
   icon?: ReactNode;
   title: string;
   description?: ReactNode;
@@ -18,7 +20,9 @@ export function EmptyState({ icon, title, description, action }: EmptyStateProps
         >
           {icon}
         </span>
-      ) : null}
+      ) : (
+        <KiboMascot mood="durmiendo" size={56} className="mb-3" />
+      )}
       <h2 className="font-display text-xl font-extrabold tracking-[-0.03em] text-balance text-foreground">
         {title}
       </h2>

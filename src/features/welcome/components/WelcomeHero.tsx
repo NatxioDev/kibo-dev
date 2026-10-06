@@ -1,12 +1,12 @@
 import { Reveal } from "@/components/motion/Reveal";
-import { KiboLogo } from "@/components/ui/KiboLogo";
+import { WelcomeLogo } from "./WelcomeLogo";
 
 /** Must be rendered inside `Stagger`: each line enters in sequence. */
 export function WelcomeHero() {
   return (
     <>
       <Reveal className="flex justify-center text-hero-foreground">
-        <KiboLogo className="h-20 w-auto sm:h-28" />
+        <WelcomeLogo className="h-20 sm:h-28" />
       </Reveal>
       <Reveal className="flex flex-col items-center gap-2 text-center">
         <h1 className="font-display text-3xl font-extrabold tracking-[-0.04em] text-hero-foreground sm:text-4xl">

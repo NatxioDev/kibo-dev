@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { ComponentProps, ReactNode } from "react";
+import { KiboLoader } from "@/components/mascot/KiboLoader";
 
 type ButtonVariant = "primary" | "secondary" | "ghost" | "danger" | "destructive";
 type ButtonSize = "sm" | "md" | "lg";
@@ -16,7 +17,7 @@ type ButtonAsLink = BaseProps & { href: string } & Omit<
     keyof BaseProps | "href"
   >;
 
-type ButtonAsButton = BaseProps & { href?: undefined } & Omit<
+type ButtonAsButton = BaseProps & { href?: undefined; loading?: boolean } & Omit<
     ComponentProps<"button">,
     keyof BaseProps
   >;
@@ -40,6 +41,12 @@ const sizeClass: Record<ButtonSize, string> = {
   lg: "h-12 px-5 text-base",
 };
 
+const loaderSize: Record<ButtonSize, number> = {
+  sm: 16,
+  md: 18,
+  lg: 20,
+};
+
 export function buttonClassName({
   variant = "primary",
   size = "md",
@@ -60,9 +67,21 @@ export function Button(props: ButtonProps) {
     );
   }
 
-  const { type = "button", ...buttonRest } = rest as ComponentProps<"button">;
+  const {
+    type = "button",
+    loading = false,
+    disabled,
+    ...buttonRest
+  } = rest as Omit<ButtonAsButton, keyof BaseProps>;
   return (
-    <button type={type} className={classes} {...buttonRest}>
+    <button
+      type={type}
+      className={classes}
+      disabled={disabled || loading}
+      aria-busy={loading || undefined}
+      {...buttonRest}
+    >
+      {loading ? <KiboLoader size={loaderSize[size ?? "md"]} label={null} /> : null}
       {children}
     </button>
   );

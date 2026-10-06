@@ -23,7 +23,6 @@ export function CategoryList({ categories }: CategoryListProps) {
     return (
       <Reveal>
         <EmptyState
-          icon="🏷️"
           title="Sin categorías"
           description="Crea categorías para saber en qué se va tu dinero."
           action={<Button href="/settings/categories/new">+ Nueva categoría</Button>}

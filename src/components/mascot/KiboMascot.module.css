@@ -1,0 +1,889 @@
+.mascot {
+  overflow: visible;
+}
+
+/* El cuerpo se aplasta y estira desde la base de la "o". */
+.body {
+  transform-box: view-box;
+  transform-origin: 50px 96px;
+}
+
+.shadow,
+.eyeL,
+.eyeR,
+.z,
+.dot,
+.spark {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+}
+
+.drop {
+  transform-box: fill-box;
+  transform-origin: 50% 0;
+}
+
+/*
+ * Los estados expresivos animan el cuerpo 2 veces (no `infinite`): su `animationend` es la
+ * señal para que el componente vuelva a idle.
+ */
+
+/* idle: respira, parpadea y mira a los lados */
+
+.mascot[data-mood="idle"] .body {
+  animation: idle-body 6s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+.mascot[data-mood="idle"] .shadow {
+  animation: idle-shadow 6s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+.mascot[data-mood="idle"] .eyes {
+  animation: idle-look 6s infinite;
+}
+
+@keyframes idle-body {
+  50% {
+    transform: scale(1.017, 1.042);
+  }
+}
+
+@keyframes idle-shadow {
+  50% {
+    transform: scale(1.017, 1);
+  }
+}
+
+@keyframes idle-look {
+  0% {
+    transform: translate(0, 0);
+    animation-timing-function: linear;
+  }
+  36% {
+    transform: translate(0, 0);
+    animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  42% {
+    transform: translate(-4.4px, 0.8px);
+    animation-timing-function: linear;
+  }
+  58% {
+    transform: translate(-4.4px, 0.8px);
+    animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  64% {
+    transform: translate(0, 0);
+    animation-timing-function: linear;
+  }
+  74% {
+    transform: translate(0, 0);
+    animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  79% {
+    transform: translate(4.2px, -1px);
+    animation-timing-function: linear;
+  }
+  89% {
+    transform: translate(4.2px, -1px);
+    animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  94%,
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+/* feliz: dos saltos con squash & stretch y la cara se balancea */
+
+.mascot[data-mood="feliz"] .body {
+  animation: feliz-body 3s 2;
+}
+
+.mascot[data-mood="feliz"] .shadow {
+  animation: feliz-shadow 3s infinite;
+}
+
+.mascot[data-mood="feliz"] .eyes {
+  transform-box: view-box;
+  transform-origin: 50px 50px;
+  animation: feliz-tilt 3s infinite;
+}
+
+@keyframes feliz-body {
+  0% {
+    transform: translate(0, 0) scale(1, 1);
+    animation-timing-function: linear;
+  }
+  10% {
+    transform: translate(0, 0) scale(1, 1);
+    animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  18% {
+    transform: translate(0, 0) scale(1.098, 0.888);
+    animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  34% {
+    transform: translate(0, -16.1px) scale(0.944, 1.07);
+    animation-timing-function: cubic-bezier(0.55, 0, 0.75, 0.2);
+  }
+  48% {
+    transform: translate(0, 0) scale(1.112, 0.86);
+    animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  58% {
+    transform: translate(0, 0) scale(1, 1);
+    animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  64% {
+    transform: translate(0, 0) scale(1.042, 0.944);
+    animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  74% {
+    transform: translate(0, -6.9px) scale(0.986, 1.028);
+    animation-timing-function: cubic-bezier(0.55, 0, 0.75, 0.2);
+  }
+  84% {
+    transform: translate(0, 0) scale(1.056, 0.93);
+    animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  92%,
+  100% {
+    transform: translate(0, 0) scale(1, 1);
+  }
+}
+
+/* La opacidad es relativa al color de --mascot-shadow. */
+@keyframes feliz-shadow {
+  0% {
+    transform: scale(1, 1);
+    animation-timing-function: linear;
+  }
+  10% {
+    transform: scale(1, 1);
+    animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  18% {
+    transform: scale(1.098, 1);
+    opacity: 1;
+    animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  34% {
+    transform: scale(0.553, 1);
+    opacity: 0.55;
+    animation-timing-function: cubic-bezier(0.55, 0, 0.75, 0.2);
+  }
+  48% {
+    transform: scale(1.112, 1);
+    opacity: 1;
+    animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  58% {
+    transform: scale(1, 1);
+    animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  64% {
+    transform: scale(1.042, 1);
+    opacity: 1;
+    animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  74% {
+    transform: scale(0.808, 1);
+    opacity: 0.81;
+    animation-timing-function: cubic-bezier(0.55, 0, 0.75, 0.2);
+  }
+  84% {
+    transform: scale(1.056, 1);
+    opacity: 1;
+    animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  92%,
+  100% {
+    transform: scale(1, 1);
+  }
+}
+
+@keyframes feliz-tilt {
+  0% {
+    transform: rotate(0deg);
+    animation-timing-function: linear;
+  }
+  18% {
+    transform: rotate(0deg);
+    animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+  }
+  40% {
+    transform: rotate(-8deg);
+    animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+  }
+  66% {
+    transform: rotate(8deg);
+    animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+  }
+  88%,
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+/* durmiendo: respiración lenta ladeada y tres "z" que flotan */
+
+.mascot[data-mood="durmiendo"] .body {
+  animation: durmiendo-body 4s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+.mascot[data-mood="durmiendo"] .shadow {
+  animation: durmiendo-shadow 4s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+.mascot[data-mood="durmiendo"] .z {
+  animation: durmiendo-z 4s infinite;
+}
+
+.mascot[data-mood="durmiendo"] .z2 {
+  animation-delay: -1.333s;
+}
+
+.mascot[data-mood="durmiendo"] .z3 {
+  animation-delay: -2.667s;
+}
+
+@keyframes durmiendo-body {
+  50% {
+    transform: rotate(-2.5deg) scale(1.035, 1.063);
+  }
+}
+
+@keyframes durmiendo-shadow {
+  50% {
+    transform: scale(1.035, 1);
+  }
+}
+
+@keyframes durmiendo-z {
+  0% {
+    transform: translate(0, 0) scale(0.5);
+    opacity: 0;
+    animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  20% {
+    transform: translate(3px, -6px) scale(0.85);
+    opacity: 1;
+    animation-timing-function: linear;
+  }
+  70% {
+    transform: translate(10px, -20px) scale(1.1);
+    opacity: 0.9;
+    animation-timing-function: cubic-bezier(0.55, 0, 0.75, 0.2);
+  }
+  100% {
+    transform: translate(14px, -28px) scale(1.25);
+    opacity: 0;
+  }
+}
+
+/* pensando: mira arriba a un lado y al otro, con puntitos que laten */
+
+.mascot[data-mood="pensando"] .body {
+  animation: pensando-body 4s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+.mascot[data-mood="pensando"] .eyes {
+  animation: pensando-look 4s infinite;
+}
+
+.mascot[data-mood="pensando"] .dot {
+  animation: pensando-dot 1.2s infinite;
+}
+
+.mascot[data-mood="pensando"] .d2 {
+  animation-delay: -0.8s;
+}
+
+.mascot[data-mood="pensando"] .d3 {
+  animation-delay: -0.4s;
+}
+
+@keyframes pensando-body {
+  25% {
+    transform: rotate(2.5deg);
+  }
+  60% {
+    transform: rotate(-2.5deg);
+  }
+}
+
+@keyframes pensando-look {
+  0% {
+    transform: translate(0, 0);
+    animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  12% {
+    transform: translate(4px, -5.5px);
+    animation-timing-function: linear;
+  }
+  38% {
+    transform: translate(4px, -5.5px);
+    animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+  }
+  52% {
+    transform: translate(-4px, -5.5px);
+    animation-timing-function: linear;
+  }
+  76% {
+    transform: translate(-4px, -5.5px);
+    animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+  }
+  90%,
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+@keyframes pensando-dot {
+  0% {
+    opacity: 0.2;
+    transform: scale(0.75);
+    animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  30% {
+    opacity: 1;
+    transform: scale(1.1);
+    animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+  }
+  60%,
+  100% {
+    opacity: 0.2;
+    transform: scale(0.75);
+  }
+}
+
+/* sorprendido: se aprieta, salta estirado y cae aplastado; los ojos se agrandan */
+
+.mascot[data-mood="sorprendido"] .body {
+  animation: sorprendido-body 3s 2;
+}
+
+.mascot[data-mood="sorprendido"] .shadow {
+  animation: sorprendido-shadow 3s infinite;
+}
+
+.mascot[data-mood="sorprendido"] .eyes {
+  animation: sorprendido-eyes 3s infinite;
+}
+
+@keyframes sorprendido-body {
+  0% {
+    transform: translate(0, 0) scale(1, 1);
+    animation-timing-function: linear;
+  }
+  12% {
+    transform: translate(0, 0) scale(1, 1);
+    animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  18% {
+    transform: translate(0, 0) scale(1.112, 0.86);
+    animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  32% {
+    transform: translate(0, -20.7px) scale(0.902, 1.126);
+    animation-timing-function: cubic-bezier(0.55, 0, 0.75, 0.2);
+  }
+  46% {
+    transform: translate(0, 0) scale(1.14, 0.832);
+    animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  58%,
+  100% {
+    transform: translate(0, 0) scale(1, 1);
+  }
+}
+
+@keyframes sorprendido-shadow {
+  0% {
+    transform: scale(1, 1);
+    opacity: 1;
+    animation-timing-function: linear;
+  }
+  12% {
+    transform: scale(1, 1);
+    opacity: 1;
+    animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  18% {
+    transform: scale(1.112, 1);
+    opacity: 1;
+    animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  32% {
+    transform: scale(0.425, 1);
+    opacity: 0.43;
+    animation-timing-function: cubic-bezier(0.55, 0, 0.75, 0.2);
+  }
+  46% {
+    transform: scale(1.14, 1);
+    opacity: 1;
+    animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  58%,
+  100% {
+    transform: scale(1, 1);
+    opacity: 1;
+  }
+}
+
+@keyframes sorprendido-eyes {
+  0% {
+    transform: translate(0, 0);
+    animation-timing-function: linear;
+  }
+  18% {
+    transform: translate(0, 1px);
+    animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  30% {
+    transform: translate(0, -3px);
+    animation-timing-function: linear;
+  }
+  76% {
+    transform: translate(0, -3px);
+    animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+  }
+  88%,
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+/* preocupado: ojos caídos hacia adentro, temblor y una gotita de sudor */
+
+.mascot[data-mood="preocupado"] .body {
+  animation: preocupado-body 3s 2;
+}
+
+.mascot[data-mood="preocupado"] .shadow {
+  animation: preocupado-shadow 3s infinite;
+}
+
+.mascot[data-mood="preocupado"] .eyes {
+  animation: preocupado-eyes 3s infinite;
+}
+
+.mascot[data-mood="preocupado"] .eyeL {
+  animation: preocupado-tilt-left 3s infinite;
+}
+
+.mascot[data-mood="preocupado"] .eyeR {
+  animation: preocupado-tilt-right 3s infinite;
+}
+
+.mascot[data-mood="preocupado"] .drop {
+  animation: preocupado-drop 3s infinite;
+}
+
+@keyframes preocupado-body {
+  0%,
+  28% {
+    transform: translate(0, 0) scale(1, 1);
+    animation-timing-function: linear;
+  }
+  31% {
+    transform: translate(-1.8px, 0) scale(1, 1);
+    animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+  }
+  34% {
+    transform: translate(1.8px, 0) scale(1, 1);
+    animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+  }
+  37% {
+    transform: translate(-1.6px, 0) scale(1, 1);
+    animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+  }
+  40% {
+    transform: translate(1.6px, 0) scale(1, 1);
+    animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+  }
+  43% {
+    transform: translate(-1.2px, 0) scale(1, 1);
+    animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+  }
+  46% {
+    transform: translate(1.2px, 0) scale(1, 1);
+    animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+  }
+  49% {
+    transform: translate(-0.8px, 0) scale(1, 1);
+    animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+  }
+  52% {
+    transform: translate(0.8px, 0) scale(1, 1);
+    animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+  }
+  55% {
+    transform: translate(0, 0) scale(1, 1);
+    animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+  }
+  70% {
+    transform: translate(0, 0) scale(0.986, 1.014);
+    animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+  }
+  100% {
+    transform: translate(0, 0) scale(1, 1);
+  }
+}
+
+@keyframes preocupado-shadow {
+  0%,
+  28% {
+    transform: translate(0, 0) scale(1, 1);
+    animation-timing-function: linear;
+  }
+  31% {
+    transform: translate(-1.8px, 0) scale(1, 1);
+    animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+  }
+  34% {
+    transform: translate(1.8px, 0) scale(1, 1);
+    animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+  }
+  37% {
+    transform: translate(-1.6px, 0) scale(1, 1);
+    animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+  }
+  40% {
+    transform: translate(1.6px, 0) scale(1, 1);
+    animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+  }
+  43% {
+    transform: translate(-1.2px, 0) scale(1, 1);
+    animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+  }
+  46% {
+    transform: translate(1.2px, 0) scale(1, 1);
+    animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+  }
+  49% {
+    transform: translate(-0.8px, 0) scale(1, 1);
+    animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+  }
+  52% {
+    transform: translate(0.8px, 0) scale(1, 1);
+    animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+  }
+  55% {
+    transform: translate(0, 0) scale(1, 1);
+    animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+  }
+  70% {
+    transform: translate(0, 0) scale(0.986, 1);
+    animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+  }
+  100% {
+    transform: translate(0, 0) scale(1, 1);
+  }
+}
+
+@keyframes preocupado-eyes {
+  0% {
+    transform: translate(0, 0);
+    animation-timing-function: linear;
+  }
+  10% {
+    transform: translate(0, 0);
+    animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  20% {
+    transform: translate(0, 3px);
+    animation-timing-function: linear;
+  }
+  86% {
+    transform: translate(0, 3px);
+    animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+  }
+  96%,
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+@keyframes preocupado-tilt-left {
+  0% {
+    transform: rotate(0deg);
+    animation-timing-function: linear;
+  }
+  10% {
+    transform: rotate(0deg);
+    animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  20% {
+    transform: rotate(-26deg);
+    animation-timing-function: linear;
+  }
+  86% {
+    transform: rotate(-26deg);
+    animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+  }
+  96%,
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes preocupado-tilt-right {
+  0% {
+    transform: rotate(0deg);
+    animation-timing-function: linear;
+  }
+  10% {
+    transform: rotate(0deg);
+    animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  20% {
+    transform: rotate(26deg);
+    animation-timing-function: linear;
+  }
+  86% {
+    transform: rotate(26deg);
+    animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+  }
+  96%,
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes preocupado-drop {
+  0% {
+    transform: translate(0, 0) scale(0);
+    opacity: 0;
+    animation-timing-function: linear;
+  }
+  24% {
+    transform: translate(0, 0) scale(0);
+    opacity: 0;
+    animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  32% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+    animation-timing-function: cubic-bezier(0.55, 0, 0.75, 0.2);
+  }
+  72% {
+    transform: translate(0, 14px) scale(1);
+    opacity: 1;
+    animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  80% {
+    transform: translate(0, 17px) scale(0.9);
+    opacity: 0;
+    animation-timing-function: linear;
+  }
+  100% {
+    transform: translate(0, 0) scale(0);
+    opacity: 0;
+  }
+}
+
+/* guino: ladea la cabeza, cierra el ojo derecho en ^ y aparecen dos destellos */
+
+.mascot[data-mood="guino"] .body {
+  animation: guino-body 3s 2;
+}
+
+.mascot[data-mood="guino"] .shadow {
+  animation: guino-shadow 3s infinite;
+}
+
+.mascot[data-mood="guino"] .spark {
+  animation: guino-spark 3s infinite;
+}
+
+.mascot[data-mood="guino"] .spark2 {
+  animation-delay: -0.25s;
+}
+
+@keyframes guino-body {
+  0% {
+    transform: translate(0, 0) rotate(0deg) scale(1, 1);
+    animation-timing-function: linear;
+  }
+  12% {
+    transform: translate(0, 0) rotate(0deg) scale(1, 1);
+    animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  18% {
+    transform: translate(0, 0) rotate(0deg) scale(1.056, 0.93);
+    animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  28% {
+    transform: translate(0, -3.45px) rotate(-8.75deg) scale(1, 1);
+    animation-timing-function: linear;
+  }
+  70% {
+    transform: translate(0, -3.45px) rotate(-8.75deg) scale(1, 1);
+    animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+  }
+  82%,
+  100% {
+    transform: translate(0, 0) rotate(0deg) scale(1, 1);
+  }
+}
+
+@keyframes guino-shadow {
+  0% {
+    transform: scale(1, 1);
+    opacity: 1;
+    animation-timing-function: linear;
+  }
+  12% {
+    transform: scale(1, 1);
+    opacity: 1;
+    animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  18% {
+    transform: scale(1.056, 1);
+    opacity: 1;
+    animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  28% {
+    transform: scale(0.904, 1);
+    opacity: 0.9;
+    animation-timing-function: linear;
+  }
+  70% {
+    transform: scale(0.904, 1);
+    opacity: 0.9;
+    animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+  }
+  82%,
+  100% {
+    transform: scale(1, 1);
+    opacity: 1;
+  }
+}
+
+@keyframes guino-spark {
+  0% {
+    transform: scale(0) rotate(0deg);
+    opacity: 0;
+    animation-timing-function: linear;
+  }
+  22% {
+    transform: scale(0) rotate(0deg);
+    opacity: 0;
+    animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  34% {
+    transform: scale(1.15) rotate(25deg);
+    opacity: 1;
+    animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+  }
+  60% {
+    transform: scale(1) rotate(60deg);
+    opacity: 1;
+    animation-timing-function: cubic-bezier(0.55, 0, 0.75, 0.2);
+  }
+  74%,
+  100% {
+    transform: scale(0) rotate(90deg);
+    opacity: 0;
+  }
+}
+
+/* mareado: se tambalea como un trompo y cada ojo-espiral gira en sentido opuesto */
+
+.mascot[data-mood="mareado"] .body {
+  animation: mareado-body 2.4s cubic-bezier(0.45, 0, 0.55, 1) 2;
+}
+
+.mascot[data-mood="mareado"] .shadow {
+  animation: mareado-shadow 2.4s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+.mascot[data-mood="mareado"] .eyeL {
+  animation: mareado-swirl 1.2s linear infinite;
+}
+
+.mascot[data-mood="mareado"] .eyeR {
+  animation: mareado-swirl 1.2s linear infinite reverse;
+}
+
+@keyframes mareado-swirl {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes mareado-body {
+  0%,
+  100% {
+    transform: translate(-2px, 0) rotate(-7.5deg);
+  }
+  50% {
+    transform: translate(2px, 0) rotate(7.5deg);
+  }
+}
+
+@keyframes mareado-shadow {
+  0%,
+  100% {
+    transform: translate(-2px, 0);
+  }
+  50% {
+    transform: translate(2px, 0);
+  }
+}
+
+/* Reduced motion: cada estado queda quieto en su pose característica. */
+@media (prefers-reduced-motion: reduce) {
+  .mascot * {
+    animation: none !important;
+  }
+
+  .mascot[data-mood="durmiendo"] .z {
+    opacity: 0;
+  }
+
+  .mascot[data-mood="durmiendo"] .z1 {
+    opacity: 1;
+    transform: translate(3px, -6px) scale(0.85);
+  }
+
+  .mascot[data-mood="pensando"] .eyes {
+    transform: translate(4px, -5.5px);
+  }
+
+  .mascot[data-mood="pensando"] .d1 {
+    opacity: 0.4;
+  }
+
+  .mascot[data-mood="pensando"] .d2 {
+    opacity: 0.7;
+  }
+
+  .mascot[data-mood="sorprendido"] .eyes {
+    transform: translate(0, -3px);
+  }
+
+  .mascot[data-mood="preocupado"] .eyes {
+    transform: translate(0, 3px);
+  }
+
+  .mascot[data-mood="preocupado"] .eyeL {
+    transform: rotate(-26deg);
+  }
+
+  .mascot[data-mood="preocupado"] .eyeR {
+    transform: rotate(26deg);
+  }
+
+  .mascot[data-mood="guino"] .body {
+    transform: translate(0, -3.45px) rotate(-8.75deg);
+  }
+
+  .mascot[data-mood="mareado"] .body {
+    transform: rotate(-7.5deg);
+  }
+}

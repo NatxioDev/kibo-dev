@@ -14,7 +14,6 @@ export function PaymentMethodList({ paymentMethods }: PaymentMethodListProps) {
     return (
       <Reveal>
         <EmptyState
-          icon="💳"
           title="Sin métodos de pago"
           description="Agrega efectivo, tarjetas o QR para saber cómo pagas."
           action={
