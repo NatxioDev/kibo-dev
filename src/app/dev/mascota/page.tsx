@@ -4,21 +4,28 @@ import { notFound } from "next/navigation";
 import { PageHeader } from "@/components/PageHeader";
 import { PageShell } from "@/components/PageShell";
 import { KiboLoader } from "@/components/mascot/KiboLoader";
+import { KiboMascot } from "@/components/mascot/KiboMascot";
+import type { MascotMood } from "@/components/mascot/types";
 import { Button } from "@/components/ui/Button";
-import { EyeMorphProbe } from "./EyeMorphProbe";
 
 export const metadata: Metadata = {
   title: "Mascota · Dev · Kibo",
 };
 
 const SIZES = [48, 32, 24, 20];
+const MASCOT_SIZES = [64, 40, 32, 24];
+const MOODS: MascotMood[] = ["idle", "feliz", "durmiendo", "pensando"];
 
 const THEMES: { name: string; className: string; style?: CSSProperties }[] = [
   { name: "Tema actual", className: "" },
   {
     name: "Claro",
     className: "bg-[#f3ecd9] text-[#0b0b0f]",
-    style: { "--mascot-ink": "#14120d" } as CSSProperties,
+    style: {
+      "--mascot-ink": "#14120d",
+      "--mascot-shadow": "rgb(20 18 13 / 0.16)",
+      "--mascot-extra": "#14120d",
+    } as CSSProperties,
   },
   { name: "Oscuro", className: "dark bg-[#14120d] text-white" },
 ];
@@ -46,15 +53,32 @@ export default function MascotaDevPage() {
         description="Banco de pruebas de KIBO-84. No existe en producción."
       />
 
-      <Section title="Prueba Safari: forma de ojos con motion">
-        <div className="flex items-center gap-4 rounded-card bg-surface p-4">
-          <EyeMorphProbe />
-          <p className="text-sm text-muted-foreground">
-            El ojo debería pasar de píldora a arco ^ y volver en cualquier
-            navegador, incluido Safari.
-          </p>
-        </div>
-      </Section>
+      {THEMES.map((theme) => (
+        <Section key={theme.name} title={`Mascota · ${theme.name}`}>
+          <div
+            className={`flex flex-col gap-8 rounded-card px-5 pt-12 pb-5 ${theme.className || "bg-surface"}`}
+            style={theme.style}
+          >
+            <div className="grid grid-cols-2 gap-x-6 gap-y-14 sm:grid-cols-4">
+              {MOODS.map((mood) => (
+                <div key={mood} className="flex flex-col items-center gap-4">
+                  <KiboMascot mood={mood} size={88} />
+                  <span className="text-xs font-semibold">{mood}</span>
+                </div>
+              ))}
+            </div>
+            <div className="flex items-end gap-5">
+              <span className="w-20 text-xs font-semibold uppercase opacity-60">Tamaños</span>
+              {MASCOT_SIZES.map((size) => (
+                <span key={size} className="flex flex-col items-center gap-1">
+                  <KiboMascot size={size} />
+                  <span className="text-[0.625rem] opacity-60">{size}px</span>
+                </span>
+              ))}
+            </div>
+          </div>
+        </Section>
+      ))}
 
       <Section title="Botones con loading">
         <div className="flex flex-wrap items-center gap-3 rounded-card bg-surface p-4">

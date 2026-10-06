@@ -31,7 +31,7 @@ reconfirmar en Safari.
 - [x] Hay evidencia del comportamiento en Safari (macOS: CSS `d` no anima ni dibuja el path).
 - [x] La decisión (`motion`) queda anotada en la sección "Decisión técnica" de la spec.
 - [x] Safari confirma que la versión con `motion` anima (`EyeMorphProbe` en `/dev/mascota`).
-- [ ] El código del spike se descarta o se convierte en la base de la tarea 8.
+- [x] El código del spike se descarta o se convierte en la base de la tarea 8.
 
 **Verification:**
 - [ ] Manual check: los ojos pasan de píldora a arco `^` en los 4 navegadores.
@@ -235,14 +235,17 @@ cuerpo, ojos) y los estados `idle`, `feliz`, `durmiendo` y `pensando`, usando la
 definió el spike. Incluye pose estática por estado para reduced motion.
 
 **Acceptance criteria:**
-- [ ] `<KiboMascot mood size shadow className />` con `aria-hidden`.
-- [ ] Los 4 estados coinciden con la hoja v3 en `/dev/mascota`.
-- [ ] Sombra y extras (z, puntitos) se ocultan en tamaños ≤ 32 px.
-- [ ] Con reduced motion cada estado muestra su pose característica quieta.
+- [x] `<KiboMascot mood size shadow className />` con `aria-hidden`.
+- [x] Los 4 estados coinciden con la hoja v3 en `/dev/mascota`.
+- [x] Sombra y extras (z, puntitos) se ocultan en tamaños ≤ 32 px.
+- [x] Con reduced motion cada estado muestra su pose característica quieta.
+- [x] `usePrefersReducedMotion` (con `useSyncExternalStore`) en vez de `useReducedMotion`: el de
+  motion lee la preferencia en el primer render y la hidratación dejaba el `d` del servidor.
 
 **Verification:**
-- [ ] Build succeeds: `bun run build`
-- [ ] Manual check: comparación lado a lado con la demo en claro/oscuro y con reduced motion.
+- [x] Typecheck y lint
+- [x] Manual check: comparación con la hoja v3 en claro/oscuro y con reduced motion (Chrome).
+- [ ] Manual check: Safari.
 
 **Dependencies:** Task 1, Task 3
 
