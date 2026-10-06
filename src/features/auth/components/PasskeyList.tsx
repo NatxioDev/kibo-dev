@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { KiboLoader } from "@/components/mascot/KiboLoader";
 import { Button } from "@/components/ui/Button";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { Field, errorProps, inputClassName } from "@/components/ui/Field";
@@ -66,7 +67,10 @@ export function PasskeyList() {
 
   if (loading) {
     return (
-      <p className="px-1 text-sm text-muted-foreground">Cargando Passkeys…</p>
+      <p role="status" className="flex items-center gap-2 px-1 text-sm text-muted-foreground">
+        <KiboLoader size={16} label={null} />
+        Cargando Passkeys…
+      </p>
     );
   }
 

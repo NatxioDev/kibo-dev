@@ -201,11 +201,11 @@ el loader inline en `TransactionForm` (`loadingOptions`) y junto al contador de
 **Description:** Mostrar `KiboLoader compact` junto a los textos "Cargando Passkeys…" y "Buscando…".
 
 **Acceptance criteria:**
-- [ ] El texto sigue visible junto al loader.
-- [ ] El loader desaparece al terminar la carga o la búsqueda.
+- [x] El texto sigue visible junto al loader.
+- [x] El loader desaparece al terminar la carga o la búsqueda.
 
 **Verification:**
-- [ ] Build succeeds: `bun run build`
+- [x] Typecheck y lint: `bunx tsc --noEmit -p .`, `bun run lint`
 - [ ] Manual check: `/settings/security` y búsqueda en `/friends`.
 
 **Dependencies:** Task 3
@@ -220,8 +220,8 @@ el loader inline en `TransactionForm` (`loadingOptions`) y junto al contador de
 
 ## Checkpoint B: Sin spinners
 
-- [ ] `rg -n "animate-spin|AuthSpinner" src` sin resultados
-- [ ] lint + test + build en verde
+- [x] `rg -n "animate-spin|AuthSpinner" src` sin resultados
+- [x] lint + test + build en verde
 - [ ] Recorrido manual: login, transacciones, reportes, settings, amigos, diálogos
 
 ---
