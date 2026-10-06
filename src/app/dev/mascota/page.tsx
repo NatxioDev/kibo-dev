@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { PageHeader } from "@/components/PageHeader";
 import { PageShell } from "@/components/PageShell";
 import { KiboLoader } from "@/components/mascot/KiboLoader";
+import { EyeMorphProbe } from "./EyeMorphProbe";
 
 export const metadata: Metadata = {
   title: "Mascota · Dev · Kibo",
@@ -43,6 +44,16 @@ export default function MascotaDevPage() {
         title="Mascota"
         description="Banco de pruebas de KIBO-84. No existe en producción."
       />
+
+      <Section title="Prueba Safari: forma de ojos con motion">
+        <div className="flex items-center gap-4 rounded-card bg-surface p-4">
+          <EyeMorphProbe />
+          <p className="text-sm text-muted-foreground">
+            El ojo debería pasar de píldora a arco ^ y volver en cualquier
+            navegador, incluido Safari.
+          </p>
+        </div>
+      </Section>
 
       {THEMES.map((theme) => (
         <Section key={theme.name} title={`Loader · ${theme.name}`}>
