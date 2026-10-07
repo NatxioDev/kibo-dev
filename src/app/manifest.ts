@@ -6,7 +6,7 @@ export default function manifest(): MetadataRoute.Manifest {
     name: "Kibo",
     short_name: "Kibo",
     description: "Gestor personal de gastos",
-    start_url: "/",
+    start_url: "/?source=pwa",
     scope: "/",
     lang: "es",
     dir: "ltr",

@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="robots" content="noindex" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f3ecd9" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#14120d" />
+    <title>Sin conexión · Kibo</title>
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem("kibo-theme");
+          var theme =
+            stored === "light" || stored === "dark"
+              ? stored
+              : window.matchMedia("(prefers-color-scheme: dark)").matches
+                ? "dark"
+                : "light";
+          if (theme === "dark") document.documentElement.classList.add("dark");
+          document.documentElement.style.colorScheme = theme;
+        } catch (e) {}
+      })();
+    </script>
+    <style>
+      :root {
+        --background: #f3ecd9;
+        --foreground: #0b0b0f;
+        --muted-foreground: rgb(68 60 44 / 0.72);
+        --primary: #0b0b0f;
+        --primary-foreground: #ffffff;
+      }
+      .dark {
+        --background: #14120d;
+        --foreground: #ffffff;
+        --muted-foreground: rgb(235 235 245 / 0.6);
+        --primary: #ffffff;
+        --primary-foreground: #000000;
+      }
+      html,
+      body {
+        margin: 0;
+        min-height: 100%;
+        background: var(--background);
+        color: var(--foreground);
+        font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+      }
+      main {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+        padding: 2rem 1.5rem;
+        text-align: center;
+      }
+      h1 {
+        margin: 0;
+        font-size: 1.5rem;
+      }
+      p {
+        margin: 0;
+        max-width: 20rem;
+        color: var(--muted-foreground);
+      }
+      button {
+        margin-top: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        border: 0;
+        border-radius: 9999px;
+        background: var(--primary);
+        color: var(--primary-foreground);
+        font: inherit;
+        font-weight: 600;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <img src="/brand/app-icon-192-v3.png" alt="" width="72" height="72" />
+      <h1>Sin conexión</h1>
+      <p>Revisa tu conexión a internet y vuelve a intentarlo.</p>
+      <button type="button" onclick="location.reload()">Reintentar</button>
+    </main>
+    <script>
+      window.addEventListener("online", function () {
+        location.reload();
+      });
+    </script>
+  </body>
+</html>
