@@ -1,3 +1,9 @@
+## [0.12.0](https://github.com/NatxioDev/kibo-dev/compare/v0.11.0...v0.12.0) (2026-10-07)
+
+### Features
+
+* **pwa:** add Serwist service worker with instant launch shell ([d5bb080](https://github.com/NatxioDev/kibo-dev/commit/d5bb0808e412f653a5dcdb19f4ad79dcab451553))
+
 ## [0.11.0](https://github.com/NatxioDev/kibo-dev/compare/v0.10.0...v0.11.0) (2026-10-06)
 
 ### Features
