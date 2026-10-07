@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="robots" content="noindex" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f3ecd9" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#14120d" />
+    <title>Kibo</title>
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem("kibo-theme");
+          var theme =
+            stored === "light" || stored === "dark"
+              ? stored
+              : window.matchMedia("(prefers-color-scheme: dark)").matches
+                ? "dark"
+                : "light";
+          if (theme === "dark") document.documentElement.classList.add("dark");
+          document.documentElement.style.colorScheme = theme;
+        } catch (e) {}
+      })();
+    </script>
+    <style>
+      :root {
+        --background: #f3ecd9;
+        --surface-muted: rgb(255 255 255 / 0.42);
+      }
+      .dark {
+        --background: #14120d;
+        --surface-muted: rgb(255 255 255 / 0.1);
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        min-height: 100%;
+        background: var(--background);
+      }
+      main {
+        padding: 2.5rem 1rem 4rem;
+      }
+      .stack {
+        display: flex;
+        flex-direction: column;
+        gap: 1.25rem;
+        max-width: 48rem;
+        margin: 0 auto;
+      }
+      .title {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.75rem;
+      }
+      .grid-lg {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1.25rem;
+      }
+      @media (min-width: 1024px) {
+        .grid-lg {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+      .b {
+        background: var(--surface-muted);
+        border-radius: 1.75rem;
+        animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+      }
+      .line {
+        border-radius: 0.25rem;
+      }
+      .pill {
+        border-radius: 9999px;
+      }
+      @keyframes pulse {
+        50% {
+          opacity: 0.5;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .b {
+          animation: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main aria-busy="true" aria-label="Cargando Kibo">
+      <div class="stack">
+        <div class="title">
+          <div class="b line" style="height: 1rem; width: 5rem"></div>
+          <div class="b line" style="height: 2rem; width: 15rem"></div>
+        </div>
+        <div class="b pill" style="height: 2.75rem"></div>
+        <div class="b" style="height: 11rem"></div>
+        <div class="grid">
+          <div class="b" style="height: 4.5rem"></div>
+          <div class="b" style="height: 4.5rem"></div>
+        </div>
+        <div class="grid-lg">
+          <div class="b" style="height: 14rem"></div>
+          <div class="b" style="height: 14rem"></div>
+        </div>
+      </div>
+    </main>
+    <script>
+      // Navigate after the first frame so the skeleton is actually painted.
+      requestAnimationFrame(function () {
+        setTimeout(function () {
+          location.replace("/");
+        }, 0);
+      });
+    </script>
+  </body>
+</html>
