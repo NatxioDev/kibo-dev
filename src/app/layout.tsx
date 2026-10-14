@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Inter_Tight } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import { MotionProvider } from "@/components/motion/MotionProvider";
 import { LiquidLensFilter } from "@/components/ui/LiquidLensFilter";
 import { DependencyProvider } from "@/core/context/dependency/Dependency.provider";
@@ -90,6 +91,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             </DependencyProvider>
           </MotionProvider>
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   );
