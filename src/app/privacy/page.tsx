@@ -3,7 +3,7 @@ import { PageHeader } from "@/components/PageHeader";
 import { Card } from "@/components/ui/Card";
 
 const CONTACT_EMAIL = "yamil.ignacio.paz.sea@gmail.com";
-const LAST_UPDATED = "25 de septiembre de 2026";
+const LAST_UPDATED = "14 de noviembre de 2026";
 
 export const metadata: Metadata = {
   title: "Política de privacidad · Kibo",
@@ -58,6 +58,10 @@ export default function PrivacyPage() {
               y métodos de pago.
             </li>
             <li>Los comentarios o reportes que nos envíes desde la app.</li>
+            <li>
+              Si lo decides, una imagen de QR generada por tu entidad financiera,
+              con una etiqueta y una fecha de vigencia que tú escribes.
+            </li>
           </ul>
           <p>
             No accedemos a tus contactos, correos, archivos ni a ningún otro
@@ -74,6 +78,10 @@ export default function PrivacyPage() {
               estadísticas.
             </li>
             <li>Para responder a tus comentarios y mejorar el servicio.</li>
+            <li>
+              Si subes un QR, para mostrarlo únicamente a las personas que tienen
+              una deuda abierta contigo.
+            </li>
           </ul>
           <p>
             No vendemos, alquilamos ni compartimos tus datos con terceros con
@@ -113,7 +121,67 @@ export default function PrivacyPage() {
           </p>
         </Section>
 
-        <Section title="5. Cookies">
+        <Section title="5. Imágenes de QR de cobro">
+          <div id="qr-de-cobro" className="flex flex-col gap-3">
+            <p>
+              Puedes subir una imagen de QR que generó tu entidad financiera, para
+              que las personas con una deuda abierta contigo la vean y paguen desde
+              la app de su banco. Kibo no genera, modifica, decodifica ni valida esa
+              imagen. Tampoco procesa, inicia ni confirma pagos, y no recibe ni
+              custodia fondos. El pago lo hace la entidad financiera, con sus propias
+              condiciones. Quien paga verifica en su app el destinatario, el monto y
+              la vigencia antes de confirmar.
+            </p>
+            <p>
+              La imagen puede incluir datos personales y financieros, como el nombre
+              del beneficiario, un número de cuenta o teléfono, la entidad, un monto,
+              un concepto o una fecha. La finalidad es única: mostrarla a quienes
+              tienen una deuda abierta contigo. No la usamos para publicidad,
+              analítica ni para entrenar modelos. Al subirla aceptas ese uso con una
+              casilla específica. Aceptar estos textos al crear la cuenta no reemplaza
+              esa casilla.
+            </p>
+            <p>
+              La ven el dueño de la imagen y esas personas mientras la deuda siga
+              abierta. Al saldar todas las deudas, dejan de verla. El archivo se aloja
+              en un bucket privado de Supabase Pte. Ltd. (Singapur), que actúa como
+              encargado del tratamiento, sobre infraestructura de Amazon Web Services
+              en la región configurada del proyecto. Hay un acuerdo de tratamiento de
+              datos (
+              <a
+                href="https://supabase.com/legal/dpa"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                DPA de Supabase
+              </a>
+              ). El acceso se limita con reglas de base de datos y enlaces de corta
+              duración. No publicamos la imagen ni la indexamos.
+            </p>
+            <p>
+              Guardamos la imagen mientras tú la mantengas. Al reemplazarla, al
+              eliminarla o al borrar tu cuenta, pedimos el borrado del archivo. Las
+              copias de seguridad del proveedor pueden conservarlo un tiempo
+              adicional. Si otra persona guardó la imagen en su teléfono, esa copia
+              queda fuera de Kibo.
+            </p>
+            <p>
+              Puedes eliminar la imagen en cualquier momento desde Ajustes. Para
+              acceder, rectificar, oponerte o pedir la supresión del resto de datos,
+              escríbenos a{" "}
+              <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>. Esta función es
+              para personas mayores de edad. Quien sube la imagen declara que la
+              cuenta es suya o que el titular lo autorizó.
+            </p>
+            <p>
+              Kibo responde por lo que controla: la seguridad del archivo, quién puede
+              verlo y el borrado. Esta descripción dice qué hace el servicio. No
+              excluye esa responsabilidad.
+            </p>
+          </div>
+        </Section>
+
+        <Section title="6. Cookies">
           <p>
             Usamos únicamente cookies necesarias para mantener tu sesión
             iniciada y recordar tu preferencia de tema. No usamos cookies de
@@ -121,7 +189,7 @@ export default function PrivacyPage() {
           </p>
         </Section>
 
-        <Section title="6. Conservación y eliminación">
+        <Section title="7. Conservación y eliminación">
           <p>
             Conservamos tus datos mientras tengas una cuenta en Kibo. Puedes
             solicitar la eliminación de tu cuenta y de todos tus datos en
@@ -131,7 +199,7 @@ export default function PrivacyPage() {
           </p>
         </Section>
 
-        <Section title="7. Tus derechos">
+        <Section title="8. Tus derechos">
           <p>
             Puedes acceder, corregir o eliminar tus datos. Tu nombre visible y
             nombre de usuario se pueden editar desde la configuración de la app;
@@ -148,21 +216,22 @@ export default function PrivacyPage() {
           </p>
         </Section>
 
-        <Section title="8. Menores de edad">
+        <Section title="9. Menores de edad">
           <p>
             Kibo no está dirigido a menores de 13 años y no recopilamos
-            intencionalmente datos de menores.
+            intencionalmente datos de menores. Subir un QR es una función para
+            personas mayores de edad.
           </p>
         </Section>
 
-        <Section title="9. Cambios a esta política">
+        <Section title="10. Cambios a esta política">
           <p>
             Podemos actualizar esta política ocasionalmente. Publicaremos
             cualquier cambio en esta página con su nueva fecha de actualización.
           </p>
         </Section>
 
-        <Section title="10. Contacto">
+        <Section title="11. Contacto">
           <p>
             Si tienes preguntas sobre esta política, escríbenos a{" "}
             <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
