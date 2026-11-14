@@ -41,6 +41,7 @@ export type TransactionSplitLink = {
   shareAmount: number;
   currency: CurrencyCode;
   expenseStatus: ExpenseStatus;
+  payerId: string;
   payerName: string;
 };
 

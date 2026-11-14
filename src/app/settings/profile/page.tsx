@@ -1,7 +1,9 @@
+import Link from "next/link";
 import { PageHeader } from "@/components/PageHeader";
 import { PageShell } from "@/components/PageShell";
 import { Reveal } from "@/components/motion/Reveal";
 import { Alert } from "@/components/ui/Alert";
+import { Card } from "@/components/ui/Card";
 import { createServerDependencies } from "@/core/infrastructure/factories/createServerDependencies";
 import { GetCurrentProfile } from "@/features/profile/application/GetCurrentProfile.application";
 import { DisplayNameForm } from "@/features/profile/components/DisplayNameForm";
@@ -49,6 +51,16 @@ export default async function ProfileSettingsPage() {
           ) : null}
           <Reveal>
             <DisplayNameForm initialValue={profile.display_name ?? ""} />
+          </Reveal>
+          <Reveal>
+            <Card className="px-5 py-4">
+              <Link href="/settings/qr" className="flex flex-col gap-1">
+                <span className="font-semibold text-foreground">QR de cobro</span>
+                <span className="text-sm text-pretty text-muted-foreground">
+                  La imagen que te dio tu banco, para quienes te deben.
+                </span>
+              </Link>
+            </Card>
           </Reveal>
         </>
       ) : (

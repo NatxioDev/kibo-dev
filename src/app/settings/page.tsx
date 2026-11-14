@@ -69,6 +69,12 @@ export default async function SettingsPage() {
             subtitle="Tarjetas, efectivo, QR…"
             href="/settings/payment-methods"
           />
+          <ListRow
+            icon="▣"
+            title="QR de cobro"
+            subtitle="La imagen de tu banco, para quienes te deben"
+            href="/settings/qr"
+          />
         </ListGroup>
       </Reveal>
 

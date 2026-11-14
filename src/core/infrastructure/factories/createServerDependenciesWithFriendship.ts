@@ -7,6 +7,7 @@ import { SupabaseDashboardRepository } from "@/features/dashboard/infrastructure
 import { SupabaseFeedbackRepository } from "@/features/feedback/infrastructure/supabase/SupabaseFeedback.repository";
 import { SupabaseFriendshipRepository } from "@/features/friends/infrastructure/supabase/SupabaseFriendship.repository";
 import { SupabasePaymentMethodRepository } from "@/features/payment-methods/infrastructure/supabase/SupabasePaymentMethod.repository";
+import { SupabasePaymentQrRepository } from "@/features/payment-qr/infrastructure/supabase/SupabasePaymentQr.repository";
 import { SupabaseProfileRepository } from "@/features/profile/infrastructure/supabase/SupabaseProfile.repository";
 import { SupabaseSplitRepository } from "@/features/splits/infrastructure/supabase/SupabaseSplit.repository";
 import { SupabaseTransactionRepository } from "@/features/transactions/infrastructure/supabase/SupabaseTransaction.repository";
@@ -33,5 +34,6 @@ export function createServerDependenciesWithFriendship(
     profileRepository: new SupabaseProfileRepository(supabase),
     friendshipRepository: new SupabaseFriendshipRepository(supabase),
     splitRepository: new SupabaseSplitRepository(supabase),
+    paymentQrRepository: new SupabasePaymentQrRepository(supabase),
   };
 }

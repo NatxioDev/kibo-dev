@@ -6,9 +6,15 @@ import { Reveal } from "@/components/motion/Reveal";
 import { ListGroup, ListRow } from "@/components/ui/ListGroup";
 import { createServerDependencies } from "@/core/infrastructure/factories/createServerDependencies";
 import { friendName } from "@/features/friends/components/FriendRow";
+import { DebtPaymentQr } from "@/features/payment-qr/components/DebtPaymentQr";
 import { balanceLines } from "@/features/splits/components/balanceLines";
 import { SettlementPanel } from "@/features/splits/components/SettlementPanel";
+import { toCents } from "@/features/splits/domain/splitAmount";
 import { formatMoneyAmount, formatTransactionDate } from "@/features/transactions/components/formatters";
+
+export const metadata = {
+  robots: { index: false, follow: false },
+};
 
 type FriendDetailPageProps = {
   params: Promise<{ userId: string }>;
@@ -33,6 +39,11 @@ export default async function FriendDetailPage({ params }: FriendDetailPageProps
   const { profile, balances, history, pendingSettlements, isFriend } = result.data;
   const name = friendName(profile);
   const lines = balanceLines(balances);
+  const owed = balances.filter((balance) => toCents(balance.net) < 0);
+  const balanceHint =
+    owed.length > 0
+      ? owed.map((balance) => formatMoneyAmount(Math.abs(balance.net), balance.currency)).join(" · ")
+      : null;
 
   return (
     <PageShell>
@@ -57,6 +68,12 @@ export default async function FriendDetailPage({ params }: FriendDetailPageProps
           {lines.length > 0 ? lines.join(" · ") : "Están a mano"}
         </p>
       </Reveal>
+
+      {owed.length > 0 ? (
+        <Reveal>
+          <DebtPaymentQr ownerId={profile.id} ownerName={name} balanceHint={balanceHint} />
+        </Reveal>
+      ) : null}
 
       <Reveal>
         <SettlementPanel

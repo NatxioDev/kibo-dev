@@ -4,6 +4,7 @@ import { PageShell } from "@/components/PageShell";
 import { Reveal } from "@/components/motion/Reveal";
 import { createServerDependencies } from "@/core/infrastructure/factories/createServerDependencies";
 import { GetTransactionWithRelations } from "@/features/transactions/application/GetTransaction.application";
+import { DebtPaymentQr } from "@/features/payment-qr/components/DebtPaymentQr";
 import { TransactionDetail } from "@/features/transactions/components/TransactionDetail";
 
 type TransactionDetailPageProps = {
@@ -53,6 +54,15 @@ export default async function TransactionDetailPage({
         sharedNotice={sharedNotice}
         deleteDescription={deleteDescription}
       />
+      {shared && !shared.isPayer ? (
+        <Reveal>
+          <DebtPaymentQr
+            ownerId={shared.payerId}
+            ownerName={shared.payerName}
+            balanceHint={null}
+          />
+        </Reveal>
+      ) : null}
     </PageShell>
   );
 }
