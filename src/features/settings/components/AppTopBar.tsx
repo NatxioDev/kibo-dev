@@ -6,6 +6,8 @@ import { KiboLogo } from "@/components/ui/KiboLogo";
 import { useWhatsNew } from "@/features/changelog/hooks/useWhatsNew";
 import { FriendsLink } from "@/features/friends/components/FriendsLink";
 import { useFriendAlerts } from "@/features/friends/hooks/usePendingFriendRequests";
+import { NotificationsLink } from "@/features/notifications/components/NotificationsLink";
+import { useUnreadNotifications } from "@/features/notifications/hooks/useUnreadNotifications";
 import type { CurrentProfile } from "@/features/profile/domain/models/Profile";
 import { ReportsLink } from "@/features/reports/components/ReportsLink";
 import { ProfileLink } from "@/features/settings/components/ProfileLink";
@@ -20,6 +22,7 @@ export function AppTopBar({ profile }: AppTopBarProps) {
   const pathname = usePathname();
   const hidden = HIDDEN_PREFIXES.some((prefix) => pathname.startsWith(prefix));
   const friendAlerts = useFriendAlerts(!hidden, pathname);
+  const unread = useUnreadNotifications(!hidden, pathname);
   const { hasUnseen } = useWhatsNew();
 
   if (hidden) {
@@ -39,6 +42,10 @@ export function AppTopBar({ profile }: AppTopBarProps) {
             requests={friendAlerts.requests}
             unclassified={friendAlerts.unclassified}
             disputes={friendAlerts.disputes}
+          />
+          <NotificationsLink
+            active={pathname.startsWith("/notifications")}
+            unread={unread}
           />
           <ProfileLink
             avatarUrl={profile?.avatar_url}

@@ -46,6 +46,12 @@ export default async function SettingsPage() {
             subtitle="Passkeys para entrar sin contraseña"
             href="/settings/security"
           />
+          <ListRow
+            icon="🔔"
+            title="Notificaciones"
+            subtitle="Cobros, pagos y novedades"
+            href="/notifications"
+          />
         </ListGroup>
       </Reveal>
 
