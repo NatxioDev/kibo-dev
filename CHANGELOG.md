@@ -1,3 +1,9 @@
+## [0.14.0](https://github.com/NatxioDev/kibo-dev/compare/v0.13.0...v0.14.0) (2026-11-17)
+
+### Features
+
+* **terms:** add the public terms and conditions page ([e6778e2](https://github.com/NatxioDev/kibo-dev/commit/e6778e20c9ddc2908ca7a4cc847eb1c839b161ed))
+
 ## [0.13.0](https://github.com/NatxioDev/kibo-dev/compare/v0.12.0...v0.13.0) (2026-11-17)
 
 ### Features
