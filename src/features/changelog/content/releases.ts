@@ -9,10 +9,20 @@ export const RELEASES: Release[] = [
   {
     version: "0.14.0",
     date: "2026-11-14",
-    title: "QR de tu banco",
+    title: "QR de cobro",
     new: [
-      "Puedes subir, reemplazar o quitar el QR que te dio tu banco, desde Ajustes.",
-      "Quienes te deben lo ven en la deuda, en un tamaño para escanearlo con su banco, y después marcan el pago como siempre.",
+      "Sube el QR de tu banco desde Ajustes; quienes te deben lo ven al saldar la deuda.",
+    ],
+    fixes: [
+      "Amigos vuelve a mostrar deudas y gastos compartidos sin error.",
+    ],
+  },
+  {
+    version: "0.12.0",
+    date: "2026-10-07",
+    title: "Kibo más rápida",
+    improvements: [
+      "La app instalada abre más rápido y se siente más fluida al volver.",
     ],
   },
   {
