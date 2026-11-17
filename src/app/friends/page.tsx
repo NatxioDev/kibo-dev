@@ -83,8 +83,10 @@ export default async function FriendsPage() {
 
       {balances.success ? <FriendsDebtSummary people={people} /> : null}
 
-      {!balances.success || !attention.success ? (
-        <Alert>{!balances.success ? balances.error : attention.error}</Alert>
+      {!balances.success ? (
+        <Alert>{balances.error}</Alert>
+      ) : !attention.success ? (
+        <Alert>{attention.error}</Alert>
       ) : null}
 
       {attention.success ? (
