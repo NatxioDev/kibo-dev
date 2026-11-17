@@ -1,3 +1,15 @@
+## [0.13.0](https://github.com/NatxioDev/kibo-dev/compare/v0.12.0...v0.13.0) (2026-11-17)
+
+### Features
+
+* **notifications:** foundation del notification center (KIBO-97) ([78e4451](https://github.com/NatxioDev/kibo-dev/commit/78e44515941c0b45262ef89249fdab25b4b6d26e))
+* **payment-qr:** store one bank QR per user ([1260efe](https://github.com/NatxioDev/kibo-dev/commit/1260efe877bfef8a3f70f3dbadce26a33b95feb9))
+
+### Bug Fixes
+
+* **friends:** estrechar ServiceResult al mostrar alert de splits ([dd75a0e](https://github.com/NatxioDev/kibo-dev/commit/dd75a0e899f9a9493e46c258c32dc335294a531b))
+* **splits:** restaurar grant de can_read_shared_expense ([3be9adc](https://github.com/NatxioDev/kibo-dev/commit/3be9adca1c17261db0c563dc3c871f6547f4cca4))
+
 ## [0.12.0](https://github.com/NatxioDev/kibo-dev/compare/v0.11.0...v0.12.0) (2026-10-07)
 
 ### Features
