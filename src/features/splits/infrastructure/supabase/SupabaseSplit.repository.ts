@@ -672,6 +672,7 @@ export class SupabaseSplitRepository implements SplitRepository {
         shareAmount: share.amount,
         currency: share.currency,
         expenseStatus: share.expenseStatus,
+        payerId: share.payerId,
         payerName: personName(profileOf(graph.data, share.payerId)),
       },
     };

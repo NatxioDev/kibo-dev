@@ -83,11 +83,15 @@ export default async function FriendsPage() {
 
       {balances.success ? <FriendsDebtSummary people={people} /> : null}
 
+      {!balances.success ? (
+        <Alert>{balances.error}</Alert>
+      ) : !attention.success ? (
+        <Alert>{attention.error}</Alert>
+      ) : null}
+
       {attention.success ? (
         <UnclassifiedInbox items={attention.data} categories={expenseCategories} />
-      ) : (
-        <Alert>{attention.error}</Alert>
-      )}
+      ) : null}
 
       {!result.success ? (
         <Reveal>
@@ -96,8 +100,6 @@ export default async function FriendsPage() {
       ) : (
         <FriendsOverview overview={result.data} balances={people} sections={["friends"]} />
       )}
-
-      {!balances.success ? <Alert>{balances.error}</Alert> : null}
 
       {former.length > 0 ? (
         <Reveal>

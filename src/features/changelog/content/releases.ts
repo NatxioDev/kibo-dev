@@ -7,6 +7,25 @@ import type { Release } from "@/features/changelog/types";
  */
 export const RELEASES: Release[] = [
   {
+    version: "0.14.0",
+    date: "2026-11-14",
+    title: "QR de cobro",
+    new: [
+      "Sube el QR de tu banco desde Ajustes; quienes te deben lo ven al saldar la deuda.",
+    ],
+    fixes: [
+      "Amigos vuelve a mostrar deudas y gastos compartidos sin error.",
+    ],
+  },
+  {
+    version: "0.12.0",
+    date: "2026-10-07",
+    title: "Kibo más rápida",
+    improvements: [
+      "La app instalada abre más rápido y se siente más fluida al volver.",
+    ],
+  },
+  {
     version: "0.11.0",
     date: "2026-10-06",
     title: "Conoce a Kibo",

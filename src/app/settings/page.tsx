@@ -46,6 +46,12 @@ export default async function SettingsPage() {
             subtitle="Passkeys para entrar sin contraseña"
             href="/settings/security"
           />
+          <ListRow
+            icon="🔔"
+            title="Notificaciones"
+            subtitle="Cobros, pagos y novedades"
+            href="/notifications"
+          />
         </ListGroup>
       </Reveal>
 
@@ -68,6 +74,12 @@ export default async function SettingsPage() {
             title="Métodos de pago"
             subtitle="Tarjetas, efectivo, QR…"
             href="/settings/payment-methods"
+          />
+          <ListRow
+            icon="▣"
+            title="QR de cobro"
+            subtitle="La imagen de tu banco, para quienes te deben"
+            href="/settings/qr"
           />
         </ListGroup>
       </Reveal>

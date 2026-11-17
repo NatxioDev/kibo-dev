@@ -6,8 +6,10 @@ import type { CategoryRepository } from "@/features/categories/domain/Category.r
 import type { DashboardRepository } from "@/features/dashboard/domain/Dashboard.repository";
 import type { FeedbackRepository } from "@/features/feedback/domain/Feedback.repository";
 import type { FriendshipRepository } from "@/features/friends/domain/Friendship.repository";
+import type { NotificationRepository } from "@/features/notifications/domain/Notification.repository";
 import type { PaymentMethodRepository } from "@/features/payment-methods/domain/PaymentMethod.repository";
 import type { ProfileRepository } from "@/features/profile/domain/Profile.repository";
+import type { PaymentQrRepository } from "@/features/payment-qr/domain/PaymentQr.repository";
 import type { SplitRepository } from "@/features/splits/domain/Split.repository";
 import type { TransactionRepository } from "@/features/transactions/domain/Transaction.repository";
 
@@ -22,7 +24,9 @@ export type AppDependencies = {
   feedbackRepository: FeedbackRepository;
   profileRepository: ProfileRepository;
   friendshipRepository: FriendshipRepository;
+  notificationRepository: NotificationRepository;
   splitRepository: SplitRepository;
+  paymentQrRepository: PaymentQrRepository;
 };
 
 // Dependencias disponibles en el cliente (solo auth, el resto es server-only)
