@@ -12,7 +12,7 @@ import type { CurrentProfile } from "@/features/profile/domain/models/Profile";
 import { ReportsLink } from "@/features/reports/components/ReportsLink";
 import { ProfileLink } from "@/features/settings/components/ProfileLink";
 
-const HIDDEN_PREFIXES = ["/login", "/auth", "/onboarding", "/settings", "/privacy"];
+const HIDDEN_PREFIXES = ["/login", "/auth", "/onboarding", "/settings", "/privacy", "/terms"];
 
 type AppTopBarProps = {
   profile: CurrentProfile | null;

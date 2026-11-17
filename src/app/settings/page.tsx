@@ -95,6 +95,7 @@ export default async function SettingsPage() {
           />
           <ListRow icon="💬" title="Enviar feedback" href="/settings/feedback" />
           <ListRow icon="🔒" title="Privacidad" href="/privacy" />
+          <ListRow icon="📄" title="Términos" href="/terms" />
         </ListGroup>
       </Reveal>
 
