@@ -18,7 +18,11 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
       initialMascotMood={initialError ? "mareado" : undefined}
       footer={
         <p className="text-center text-xs text-muted-foreground">
-          Al continuar aceptas nuestra{" "}
+          Al continuar aceptas los{" "}
+          <Link href="/terms" className="underline hover:text-foreground">
+            términos
+          </Link>{" "}
+          y la{" "}
           <Link href="/privacy" className="underline hover:text-foreground">
             política de privacidad
           </Link>

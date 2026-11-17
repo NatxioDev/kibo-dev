@@ -243,6 +243,10 @@ function PaymentQrForm({
               {PAYMENT_QR_CONSENT_TEXT}{" "}
               <Link href="/privacy#qr-de-cobro" className="font-semibold text-primary">
                 Ver la política de privacidad
+              </Link>{" "}
+              y los{" "}
+              <Link href="/terms#qr-de-cobro" className="font-semibold text-primary">
+                términos
               </Link>
             </span>
           </label>
