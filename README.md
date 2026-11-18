@@ -129,6 +129,15 @@ La tabla `friendships`:
 - Rechazar, cancelar o eliminar una amistad borra la fila. Un trigger solo permite cambiar `status` y registra `responded_at`.
 - RLS: solo los participantes ven la fila; cada uno solo crea solicitudes propias en `pending`; solo el destinatario puede aceptarlas; cualquiera de los dos puede borrarla.
 
+### Web Push
+
+`notifications.push_status` funciona como cola: `private.enqueue_notification` deja la fila en `pending` solo si el usuario tiene la categoría activa **y** algún dispositivo suscrito. La Edge Function [`send-push`](supabase/functions/send-push/index.ts) la entrega y actualiza el estado.
+
+- Se invoca desde el servidor con `sendPush(notificationId)` después de crear la notificación.
+- Se autentica con `PUSH_DISPATCH_SECRET` (Supabase secret y `.env.local`), no con JWT de usuario: por eso la función tiene `verify_jwt = false`.
+- Borra la suscripción ante 404/410 y cuenta el fallo ante 429/5xx, dejando `push_next_attempt_at` para un drenaje futuro.
+- Las claves VAPID se derivan de `VAPID_KEYS_JWK`; el payload es el mismo que consume el service worker.
+
 ## Scripts
 
 ```bash
