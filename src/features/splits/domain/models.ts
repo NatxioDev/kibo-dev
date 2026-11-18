@@ -36,6 +36,12 @@ export type SplitWriteResult = {
   notificationIds: string[];
 };
 
+export type SettlementWriteResult = {
+  id: string;
+  /** Notificaciones creadas para la contraparte; se entregan por push después. */
+  notificationIds: string[];
+};
+
 export type TransactionSplitLink = {
   expenseId: string;
   shareId: string;
@@ -62,6 +68,23 @@ export type ExpenseEditContext = {
   transactionId: string | null;
   amountsLocked: boolean;
   participants: { userId: string; amount: number }[];
+};
+
+export type SharedExpenseDetail = {
+  expenseId: string;
+  shareId: string;
+  /** Quién pagó el gasto. */
+  payer: FriendProfile;
+  role: "payer" | "debtor";
+  myAmount: number;
+  totalAmount: number;
+  currency: CurrencyCode;
+  date: string;
+  merchant: string | null;
+  description: string | null;
+  categoryNameSnapshot: string | null;
+  shareStatus: ShareStatus;
+  expenseStatus: ExpenseStatus;
 };
 
 export type AttentionShare = {

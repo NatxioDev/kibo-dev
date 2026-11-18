@@ -7,6 +7,8 @@ import type {
   PersonBalance,
   ResolvedSplit,
   ServiceResult,
+  SettlementWriteResult,
+  SharedExpenseDetail,
   SplitWriteResult,
   TransactionSplitLink,
 } from "@/features/splits/domain/models";
@@ -35,14 +37,15 @@ export interface SplitRepository {
     creditorId: string;
     amount: number;
     currency: CurrencyCode;
-  }): Promise<ServiceResult<{ id: string }>>;
-  confirmSettlement(settlementId: string): Promise<ServiceResult<null>>;
-  rejectSettlement(settlementId: string): Promise<ServiceResult<null>>;
+  }): Promise<ServiceResult<SettlementWriteResult>>;
+  /** Devuelve los ids de las notificaciones creadas para el deudor. */
+  confirmSettlement(settlementId: string): Promise<ServiceResult<string[]>>;
+  rejectSettlement(settlementId: string): Promise<ServiceResult<string[]>>;
   recordReceivedPayment(input: {
     debtorId: string;
     amount: number;
     currency: CurrencyCode;
-  }): Promise<ServiceResult<{ id: string }>>;
+  }): Promise<ServiceResult<SettlementWriteResult>>;
   countAttention(): Promise<
     ServiceResult<{ unclassified: number; disputes: number }>
   >;
@@ -56,4 +59,7 @@ export interface SplitRepository {
   getEditContext(
     expenseId: string,
   ): Promise<ServiceResult<ExpenseEditContext>>;
+  shareDetail(
+    expenseId: string,
+  ): Promise<ServiceResult<SharedExpenseDetail>>;
 }
