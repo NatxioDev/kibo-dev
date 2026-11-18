@@ -1,7 +1,10 @@
 import { describe, expect, it } from "vitest";
 import type { ServiceResult } from "@/core/domain/ServiceResult";
 import type { NotificationRepository } from "@/features/notifications/domain/Notification.repository";
-import type { Notification } from "@/features/notifications/domain/models/Notification";
+import type {
+  Notification,
+  NotificationPreferences,
+} from "@/features/notifications/domain/models/Notification";
 import { MarkNotificationsRead } from "./MarkNotificationsRead.application";
 
 class FakeNotificationRepository implements NotificationRepository {
@@ -27,6 +30,22 @@ class FakeNotificationRepository implements NotificationRepository {
 
   async markAllRead(): Promise<ServiceResult<number>> {
     return { success: true, data: 0 };
+  }
+
+  async getPreferences(): Promise<ServiceResult<NotificationPreferences>> {
+    return { success: false, error: "no usado" };
+  }
+
+  async updatePreferences(): Promise<ServiceResult<NotificationPreferences>> {
+    return { success: false, error: "no usado" };
+  }
+
+  async upsertPushSubscription(): Promise<ServiceResult<string>> {
+    return { success: false, error: "no usado" };
+  }
+
+  async deletePushSubscription(): Promise<ServiceResult<boolean>> {
+    return { success: false, error: "no usado" };
   }
 }
 

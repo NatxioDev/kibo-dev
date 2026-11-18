@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { createServerDependencies } from "@/core/infrastructure/factories/createServerDependencies";
 import { CountPendingFriendRequests } from "@/features/friends/application/CountPendingFriendRequests.application";
+import { sendPush } from "@/features/notifications/push/sendPush";
 import {
   ClassifyShare,
   ConfirmSettlement,
@@ -109,8 +110,11 @@ export async function requestSettlementAction(input: {
     amount: parsed.data.amount,
     currency: parsed.data.currency,
   });
-  if (result.success) revalidateMoneyPaths();
-  return result;
+  if (!result.success) return result;
+
+  revalidateMoneyPaths();
+  await Promise.all(result.data.notificationIds.map(sendPush));
+  return { success: true, data: { id: result.data.id } };
 }
 
 export async function confirmSettlementAction(
@@ -123,8 +127,11 @@ export async function confirmSettlementAction(
 
   const { splitRepository } = await createServerDependencies();
   const result = await new ConfirmSettlement(splitRepository).execute(parsed.data);
-  if (result.success) revalidateMoneyPaths();
-  return result;
+  if (!result.success) return result;
+
+  revalidateMoneyPaths();
+  await Promise.all(result.data.map(sendPush));
+  return { success: true, data: null };
 }
 
 export async function rejectSettlementAction(
@@ -137,8 +144,11 @@ export async function rejectSettlementAction(
 
   const { splitRepository } = await createServerDependencies();
   const result = await new RejectSettlement(splitRepository).execute(parsed.data);
-  if (result.success) revalidateMoneyPaths();
-  return result;
+  if (!result.success) return result;
+
+  revalidateMoneyPaths();
+  await Promise.all(result.data.map(sendPush));
+  return { success: true, data: null };
 }
 
 export async function recordReceivedPaymentAction(input: {
@@ -160,8 +170,11 @@ export async function recordReceivedPaymentAction(input: {
     amount: parsed.data.amount,
     currency: parsed.data.currency,
   });
-  if (result.success) revalidateMoneyPaths();
-  return result;
+  if (!result.success) return result;
+
+  revalidateMoneyPaths();
+  await Promise.all(result.data.notificationIds.map(sendPush));
+  return { success: true, data: { id: result.data.id } };
 }
 
 export async function voidSharedExpenseAction(

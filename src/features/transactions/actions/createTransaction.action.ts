@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createServerDependencies } from "@/core/infrastructure/factories/createServerDependencies";
+import { sendPush } from "@/features/notifications/push/sendPush";
 import { CreateSharedExpense } from "@/features/splits/application/CreateSharedExpense.application";
 import { CreateTransaction } from "@/features/transactions/application/CreateTransaction.application";
 import type { ServiceResult } from "@/core/domain/ServiceResult";
@@ -74,6 +75,7 @@ export async function createTransactionAction(
     if (!result.success) return result;
 
     revalidateMoneyPaths();
+    await Promise.all(result.data.notificationIds.map(sendPush));
     return { success: true, data: { id: result.data.transactionId } };
   }
 

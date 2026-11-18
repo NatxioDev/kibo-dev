@@ -51,12 +51,15 @@ cp .env.local.example .env.local
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=
 SUPABASE_SECRET_KEY=
+# NEXT_PUBLIC_VAPID_PUBLIC_KEY=   (opcional, solo para probar otro par)
 # USERNAME_CHANGE_COOLDOWN_DAYS=30
 ```
 
 Las obtienes en el dashboard de Supabase → **Connect** o **Project Settings → API Keys**. En el navegador solo se usa la **publishable key**. `SUPABASE_SECRET_KEY` (sección **Secret keys**) es solo de servidor: nunca le pongas prefijo `NEXT_PUBLIC_`. Se usa únicamente en la Server Action que cambia el `@username`.
 
-`USERNAME_CHANGE_COOLDOWN_DAYS` define cuántos días deben pasar entre cambios de `@username` (por defecto 30; `0` = sin límite). Configura ambas variables también en Vercel.
+La clave pública VAPID (base64url, 65 bytes) viene por defecto en `src/features/notifications/domain/vapidKey.ts`: es pública por diseño y no hace falta configurarla en Vercel. La privada no va en el repo: vive en Supabase secrets (`VAPID_KEYS_JWK`) y solo la usa la Edge Function `send-push`. Rotar el par obliga a cambiar la constante y a que todos los dispositivos se re-suscriban.
+
+`USERNAME_CHANGE_COOLDOWN_DAYS` define cuántos días deben pasar entre cambios de `@username` (por defecto 30; `0` = sin límite). Configura las variables de Supabase también en Vercel.
 
 4. Arrancar en desarrollo:
 
@@ -125,6 +128,15 @@ La tabla `friendships`:
 - Un índice único sobre el par ordenado impide dos relaciones entre las mismas personas (en cualquier dirección), y un check impide agregarse a uno mismo.
 - Rechazar, cancelar o eliminar una amistad borra la fila. Un trigger solo permite cambiar `status` y registra `responded_at`.
 - RLS: solo los participantes ven la fila; cada uno solo crea solicitudes propias en `pending`; solo el destinatario puede aceptarlas; cualquiera de los dos puede borrarla.
+
+### Web Push
+
+`notifications.push_status` funciona como cola: `private.enqueue_notification` deja la fila en `pending` solo si el usuario tiene la categoría activa **y** algún dispositivo suscrito. La Edge Function [`send-push`](supabase/functions/send-push/index.ts) la entrega y actualiza el estado.
+
+- Se invoca desde el servidor con `sendPush(notificationId)` después de crear la notificación.
+- Se autentica con `PUSH_DISPATCH_SECRET` (Supabase secret y `.env.local`), no con JWT de usuario: por eso la función tiene `verify_jwt = false`.
+- Borra la suscripción ante 404/410 y cuenta el fallo ante 429/5xx, dejando `push_next_attempt_at` para un drenaje futuro.
+- Las claves VAPID se derivan de `VAPID_KEYS_JWK`; el payload es el mismo que consume el service worker.
 
 ## Scripts
 
