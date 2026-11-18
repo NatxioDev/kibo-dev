@@ -1,3 +1,13 @@
+## [0.15.0](https://github.com/NatxioDev/kibo-dev/compare/v0.14.0...v0.15.0) (2026-11-18)
+
+### Features
+
+* add settlements notifications ([7442102](https://github.com/NatxioDev/kibo-dev/commit/7442102018ff9a848d48a0d5780882d2c4b48160))
+* **debts:** add notifications for debts ([64453c9](https://github.com/NatxioDev/kibo-dev/commit/64453c90cc02c5ac1372d250f9e6cfd93dc528c7))
+* **notification:** add notification suscription ([2f242ea](https://github.com/NatxioDev/kibo-dev/commit/2f242ea058cc36ecb5ad8979d27efb41f7246d16))
+* **notification:** add push notifications ([549d7b6](https://github.com/NatxioDev/kibo-dev/commit/549d7b6397254b395de11bf399defe91f386f33f))
+* **notify:** create supabase events ([e9fdbd7](https://github.com/NatxioDev/kibo-dev/commit/e9fdbd79227fa6372ed43f834b6c146462bbd681))
+
 ## [0.14.0](https://github.com/NatxioDev/kibo-dev/compare/v0.13.0...v0.14.0) (2026-11-17)
 
 ### Features
