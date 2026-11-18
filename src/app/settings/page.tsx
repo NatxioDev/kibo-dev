@@ -49,8 +49,8 @@ export default async function SettingsPage() {
           <ListRow
             icon="🔔"
             title="Notificaciones"
-            subtitle="Cobros, pagos y novedades"
-            href="/notifications"
+            subtitle="Estado del dispositivo y preferencias"
+            href="/settings/notifications"
           />
         </ListGroup>
       </Reveal>

@@ -5,6 +5,7 @@ import { LiquidLensFilter } from "@/components/ui/LiquidLensFilter";
 import { DependencyProvider } from "@/core/context/dependency/Dependency.provider";
 import { WhatsNewDialog } from "@/features/changelog/components/WhatsNewDialog";
 import { InstallPromptListener } from "@/features/install/components/InstallPromptListener";
+import { PushSubscriptionResync } from "@/features/notifications/components/PushSubscriptionResync";
 import { ServiceWorkerRegistrar } from "@/features/pwa/components/ServiceWorkerRegistrar";
 import { AppTopBarWrapper } from "@/features/settings/components/AppTopBarWrapper";
 import { ThemeProvider } from "@/features/theme/ThemeProvider";
@@ -80,6 +81,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <LiquidLensFilter />
         <InstallPromptListener />
         <ServiceWorkerRegistrar />
+        <PushSubscriptionResync />
         <div aria-hidden className="app-blobs motion-safe:animate-blobs" />
         <ThemeProvider>
           <MotionProvider>

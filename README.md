@@ -51,12 +51,15 @@ cp .env.local.example .env.local
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=
 SUPABASE_SECRET_KEY=
+# NEXT_PUBLIC_VAPID_PUBLIC_KEY=   (opcional, solo para probar otro par)
 # USERNAME_CHANGE_COOLDOWN_DAYS=30
 ```
 
 Las obtienes en el dashboard de Supabase → **Connect** o **Project Settings → API Keys**. En el navegador solo se usa la **publishable key**. `SUPABASE_SECRET_KEY` (sección **Secret keys**) es solo de servidor: nunca le pongas prefijo `NEXT_PUBLIC_`. Se usa únicamente en la Server Action que cambia el `@username`.
 
-`USERNAME_CHANGE_COOLDOWN_DAYS` define cuántos días deben pasar entre cambios de `@username` (por defecto 30; `0` = sin límite). Configura ambas variables también en Vercel.
+La clave pública VAPID (base64url, 65 bytes) viene por defecto en `src/features/notifications/domain/vapidKey.ts`: es pública por diseño y no hace falta configurarla en Vercel. La privada no va en el repo: vive en Supabase secrets (`VAPID_KEYS_JWK`) y solo la usa la Edge Function `send-push`. Rotar el par obliga a cambiar la constante y a que todos los dispositivos se re-suscriban.
+
+`USERNAME_CHANGE_COOLDOWN_DAYS` define cuántos días deben pasar entre cambios de `@username` (por defecto 30; `0` = sin límite). Configura las variables de Supabase también en Vercel.
 
 4. Arrancar en desarrollo:
 
