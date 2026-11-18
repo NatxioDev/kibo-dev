@@ -32,6 +32,8 @@ export type ResolvedSplit = {
 export type SplitWriteResult = {
   expenseId: string;
   transactionId: string | null;
+  /** Notificaciones creadas para los deudores; se entregan por push después. */
+  notificationIds: string[];
 };
 
 export type TransactionSplitLink = {

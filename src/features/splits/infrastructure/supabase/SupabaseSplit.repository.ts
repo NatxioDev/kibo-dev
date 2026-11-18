@@ -335,12 +335,17 @@ export class SupabaseSplitRepository implements SplitRepository {
     });
 
     if (error) return fail(error);
-    const payload = data as { expense_id: string; transaction_id: string | null };
+    const payload = data as {
+      expense_id: string;
+      transaction_id: string | null;
+      notification_ids?: string[];
+    };
     return {
       success: true,
       data: {
         expenseId: payload.expense_id,
         transactionId: payload.transaction_id,
+        notificationIds: payload.notification_ids ?? [],
       },
     };
   }
@@ -373,6 +378,8 @@ export class SupabaseSplitRepository implements SplitRepository {
       data: {
         expenseId: payload.expense_id,
         transactionId: payload.transaction_id,
+        // Editar un gasto todavía no notifica (KIBO-101 cubre solo el alta).
+        notificationIds: [],
       },
     };
   }
