@@ -45,6 +45,16 @@ export type NotificationPreferences = {
   updated_at: string;
 };
 
+export type PushPlatform = "android" | "ios" | "desktop" | "unknown";
+
+export type PushSubscriptionInput = {
+  endpoint: string;
+  p256dh: string;
+  auth: string;
+  platform: PushPlatform;
+  userAgent: string | null;
+};
+
 export type NotificationPeriod = "today" | "week" | "older";
 
 export type NotificationGroup = {

@@ -8,6 +8,10 @@ export function mapNotificationError(error: {
     return "Debes iniciar sesión.";
   }
 
+  if (message.includes("suscripción")) {
+    return "No pudimos registrar este dispositivo. Vuelve a intentarlo.";
+  }
+
   if (error.code === "23505" || message.includes("duplicate") || message.includes("unique")) {
     return "Esta notificación ya existe.";
   }

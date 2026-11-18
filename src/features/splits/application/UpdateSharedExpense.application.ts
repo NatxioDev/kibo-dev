@@ -58,6 +58,7 @@ export class UpdateSharedExpense {
         data: {
           expenseId,
           transactionId: current.data.transactionId,
+          notificationIds: [],
         },
       };
     }

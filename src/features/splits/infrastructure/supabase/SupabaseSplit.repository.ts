@@ -15,7 +15,9 @@ import type {
   ServiceResult,
   SettlementStatus,
   SettlementView,
+  SettlementWriteResult,
   ShareStatus,
+  SharedExpenseDetail,
   SplitWriteResult,
   TransactionSplitLink,
 } from "@/features/splits/domain/models";
@@ -335,12 +337,17 @@ export class SupabaseSplitRepository implements SplitRepository {
     });
 
     if (error) return fail(error);
-    const payload = data as { expense_id: string; transaction_id: string | null };
+    const payload = data as {
+      expense_id: string;
+      transaction_id: string | null;
+      notification_ids?: string[];
+    };
     return {
       success: true,
       data: {
         expenseId: payload.expense_id,
         transactionId: payload.transaction_id,
+        notificationIds: payload.notification_ids ?? [],
       },
     };
   }
@@ -373,6 +380,8 @@ export class SupabaseSplitRepository implements SplitRepository {
       data: {
         expenseId: payload.expense_id,
         transactionId: payload.transaction_id,
+        // Editar un gasto todavía no notifica (KIBO-101 cubre solo el alta).
+        notificationIds: [],
       },
     };
   }
@@ -436,44 +445,64 @@ export class SupabaseSplitRepository implements SplitRepository {
     creditorId: string;
     amount: number;
     currency: CurrencyCode;
-  }): Promise<ServiceResult<{ id: string }>> {
+  }): Promise<ServiceResult<SettlementWriteResult>> {
     const { data, error } = await this.supabase.rpc("request_settlement", {
       p_creditor_id: input.creditorId,
       p_amount: input.amount,
       p_currency: input.currency,
     });
     if (error) return fail(error);
-    return { success: true, data: { id: data as string } };
+    const payload = data as {
+      settlement_id: string;
+      notification_ids?: string[];
+    };
+    return {
+      success: true,
+      data: {
+        id: payload.settlement_id,
+        notificationIds: payload.notification_ids ?? [],
+      },
+    };
   }
 
-  async confirmSettlement(settlementId: string): Promise<ServiceResult<null>> {
-    const { error } = await this.supabase.rpc("confirm_settlement", {
+  async confirmSettlement(settlementId: string): Promise<ServiceResult<string[]>> {
+    const { data, error } = await this.supabase.rpc("confirm_settlement", {
       p_settlement_id: settlementId,
     });
     if (error) return fail(error);
-    return { success: true, data: null };
+    return { success: true, data: (data as string[] | null) ?? [] };
   }
 
-  async rejectSettlement(settlementId: string): Promise<ServiceResult<null>> {
-    const { error } = await this.supabase.rpc("reject_settlement", {
+  async rejectSettlement(settlementId: string): Promise<ServiceResult<string[]>> {
+    const { data, error } = await this.supabase.rpc("reject_settlement", {
       p_settlement_id: settlementId,
     });
     if (error) return fail(error);
-    return { success: true, data: null };
+    return { success: true, data: (data as string[] | null) ?? [] };
   }
 
   async recordReceivedPayment(input: {
     debtorId: string;
     amount: number;
     currency: CurrencyCode;
-  }): Promise<ServiceResult<{ id: string }>> {
+  }): Promise<ServiceResult<SettlementWriteResult>> {
     const { data, error } = await this.supabase.rpc("record_received_payment", {
       p_debtor_id: input.debtorId,
       p_amount: input.amount,
       p_currency: input.currency,
     });
     if (error) return fail(error);
-    return { success: true, data: { id: data as string } };
+    const payload = data as {
+      settlement_id: string;
+      notification_ids?: string[];
+    };
+    return {
+      success: true,
+      data: {
+        id: payload.settlement_id,
+        notificationIds: payload.notification_ids ?? [],
+      },
+    };
   }
 
   async countAttention(): Promise<
@@ -730,6 +759,39 @@ export class SupabaseSplitRepository implements SplitRepository {
           participants.map((item) => item.userId),
         ),
         participants,
+      },
+    };
+  }
+
+  async shareDetail(
+    expenseId: string,
+  ): Promise<ServiceResult<SharedExpenseDetail>> {
+    const graph = await this.loadGraph();
+    if (!graph.success) return graph;
+
+    const share = graph.data.shares.find(
+      (item) => item.expenseId === expenseId && item.userId === graph.data.me,
+    );
+    if (!share) {
+      return { success: false, error: "No encontramos ese gasto compartido." };
+    }
+
+    return {
+      success: true,
+      data: {
+        expenseId,
+        shareId: share.id,
+        payer: profileOf(graph.data, share.payerId),
+        role: share.payerId === graph.data.me ? "payer" : "debtor",
+        myAmount: share.amount,
+        totalAmount: share.totalAmount,
+        currency: share.currency,
+        date: share.date,
+        merchant: share.merchant,
+        description: share.description,
+        categoryNameSnapshot: share.categoryNameSnapshot,
+        shareStatus: share.status,
+        expenseStatus: share.expenseStatus,
       },
     };
   }
