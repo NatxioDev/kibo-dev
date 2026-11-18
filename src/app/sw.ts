@@ -10,6 +10,10 @@ import {
   type SerwistGlobalConfig,
   StaleWhileRevalidate,
 } from "serwist";
+import {
+  parsePushPayload,
+  resolveNotificationUrl,
+} from "@/features/notifications/push/pushPayload";
 
 declare global {
   interface WorkerGlobalScope extends SerwistGlobalConfig {
@@ -98,3 +102,67 @@ const serwist = new Serwist({
 });
 
 serwist.addEventListeners();
+
+const NOTIFICATION_ICON = "/brand/app-icon-192-v3.png";
+
+function readPushData(data: PushMessageData | null): unknown {
+  if (!data) {
+    return null;
+  }
+
+  try {
+    return data.json();
+  } catch {
+    return null;
+  }
+}
+
+/** Reutiliza una pestaña de Kibo si existe; si no, abre una nueva en el deep link. */
+async function focusOrOpenWindow(path: string): Promise<void> {
+  const target = new URL(path, self.location.origin);
+  const windows = await self.clients.matchAll({
+    type: "window",
+    includeUncontrolled: true,
+  });
+
+  for (const client of windows) {
+    if (new URL(client.url).origin !== target.origin) {
+      continue;
+    }
+
+    const windowClient = client as WindowClient;
+    const focused = await windowClient.focus();
+    if (focused && focused.url !== target.href) {
+      await focused.navigate(target.href).catch(() => {});
+    }
+    return;
+  }
+
+  await self.clients.openWindow(target.href);
+}
+
+self.addEventListener("push", (event) => {
+  const payload = parsePushPayload(readPushData(event.data), self.location.origin);
+
+  // `renotify` es estándar pero falta en los tipos de lib.webworker.
+  const options: NotificationOptions & { renotify?: boolean } = {
+    body: payload.body,
+    icon: NOTIFICATION_ICON,
+    badge: NOTIFICATION_ICON,
+    tag: payload.tag,
+    // Sin `tag` no hay reemplazo que anunciar.
+    renotify: Boolean(payload.tag),
+    data: { ...payload.data, url: payload.url },
+  };
+
+  event.waitUntil(self.registration.showNotification(payload.title, options));
+});
+
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+
+  const data = event.notification.data as { url?: unknown } | null;
+  const url = resolveNotificationUrl(data?.url, self.location.origin);
+
+  event.waitUntil(focusOrOpenWindow(url));
+});
