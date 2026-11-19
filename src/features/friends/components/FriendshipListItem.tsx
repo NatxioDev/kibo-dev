@@ -1,9 +1,7 @@
 "use client";
 
-import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { FriendRow, friendName } from "@/features/friends/components/FriendRow";
-import { RemoveFriendDialog } from "@/features/friends/components/RemoveFriendDialog";
 import { balanceLines } from "@/features/splits/components/balanceLines";
 import type { PersonBalance } from "@/features/splits/domain/models";
 import type { Friendship } from "@/features/friends/domain/models/Friendship";
@@ -15,42 +13,23 @@ type FriendshipListItemProps = {
 };
 
 export function FriendshipListItem({ friendship, balance }: FriendshipListItemProps) {
-  const [removeOpen, setRemoveOpen] = useState(false);
   const { accept, remove, error, loading, pendingAction } = useFriendshipActions();
   const { id, status, direction, friend } = friendship;
   const name = friendName(friend);
 
   if (status === "accepted") {
     return (
-      <>
-        <FriendRow
-          profile={friend}
-          href={`/friends/${friend.id}`}
-          subtitle={
-            balance?.pendingSettlement
-              ? "Pago por confirmar"
-              : balance
-                ? balanceLines(balance.balances).join(" · ") || (balance.hasHistory ? "Están a mano" : undefined)
-                : undefined
-          }
-          trailing={
-            <Button
-              variant="ghost"
-              size="sm"
-              aria-label={`Eliminar a ${name} de tus amigos`}
-              onClick={() => setRemoveOpen(true)}
-            >
-              Eliminar
-            </Button>
-          }
-        />
-        <RemoveFriendDialog
-          open={removeOpen}
-          onClose={() => setRemoveOpen(false)}
-          friendshipId={id}
-          friendName={name}
-        />
-      </>
+      <FriendRow
+        profile={friend}
+        href={`/friends/${friend.id}`}
+        subtitle={
+          balance?.pendingSettlement
+            ? "Pago por confirmar"
+            : balance
+              ? balanceLines(balance.balances).join(" · ") || (balance.hasHistory ? "Están a mano" : undefined)
+              : undefined
+        }
+      />
     );
   }
 
@@ -63,15 +42,13 @@ export function FriendshipListItem({ friendship, balance }: FriendshipListItemPr
           <>
             <Button
               variant="secondary"
-              size="sm"
               disabled={loading}
               aria-label={`Rechazar la solicitud de ${name}`}
-              onClick={() => remove(id)}
+              onClick={() => remove(id, undefined, "Solicitud rechazada")}
             >
               {pendingAction === "remove" ? "Rechazando…" : "Rechazar"}
             </Button>
             <Button
-              size="sm"
               disabled={loading}
               aria-label={`Aceptar la solicitud de ${name}`}
               onClick={() => accept(id)}
@@ -91,10 +68,9 @@ export function FriendshipListItem({ friendship, balance }: FriendshipListItemPr
       trailing={
         <Button
           variant="secondary"
-          size="sm"
           disabled={loading}
           aria-label={`Cancelar la solicitud enviada a ${name}`}
-          onClick={() => remove(id)}
+          onClick={() => remove(id, undefined, "Solicitud cancelada")}
         >
           {loading ? "Cancelando…" : "Cancelar"}
         </Button>

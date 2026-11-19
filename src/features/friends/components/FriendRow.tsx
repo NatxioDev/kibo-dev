@@ -33,30 +33,55 @@ export function FriendRow({ profile, trailing, error, subtitle, href }: FriendRo
     </>
   );
 
+  const row = (
+    <>
+      <span aria-hidden className="shrink-0">
+        <ProfileAvatar avatarUrl={profile.avatar_url} name={name} size={40} />
+      </span>
+      <span className="min-w-0 flex-1">{identity}</span>
+      {trailing ? <span className="flex shrink-0 items-center gap-2">{trailing}</span> : null}
+      {href ? <RowChevron /> : null}
+    </>
+  );
+
+  const rowClass = "flex min-h-11 items-center gap-3 px-4 py-3";
+
   return (
-    <li className="flex flex-col gap-2 px-4 py-3">
-      <div className="flex min-h-10 items-center gap-3">
-        <span aria-hidden className="shrink-0">
-          <ProfileAvatar avatarUrl={profile.avatar_url} name={name} size={40} />
-        </span>
-        {href ? (
-          <Link
-            href={href}
-            className="min-w-0 flex-1 rounded-xl focus-visible:ring-2 focus-visible:ring-primary/50"
-          >
-            {identity}
-          </Link>
-        ) : (
-          <span className="min-w-0 flex-1">{identity}</span>
-        )}
-        {trailing ? <span className="flex shrink-0 items-center gap-2">{trailing}</span> : null}
-      </div>
+    <li className="flex flex-col">
+      {href ? (
+        <Link
+          href={href}
+          className={`${rowClass} hover:bg-surface-muted focus-visible:ring-2 focus-visible:ring-primary/50 active:bg-surface-muted`}
+        >
+          {row}
+        </Link>
+      ) : (
+        <div className={rowClass}>{row}</div>
+      )}
       {error ? (
-        <p className="text-sm text-expense" role="alert">
+        <p className="px-4 pb-3 text-sm text-expense" role="alert">
           {error}
         </p>
       ) : null}
     </li>
+  );
+}
+
+function RowChevron() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className="h-4 w-4 shrink-0 text-muted-foreground/60"
+      aria-hidden
+    >
+      <path d="M9 18l6-6-6-6" />
+    </svg>
   );
 }
 

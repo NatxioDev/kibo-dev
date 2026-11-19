@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
+import { showToast } from "@/components/ui/Toast";
 import { deleteTransactionAction } from "@/features/transactions/actions/deleteTransaction.action";
 
 export function useDeleteTransactionWithAction() {
@@ -20,6 +21,7 @@ export function useDeleteTransactionWithAction() {
         return;
       }
 
+      showToast("Movimiento eliminado");
       onSuccess?.();
       router.refresh();
     });

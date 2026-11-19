@@ -22,7 +22,6 @@ export function FriendSearchResultItem({ result }: FriendSearchResultItemProps) 
   if (relation === "none") {
     trailing = (
       <Button
-        size="sm"
         disabled={loading}
         aria-label={`Agregar a ${name} como amigo`}
         onClick={() => send(profile.id)}
@@ -33,7 +32,6 @@ export function FriendSearchResultItem({ result }: FriendSearchResultItemProps) 
   } else if (relation === "incoming" && friendshipId) {
     trailing = (
       <Button
-        size="sm"
         disabled={loading}
         aria-label={`Aceptar la solicitud de ${name}`}
         onClick={() => accept(friendshipId)}

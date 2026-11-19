@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { Alert } from "@/components/ui/Alert";
 import { Button } from "@/components/ui/Button";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
+import { HowItWorks } from "@/components/ui/HowItWorks";
+import { showToast } from "@/components/ui/Toast";
 import { Currency } from "@/core/domain/value-objects";
 import { friendName } from "@/features/friends/components/FriendRow";
 import type { FriendProfile } from "@/features/friends/domain/models/Friendship";
@@ -27,18 +29,21 @@ type SettlementPanelProps = {
 
 export function SettlementPanel({ profile, balances, pending }: SettlementPanelProps) {
   const name = friendName(profile);
-  const quiet =
-    pending.length === 0 &&
-    balances.every((balance) => toCents(balance.net) === 0 && !balance.inReview);
-
-  if (quiet) return null;
-
   const payable = balances.filter(
     (balance) => toCents(balance.iCanPay) > 0 || toCents(balance.theyCanPay) > 0,
   );
+  const quiet =
+    pending.length === 0 &&
+    payable.length === 0 &&
+    balances.every((balance) => !balance.inReview);
+
+  if (quiet) return null;
 
   return (
     <div className="flex flex-col gap-4">
+      {payable.map((balance) => (
+        <PayForm key={balance.currency} profile={profile} balance={balance} name={name} />
+      ))}
       {pending.map((settlement) => (
         <PendingSettlement
           key={settlement.id}
@@ -47,14 +52,9 @@ export function SettlementPanel({ profile, balances, pending }: SettlementPanelP
           name={name}
         />
       ))}
-      {payable.map((balance) => (
-        <PayForm key={balance.currency} profile={profile} balance={balance} name={name} />
-      ))}
       {payable.length === 0 && pending.length === 0 ? (
         <p className="text-sm text-pretty text-muted-foreground">
-          {balances.some((balance) => balance.inReview)
-            ? "Hay una parte en revisión. No se puede saldar hasta que la resuelvan."
-            : "No hay un saldo para saldar."}
+          Hay una parte en disputa. No se puede saldar hasta resolverla.
         </p>
       ) : null}
     </div>
@@ -74,39 +74,53 @@ function PendingSettlement({
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [rejectOpen, setRejectOpen] = useState(false);
+  const [outcome, setOutcome] = useState<"confirmed" | "rejected" | null>(null);
   const theyPayMe = settlement.debtorId === profile.id;
 
   function confirm() {
     setError(null);
+    setOutcome("confirmed");
     startTransition(async () => {
       const result = await confirmSettlementAction(settlement.id);
       if (!result.success) {
+        setOutcome(null);
         setError(result.error);
         return;
       }
+      showToast("Pago confirmado");
       router.refresh();
     });
   }
 
   function reject() {
     setError(null);
+    setRejectOpen(false);
+    setOutcome("rejected");
     startTransition(async () => {
       const result = await rejectSettlementAction(settlement.id);
       if (!result.success) {
+        setOutcome(null);
         setError(result.error);
         return;
       }
-      setRejectOpen(false);
+      showToast("Pago rechazado");
       router.refresh();
     });
   }
 
+  if (outcome === "confirmed") {
+    return <p className="text-sm font-semibold text-foreground">Pago confirmado.</p>;
+  }
+  if (outcome === "rejected") {
+    return <p className="text-sm font-semibold text-foreground">Pago rechazado.</p>;
+  }
+
   return (
-    <div className="flex flex-col gap-3 rounded-card border border-border bg-surface p-4 shadow-card">
+    <div className="flex flex-col gap-3 border-t border-border pt-4">
       <p className="text-sm text-pretty text-foreground">
         {theyPayMe
           ? `${name} dice que te pagó ${formatMoneyAmount(settlement.amount, settlement.currency)}.`
-          : `Esperando que ${name} confirme tu pago de ${formatMoneyAmount(settlement.amount, settlement.currency)}.`}
+          : `Falta que ${name} confirme tu pago de ${formatMoneyAmount(settlement.amount, settlement.currency)}.`}
       </p>
       {error ? <Alert>{error}</Alert> : null}
       {theyPayMe ? (
@@ -159,10 +173,14 @@ function PayForm({
   const router = useRouter();
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
+  const [sent, setSent] = useState(false);
   const iPay = toCents(balance.iCanPay) > 0;
   const max = iPay ? balance.iCanPay : balance.theyCanPay;
   const [amount, setAmount] = useState(String(max));
   const currency = Currency.from(balance.currency);
+  const numeric = Number(amount);
+  const labelAmount =
+    Number.isFinite(numeric) && toCents(numeric) > 0 ? numeric : max;
 
   function submit() {
     const value = Number(amount);
@@ -175,6 +193,7 @@ function PayForm({
       return;
     }
     setError(null);
+    setSent(true);
     startTransition(async () => {
       const result = iPay
         ? await requestSettlementAction({
@@ -188,16 +207,29 @@ function PayForm({
             currency: balance.currency,
           });
       if (!result.success) {
+        setSent(false);
         setError(result.error);
         return;
       }
+      showToast(
+        iPay ? `Pago enviado a ${name}, falta que confirme` : "Pago confirmado",
+      );
       router.refresh();
     });
   }
 
+  if (sent) {
+    return (
+      <p className="text-sm font-semibold text-foreground">
+        {iPay ? `Pago enviado a ${name}. Falta que confirme.` : "Pago confirmado."}
+      </p>
+    );
+  }
+
   return (
     <form
-      className="flex flex-col gap-3 rounded-card border border-border bg-surface p-4 shadow-card"
+      id={`pagar-${balance.currency}`}
+      className="flex flex-col gap-3 border-t border-border pt-4"
       onSubmit={(event) => {
         event.preventDefault();
         submit();
@@ -205,11 +237,11 @@ function PayForm({
     >
       <p className="text-sm text-pretty text-foreground">
         {iPay
-          ? `Le debes ${formatMoneyAmount(balance.iCanPay, balance.currency)} a ${name}. El saldo baja cuando confirme que lo recibió.`
-          : `${name} te debe ${formatMoneyAmount(balance.theyCanPay, balance.currency)}. Registrar un pago recibido no entra a tus movimientos.`}
+          ? `Puedes pagar hasta ${formatMoneyAmount(max, balance.currency)}.`
+          : `${name} te debe ${formatMoneyAmount(max, balance.currency)}.`}
       </p>
-      <label className="flex flex-col gap-1.5" htmlFor={`settle-${balance.currency}`}>
-        <span className="text-sm font-semibold">Monto</span>
+      <label className="flex flex-col gap-2" htmlFor={`settle-${balance.currency}`}>
+        <span className="text-sm font-semibold text-muted-foreground">Monto</span>
         <AmountInput
           id={`settle-${balance.currency}`}
           name={`settle-${balance.currency}`}
@@ -222,9 +254,18 @@ function PayForm({
         />
       </label>
       {error ? <Alert>{error}</Alert> : null}
-      <Button type="submit" loading={pending}>
-        {pending ? "Guardando…" : iPay ? "Ya pagué" : "Registrar pago recibido"}
+      <Button type="submit" size="lg" loading={pending} className="w-full">
+        {pending
+          ? "Enviando…"
+          : iPay
+            ? `Pagar ${formatMoneyAmount(labelAmount, balance.currency)}`
+            : "Registrar que te pagó"}
       </Button>
+      <HowItWorks>
+        {iPay
+          ? "El saldo baja cuando confirme que lo recibió. Kibo no mueve el dinero: el pago se hace en tu banco."
+          : "Registrar un pago recibido no entra a tus movimientos. El saldo baja al momento."}
+      </HowItWorks>
     </form>
   );
 }

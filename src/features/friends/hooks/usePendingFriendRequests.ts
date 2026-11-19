@@ -7,7 +7,7 @@ import type { FriendAlertCounts } from "@/features/splits/domain/models";
 const EMPTY: FriendAlertCounts = { requests: 0, unclassified: 0, disputes: 0 };
 
 /**
- * Hook del cliente que cuenta solicitudes de amistad, gastos por clasificar y deudas en revisión.
+ * Hook del cliente que cuenta solicitudes de amistad, gastos para revisar y deudas en disputa.
  * Se mantiene en el cliente porque:
  * - Se actualiza automáticamente cuando cambia la ruta (refreshKey)
  * - Se actualiza cuando la app vuelve al foreground (visibilitychange event)

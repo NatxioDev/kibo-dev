@@ -4,7 +4,7 @@ export const PAYMENT_QR_CONSENT_TEXT =
   "Acepto que Kibo guarde esta imagen, que puede incluir mi nombre, número de cuenta, entidad financiera y otros datos, únicamente para mostrarla a las personas que tienen una deuda abierta conmigo. La imagen se aloja en servidores de Supabase. Declaro que la cuenta es mía o que tengo autorización de su titular.";
 
 export const PAYMENT_QR_REMINDER =
-  "Recuerda: este QR lo generó una entidad financiera y Kibo solo lo guarda y lo muestra. Kibo no procesa pagos. Antes de pagar, verifica en la app de tu banco que el nombre del destinatario sea el correcto y que el monto coincida.";
+  "Escanea el QR con la app de tu banco: Kibo solo lo muestra y no procesa el pago.";
 
 export const PAYMENT_QR_UPLOAD_INTRO =
   "Sube la imagen del QR tal como te la dio tu banco. Solo la verán las personas que tienen una deuda abierta contigo. Puedes reemplazarla o eliminarla cuando quieras. Si sabes hasta cuándo vale, indica la fecha. Es opcional.";

@@ -9,6 +9,7 @@ import { InstallPromptListener } from "@/features/install/components/InstallProm
 import { PushSubscriptionResync } from "@/features/notifications/components/PushSubscriptionResync";
 import { ServiceWorkerRegistrar } from "@/features/pwa/components/ServiceWorkerRegistrar";
 import { AppTopBarWrapper } from "@/features/settings/components/AppTopBarWrapper";
+import { Toaster } from "@/components/ui/Toast";
 import { ThemeProvider } from "@/features/theme/ThemeProvider";
 import { ThemeScript } from "@/features/theme/ThemeScript";
 import "./globals.css";
@@ -90,6 +91,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
               <AppTopBarWrapper />
               {children}
               <WhatsNewDialog />
+              <Toaster />
             </DependencyProvider>
           </MotionProvider>
         </ThemeProvider>

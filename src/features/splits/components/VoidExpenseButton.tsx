@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/Button";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
+import { showToast } from "@/components/ui/Toast";
 import { voidSharedExpenseAction } from "@/features/splits/actions/split.action";
 
 export function VoidExpenseButton({ expenseId }: { expenseId: string }) {
@@ -21,6 +22,7 @@ export function VoidExpenseButton({ expenseId }: { expenseId: string }) {
         return;
       }
       setOpen(false);
+      showToast("Gasto compartido eliminado");
       router.push("/friends");
       router.refresh();
     });
@@ -34,7 +36,7 @@ export function VoidExpenseButton({ expenseId }: { expenseId: string }) {
       <ConfirmDialog
         open={open}
         title="¿Eliminar este gasto compartido?"
-        description="Se anula para todos y sale de los movimientos. El historial de la deuda se conserva. Si ya hubo un pago confirmado, no se puede eliminar."
+        description="Se elimina para todos y sale de los movimientos. El historial de la deuda se conserva. Si ya hubo un pago confirmado, no se puede eliminar."
         confirmLabel="Eliminar gasto"
         pendingLabel="Eliminando…"
         loading={pending}

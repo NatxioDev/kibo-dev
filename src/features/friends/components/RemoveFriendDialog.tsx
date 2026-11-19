@@ -8,6 +8,8 @@ type RemoveFriendDialogProps = {
   onClose: () => void;
   friendshipId: string;
   friendName: string;
+  successMessage?: string;
+  onRemoved?: () => void;
 };
 
 export function RemoveFriendDialog({
@@ -15,6 +17,8 @@ export function RemoveFriendDialog({
   onClose,
   friendshipId,
   friendName,
+  successMessage = "Amistad eliminada",
+  onRemoved,
 }: RemoveFriendDialogProps) {
   const { remove, error, loading, setError } = useFriendshipActions();
 
@@ -25,10 +29,15 @@ export function RemoveFriendDialog({
   }
 
   function handleConfirm() {
-    remove(friendshipId, () => {
-      setError(null);
-      onClose();
-    });
+    remove(
+      friendshipId,
+      () => {
+        setError(null);
+        onClose();
+        onRemoved?.();
+      },
+      successMessage,
+    );
   }
 
   return (
