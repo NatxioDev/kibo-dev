@@ -10,12 +10,14 @@ export function friendName(profile: FriendProfile): string {
 type FriendRowProps = {
   profile: FriendProfile;
   trailing?: ReactNode;
+  /** Acciones propias de la fila: van debajo, para no apretar el nombre en mobile. */
+  actions?: ReactNode;
   error?: string | null;
   subtitle?: ReactNode;
   href?: string;
 };
 
-export function FriendRow({ profile, trailing, error, subtitle, href }: FriendRowProps) {
+export function FriendRow({ profile, trailing, actions, error, subtitle, href }: FriendRowProps) {
   const name = friendName(profile);
   const identity = (
     <>
@@ -58,6 +60,7 @@ export function FriendRow({ profile, trailing, error, subtitle, href }: FriendRo
       ) : (
         <div className={rowClass}>{row}</div>
       )}
+      {actions ? <div className="flex flex-wrap gap-2 px-4 pb-3">{actions}</div> : null}
       {error ? (
         <p className="px-4 pb-3 text-sm text-expense" role="alert">
           {error}

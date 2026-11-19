@@ -2,9 +2,10 @@ import { formatMoneyAmount } from "@/features/transactions/components/formatters
 import type { CurrencyBalance } from "@/features/splits/domain/models";
 import { toCents } from "@/features/splits/domain/splitAmount";
 
-export function balanceToneClass(balances: CurrencyBalance[]): string {
-  if (balances.some((balance) => toCents(balance.net) < 0)) return "text-expense";
-  if (balances.some((balance) => toCents(balance.net) > 0)) return "text-income";
+export function balanceToneClass(balance: CurrencyBalance): string {
+  const net = toCents(balance.net);
+  if (net < 0) return "text-expense";
+  if (net > 0) return "text-income";
   return "text-foreground";
 }
 

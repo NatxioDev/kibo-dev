@@ -6,6 +6,9 @@ export const PAYMENT_QR_CONSENT_TEXT =
 export const PAYMENT_QR_REMINDER =
   "Escanea el QR con la app de tu banco: Kibo solo lo muestra y no procesa el pago.";
 
+export const PAYMENT_QR_VERIFY_NOTE =
+  "Verifica en tu app el destinatario, el monto y la vigencia antes de confirmar.";
+
 export const PAYMENT_QR_UPLOAD_INTRO =
   "Sube la imagen del QR tal como te la dio tu banco. Solo la verán las personas que tienen una deuda abierta contigo. Puedes reemplazarla o eliminarla cuando quieras. Si sabes hasta cuándo vale, indica la fecha. Es opcional.";
 
@@ -93,6 +96,7 @@ export function paymentQrCopySamples(): string[] {
   return [
     PAYMENT_QR_CONSENT_TEXT,
     PAYMENT_QR_REMINDER,
+    PAYMENT_QR_VERIFY_NOTE,
     PAYMENT_QR_UPLOAD_INTRO,
     PAYMENT_QR_FILE_HINT,
     PAYMENT_QR_REPLACE_WARNING,

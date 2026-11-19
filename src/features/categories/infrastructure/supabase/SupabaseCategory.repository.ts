@@ -29,18 +29,42 @@ export class SupabaseCategoryRepository implements CategoryRepository {
   async listActiveByType(
     type: TransactionType,
   ): Promise<ServiceResult<Category[]>> {
-    const { data, error } = await this.supabase
-      .from("categories")
-      .select("*")
-      .eq("is_active", true)
-      .eq("type", type)
-      .order("name", { ascending: true });
+    const [categoriesResult, usageResult] = await Promise.all([
+      this.supabase
+        .from("categories")
+        .select("*")
+        .eq("is_active", true)
+        .eq("type", type)
+        .order("name", { ascending: true }),
+      this.supabase
+        .from("transactions")
+        .select("category_id")
+        .eq("type", type)
+        .not("category_id", "is", null),
+    ]);
 
-    if (error) {
-      return { success: false, error: mapCategoryError(error) };
+    if (categoriesResult.error) {
+      return { success: false, error: mapCategoryError(categoriesResult.error) };
     }
 
-    return { success: true, data: (data ?? []) as Category[] };
+    const categories = (categoriesResult.data ?? []) as Category[];
+    // Si el conteo falla, devolvemos el orden alfabético: el formulario sigue usable.
+    if (usageResult.error) return { success: true, data: categories };
+
+    // shortcut: cuenta en JS sobre una columna; si el volumen crece, mover a una vista o RPC.
+    const usage = new Map<string, number>();
+    for (const row of usageResult.data ?? []) {
+      const id = row.category_id as string;
+      usage.set(id, (usage.get(id) ?? 0) + 1);
+    }
+
+    const byUsage = [...categories].sort(
+      (a, b) =>
+        (usage.get(b.id) ?? 0) - (usage.get(a.id) ?? 0) ||
+        a.name.localeCompare(b.name, "es"),
+    );
+
+    return { success: true, data: byUsage };
   }
 
   async getById(id: string): Promise<ServiceResult<Category>> {

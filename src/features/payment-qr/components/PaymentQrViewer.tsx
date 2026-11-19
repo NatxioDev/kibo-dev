@@ -8,13 +8,12 @@ import { Card } from "@/components/ui/Card";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { HowItWorks } from "@/components/ui/HowItWorks";
 import { Portal } from "@/components/ui/Portal";
-import { textareaClassName } from "@/components/ui/Field";
-import { createFeedbackAction } from "@/features/feedback/actions/createFeedback.action";
 import { acknowledgePaymentQrNoticeAction } from "@/features/payment-qr/actions/paymentQr.action";
 import {
   PAYMENT_QR_AFTER_PAY,
   PAYMENT_QR_REMINDER,
   PAYMENT_QR_SAVE_NOTE,
+  PAYMENT_QR_VERIFY_NOTE,
   paymentQrAmountHint,
   paymentQrDeletedNotice,
   paymentQrEmptyForDebtor,
@@ -46,7 +45,6 @@ export function PaymentQrViewer({
 }: PaymentQrViewerProps) {
   const [revealed, setRevealed] = useState(false);
   const [enlarged, setEnlarged] = useState(false);
-  const [reportOpen, setReportOpen] = useState(false);
 
   useEffect(() => {
     if (!notice || viewerIsOwner) return;
@@ -125,6 +123,7 @@ export function PaymentQrViewer({
 
           <p className="text-sm text-pretty text-muted-foreground">{PAYMENT_QR_REMINDER}</p>
           <HowItWorks>
+            <p>{PAYMENT_QR_VERIFY_NOTE}</p>
             <p>{paymentQrAmountHint(balanceHint)}</p>
             {!viewerIsOwner ? <p>{PAYMENT_QR_AFTER_PAY}</p> : null}
             <p>{PAYMENT_QR_SAVE_NOTE}</p>
@@ -148,11 +147,6 @@ export function PaymentQrViewer({
               >
                 Abrir imagen
               </a>
-              {!viewerIsOwner ? (
-                <Button type="button" variant="ghost" onClick={() => setReportOpen(true)}>
-                  Reportar un problema
-                </Button>
-              ) : null}
             </div>
           ) : null}
         </>
@@ -164,9 +158,6 @@ export function PaymentQrViewer({
           alt={`QR de cobro de ${ownerName}, ampliado`}
           onClose={() => setEnlarged(false)}
         />
-      ) : null}
-      {reportOpen ? (
-        <ReportDialog ownerId={ownerId} ownerName={ownerName} onClose={() => setReportOpen(false)} />
       ) : null}
     </Card>
   );
@@ -245,86 +236,6 @@ function EnlargeDialog({
           <Button type="button" variant="secondary" onClick={onClose}>
             Cerrar
           </Button>
-        </div>
-      </div>
-    </Portal>
-  );
-}
-
-function ReportDialog({
-  ownerId,
-  ownerName,
-  onClose,
-}: {
-  ownerId: string;
-  ownerName: string;
-  onClose: () => void;
-}) {
-  const [message, setMessage] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [done, setDone] = useState(false);
-  const [pending, setPending] = useState(false);
-
-  async function submit() {
-    const text = `Problema con el QR de ${ownerName}. ${message.trim()}`.trim();
-    if (text.length < 10) {
-      setError("Cuéntanos un poco más.");
-      return;
-    }
-    setPending(true);
-    setError(null);
-    const result = await createFeedbackAction({
-      type: "OTHER",
-      message: text,
-      page: `/friends/${ownerId}`,
-    });
-    setPending(false);
-    if (!result.success) {
-      setError(result.error);
-      return;
-    }
-    setDone(true);
-  }
-
-  return (
-    <Portal>
-      <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 p-3 sm:items-center">
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="report-qr-title"
-          className="w-full max-w-sm rounded-[2rem] border border-border bg-surface p-6 shadow-card"
-        >
-          <h2 id="report-qr-title" className="font-display text-xl font-extrabold text-foreground">
-            Reportar un problema
-          </h2>
-          <p className="mt-2 text-sm text-pretty text-muted-foreground">
-            Cuéntanos qué viste. El mensaje no incluye la imagen.
-          </p>
-          {done ? (
-            <p className="mt-4 text-sm text-foreground" role="status">
-              Recibimos tu reporte.
-            </p>
-          ) : (
-            <textarea
-              value={message}
-              onChange={(event) => setMessage(event.target.value)}
-              rows={4}
-              className={`${textareaClassName} mt-4`}
-              placeholder="Por ejemplo: el banco no reconoció la imagen."
-            />
-          )}
-          {error ? <p className="mt-3 text-sm text-expense">{error}</p> : null}
-          <div className="mt-4 flex flex-col gap-2">
-            {done ? null : (
-              <Button type="button" onClick={() => void submit()} loading={pending}>
-                {pending ? "Enviando…" : "Enviar"}
-              </Button>
-            )}
-            <Button type="button" variant="secondary" onClick={onClose} disabled={pending}>
-              Cerrar
-            </Button>
-          </div>
         </div>
       </div>
     </Portal>
