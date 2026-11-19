@@ -41,7 +41,7 @@ export function ChoiceChip({
 
 export function ChipScroller({ children }: { children: ReactNode }) {
   return (
-    <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pt-1 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+    <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pt-1 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:flex-wrap md:overflow-visible">
       {children}
     </div>
   );
