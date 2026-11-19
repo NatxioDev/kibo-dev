@@ -15,6 +15,7 @@ import {
   PAYMENT_QR_AFTER_PAY,
   PAYMENT_QR_REMINDER,
   PAYMENT_QR_SAVE_NOTE,
+  PAYMENT_QR_VERIFY_NOTE,
   paymentQrAmountHint,
   paymentQrDeletedNotice,
   paymentQrEmptyForDebtor,
@@ -125,6 +126,7 @@ export function PaymentQrViewer({
 
           <p className="text-sm text-pretty text-muted-foreground">{PAYMENT_QR_REMINDER}</p>
           <HowItWorks>
+            <p>{PAYMENT_QR_VERIFY_NOTE}</p>
             <p>{paymentQrAmountHint(balanceHint)}</p>
             {!viewerIsOwner ? <p>{PAYMENT_QR_AFTER_PAY}</p> : null}
             <p>{PAYMENT_QR_SAVE_NOTE}</p>
