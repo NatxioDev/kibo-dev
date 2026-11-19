@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { showToast } from "@/components/ui/Toast";
 import { acceptFriendRequestAction } from "@/features/friends/actions/acceptFriendRequest.action";
 import { removeFriendshipAction } from "@/features/friends/actions/removeFriendship.action";
 import { sendFriendRequestAction } from "@/features/friends/actions/sendFriendRequest.action";
@@ -36,15 +37,24 @@ export function useFriendshipActions() {
   }
 
   function send(addresseeId: string, onSuccess?: () => void) {
-    run("send", () => sendFriendRequestAction(addresseeId), onSuccess);
+    run("send", () => sendFriendRequestAction(addresseeId), () => {
+      showToast("Solicitud enviada");
+      onSuccess?.();
+    });
   }
 
   function accept(id: string, onSuccess?: () => void) {
-    run("accept", () => acceptFriendRequestAction(id), onSuccess);
+    run("accept", () => acceptFriendRequestAction(id), () => {
+      showToast("Solicitud aceptada");
+      onSuccess?.();
+    });
   }
 
-  function remove(id: string, onSuccess?: () => void) {
-    run("remove", () => removeFriendshipAction(id), onSuccess);
+  function remove(id: string, onSuccess?: () => void, successMessage = "Listo") {
+    run("remove", () => removeFriendshipAction(id), () => {
+      showToast(successMessage);
+      onSuccess?.();
+    });
   }
 
   return {

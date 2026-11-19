@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { type FormEvent } from "react";
+import { type FormEvent, useEffect, useRef, useState } from "react";
 import { Alert } from "@/components/ui/Alert";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
@@ -20,6 +20,7 @@ import { Currency } from "@/core/domain/value-objects";
 import { accountIcon } from "@/features/accounts/components/accountIcon";
 import { AmountInput } from "@/features/transactions/components/AmountInput";
 import { todayDateInputValue } from "@/features/transactions/components/formatters";
+import { hasExtraDetails } from "@/features/transactions/domain/formDetails";
 import { useTransactionFormWithActions } from "@/features/transactions/hooks/useTransactionFormWithActions";
 import {
   DESCRIPTION_MAX_LENGTH,
@@ -37,6 +38,7 @@ type TransactionFormProps = {
   bill?: ExpenseEditContext | null;
   shareLock?: { payerName: string } | null;
   preset?: "debt";
+  initialFriendId?: string | null;
 };
 
 const FIELD_ORDER = [
@@ -79,6 +81,7 @@ export function TransactionForm({
   bill = null,
   shareLock = null,
   preset,
+  initialFriendId = null,
 }: TransactionFormProps) {
   const router = useRouter();
   const {
@@ -104,11 +107,55 @@ export function TransactionForm({
     showSplit,
     splitRequired,
     isDebt,
-  } = useTransactionFormWithActions({ mode, transaction, friends, bill, shareLock, preset });
+  } = useTransactionFormWithActions({
+    mode,
+    transaction,
+    friends,
+    bill,
+    shareLock,
+    preset,
+    initialFriendId,
+  });
+
+  const [detailsOpen, setDetailsOpen] = useState(() =>
+    mode !== "create" &&
+    hasExtraDetails(
+      bill
+        ? {
+            paymentMethodId: bill.paymentMethodId,
+            merchant: bill.merchant,
+            description: bill.description,
+          }
+        : {
+            paymentMethodId: transaction?.payment_method_id,
+            merchant: transaction?.merchant,
+            description: transaction?.description,
+          },
+    ),
+  );
+  const pendingFocus = useRef<Partial<Record<string, string>> | null>(null);
+  const [focusToken, setFocusToken] = useState(0);
+
+  useEffect(() => {
+    if (focusToken === 0) return;
+    const errors = pendingFocus.current;
+    if (!errors) return;
+    const frame = window.requestAnimationFrame(() => {
+      pendingFocus.current = null;
+      focusFirstError(errors, FIELD_ORDER);
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [focusToken]);
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    focusFirstError(submit(), FIELD_ORDER);
+    const errors = submit();
+    if (!errors) return;
+    if (errors.payment_method_id || errors.merchant || errors.description) {
+      setDetailsOpen(true);
+    }
+    pendingFocus.current = errors;
+    setFocusToken((token) => token + 1);
   }
 
   function handleCancel() {
@@ -312,6 +359,19 @@ export function TransactionForm({
         )}
       </Field>
 
+      <Button
+        type="button"
+        variant="secondary"
+        aria-expanded={detailsOpen}
+        onClick={() => setDetailsOpen((open) => !open)}
+        className="w-full"
+      >
+        Más detalles
+        <DetailsChevron open={detailsOpen} />
+      </Button>
+
+      {detailsOpen ? (
+        <div className="flex flex-col gap-6">
       <Field
         label="Método de pago"
         errorFor="payment_method_id"
@@ -355,7 +415,7 @@ export function TransactionForm({
       <Field
         label={
           <>
-            Comercio <span className="tracking-normal normal-case opacity-70">· opcional</span>
+            Comercio <span className="font-medium tracking-normal opacity-70">· opcional</span>
           </>
         }
         htmlFor="merchant"
@@ -379,7 +439,7 @@ export function TransactionForm({
       <Field
         label={
           <>
-            Nota <span className="tracking-normal normal-case opacity-70">· opcional</span>
+            Nota <span className="font-medium tracking-normal opacity-70">· opcional</span>
           </>
         }
         htmlFor="description"
@@ -407,6 +467,8 @@ export function TransactionForm({
           placeholder="Añade un detalle…"
         />
       </Field>
+        </div>
+      ) : null}
 
       {shareLock ? (
         <Alert>
@@ -460,5 +522,23 @@ export function TransactionForm({
         Cancelar
       </Button>
     </form>
+  );
+}
+
+function DetailsChevron({ open }: { open: boolean }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={`h-4 w-4 transition-transform ${open ? "rotate-180" : ""}`}
+      aria-hidden
+    >
+      <path d="M6 9l6 6 6-6" />
+    </svg>
   );
 }

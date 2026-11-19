@@ -22,8 +22,8 @@ export function FriendsLink({
   const showBadge = total > 0 && !active;
   const details = [
     countLabel(requests, "solicitud pendiente", "solicitudes pendientes"),
-    countLabel(unclassified, "gasto por clasificar", "gastos por clasificar"),
-    countLabel(disputes, "deuda en revisión", "deudas en revisión"),
+    countLabel(unclassified, "gasto para revisar", "gastos para revisar"),
+    countLabel(disputes, "deuda en disputa", "deudas en disputa"),
   ].filter((part): part is string => part != null);
   const label = showBadge ? `Amigos, ${details.join(", ")}` : "Amigos";
 

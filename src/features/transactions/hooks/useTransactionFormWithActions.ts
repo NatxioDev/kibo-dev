@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
+import { showToast } from "@/components/ui/Toast";
 import type { FriendProfile } from "@/features/friends/domain/models/Friendship";
 import type { ExpenseEditContext, SplitDraft } from "@/features/splits/domain/models";
 import { resolveSplitDraft } from "@/features/splits/domain/resolveSplit";
@@ -11,6 +12,7 @@ import { listActiveAccountsAction } from "@/features/transactions/actions/listAc
 import { listActiveCategoriesByTypeAction } from "@/features/transactions/actions/listActiveCategoriesByType.action";
 import { listActivePaymentMethodsAction } from "@/features/transactions/actions/listActivePaymentMethods.action";
 import { createTransactionAction } from "@/features/transactions/actions/createTransaction.action";
+import { deleteTransactionAction } from "@/features/transactions/actions/deleteTransaction.action";
 import {
   updateSharedExpenseAction,
   updateTransactionAction,
@@ -57,6 +59,7 @@ type UseTransactionFormOptions = {
   bill?: ExpenseEditContext | null;
   shareLock?: { payerName: string } | null;
   preset?: "debt";
+  initialFriendId?: string | null;
 };
 
 function toFormState(transaction?: Transaction, bill?: ExpenseEditContext | null): FormState {
@@ -101,14 +104,23 @@ function toFormState(transaction?: Transaction, bill?: ExpenseEditContext | null
   };
 }
 
-function toSplitState(bill?: ExpenseEditContext | null, preset?: "debt"): SplitState {
+function toSplitState(
+  bill?: ExpenseEditContext | null,
+  preset?: "debt",
+  initialFriendId?: string | null,
+  friends: FriendProfile[] = [],
+): SplitState {
   if (!bill) {
     const debt = preset === "debt";
+    const friendIds =
+      debt && initialFriendId && friends.some((friend) => friend.id === initialFriendId)
+        ? [initialFriendId]
+        : [];
     return {
       enabled: debt,
       payerConsumes: !debt,
       mode: "equal",
-      friendIds: [],
+      friendIds,
       payerAmount: "",
       friendAmounts: {},
     };
@@ -144,11 +156,14 @@ export function useTransactionFormWithActions({
   bill = null,
   shareLock = null,
   preset,
+  initialFriendId = null,
 }: UseTransactionFormOptions) {
   const router = useRouter();
   const isDebt = preset === "debt";
   const [values, setValues] = useState<FormState>(() => toFormState(transaction, bill));
-  const [split, setSplit] = useState<SplitState>(() => toSplitState(bill, preset));
+  const [split, setSplit] = useState<SplitState>(() =>
+    toSplitState(bill, preset, initialFriendId, friends),
+  );
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [formError, setFormError] = useState<string | null>(null);
   const [accounts, setAccounts] = useState<Account[]>([]);
@@ -348,6 +363,29 @@ export function useTransactionFormWithActions({
       if (!result.success) {
         setFormError(result.error);
         return;
+      }
+
+      const createdId = mode === "create" ? result.data.id : null;
+      const savedMessage =
+        mode !== "create"
+          ? "Cambios guardados"
+          : isDebt
+            ? "Deuda guardada"
+            : payload.type === "INCOME"
+              ? "Ingreso guardado"
+              : "Gasto guardado";
+
+      if (createdId) {
+        showToast(savedMessage, {
+          label: "Deshacer",
+          onClick: async () => {
+            const deleted = await deleteTransactionAction(createdId);
+            showToast(deleted.success ? "Deshecho" : "No se pudo deshacer");
+            router.refresh();
+          },
+        });
+      } else {
+        showToast(savedMessage);
       }
 
       if (result.data.id && !isDebt) {

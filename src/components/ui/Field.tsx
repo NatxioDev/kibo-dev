@@ -6,8 +6,7 @@ export const inputClassName =
 export const textareaClassName =
   "glass w-full resize-none rounded-2xl border border-border bg-surface px-4 py-3 text-base text-foreground shadow-card transition-[border-color,box-shadow] placeholder:text-muted-foreground/70 focus-visible:border-primary/40 disabled:opacity-60 aria-invalid:border-expense/60";
 
-export const labelClassName =
-  "text-[0.6875rem] font-semibold tracking-[0.14em] text-muted-foreground uppercase";
+export const labelClassName = "text-sm font-semibold text-muted-foreground";
 
 type FieldProps = {
   label: ReactNode;

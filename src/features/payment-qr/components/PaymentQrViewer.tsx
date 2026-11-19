@@ -1,10 +1,12 @@
 "use client";
 
 import { useEffect, useId, useState } from "react";
+import Link from "next/link";
 import { Alert } from "@/components/ui/Alert";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { EmptyState } from "@/components/ui/EmptyState";
+import { HowItWorks } from "@/components/ui/HowItWorks";
 import { Portal } from "@/components/ui/Portal";
 import { textareaClassName } from "@/components/ui/Field";
 import { createFeedbackAction } from "@/features/feedback/actions/createFeedback.action";
@@ -122,29 +124,32 @@ export function PaymentQrViewer({
           )}
 
           <p className="text-sm text-pretty text-muted-foreground">{PAYMENT_QR_REMINDER}</p>
-          <p className="text-sm text-pretty text-muted-foreground">
-            {paymentQrAmountHint(balanceHint)}
-          </p>
-          {!viewerIsOwner ? (
-            <p className="text-sm text-pretty text-foreground">{PAYMENT_QR_AFTER_PAY}</p>
-          ) : null}
-          <p className="text-xs text-pretty text-muted-foreground">{PAYMENT_QR_SAVE_NOTE}</p>
+          <HowItWorks>
+            <p>{paymentQrAmountHint(balanceHint)}</p>
+            {!viewerIsOwner ? <p>{PAYMENT_QR_AFTER_PAY}</p> : null}
+            <p>{PAYMENT_QR_SAVE_NOTE}</p>
+            <p>
+              <Link href="/terms#qr-de-cobro" className="font-semibold text-primary">
+                Condiciones del QR de cobro
+              </Link>
+            </p>
+          </HowItWorks>
 
           {!expired ? (
             <div className="flex flex-wrap gap-2">
-              <Button type="button" variant="secondary" size="sm" onClick={() => setEnlarged(true)}>
+              <Button type="button" variant="secondary" onClick={() => setEnlarged(true)}>
                 Ampliar
               </Button>
               <a
                 href={image.signedUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex h-9 items-center justify-center rounded-control px-3.5 text-sm font-semibold text-muted-foreground hover:bg-surface-muted hover:text-foreground"
+                className="inline-flex h-11 items-center justify-center rounded-control px-4 text-sm font-semibold text-muted-foreground hover:bg-surface-muted hover:text-foreground"
               >
                 Abrir imagen
               </a>
               {!viewerIsOwner ? (
-                <Button type="button" variant="ghost" size="sm" onClick={() => setReportOpen(true)}>
+                <Button type="button" variant="ghost" onClick={() => setReportOpen(true)}>
                   Reportar un problema
                 </Button>
               ) : null}

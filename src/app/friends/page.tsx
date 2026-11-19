@@ -8,6 +8,7 @@ import { createServerDependencies } from "@/core/infrastructure/factories/create
 import { ListCategories } from "@/features/categories/application/ListCategories.application";
 import { ListFriendships } from "@/features/friends/application/ListFriendships.application";
 import { friendName } from "@/features/friends/components/FriendRow";
+import { FORMER_FRIENDS_TITLE } from "@/features/splits/domain/inboxCopy";
 import { FriendsOverview } from "@/features/friends/components/FriendsOverview";
 import { balanceLines } from "@/features/splits/components/balanceLines";
 import { FriendsDebtSummary } from "@/features/splits/components/FriendsDebtSummary";
@@ -104,7 +105,7 @@ export default async function FriendsPage() {
       {former.length > 0 ? (
         <Reveal>
           <ListGroup
-            title="Saldos anteriores"
+            title={FORMER_FRIENDS_TITLE}
             footer="Si eliminas una amistad, las deudas y el historial se quedan."
           >
             {former.map((person) => (

@@ -120,11 +120,11 @@ export default async function SharedExpensePage({ params }: SharedExpensePagePro
 
 function statusLabel(detail: SharedExpenseDetail): string {
   if (detail.expenseStatus === "voided" || detail.shareStatus === "voided") {
-    return "Anulado";
+    return "Eliminado";
   }
-  if (detail.shareStatus === "disputed") return "En revisión";
-  if (detail.shareStatus === "pending") return "Por clasificar";
-  return "Clasificado";
+  if (detail.shareStatus === "disputed") return "En disputa";
+  if (detail.shareStatus === "pending") return "Para revisar";
+  return "Aceptado";
 }
 
 function Row({

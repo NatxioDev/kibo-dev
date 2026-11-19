@@ -5,7 +5,14 @@ import { useRouter } from "next/navigation";
 import { Alert } from "@/components/ui/Alert";
 import { Button } from "@/components/ui/Button";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
+import { showToast } from "@/components/ui/Toast";
 import { friendName } from "@/features/friends/components/FriendRow";
+import {
+  INBOX_ACCEPT_LABEL,
+  INBOX_DISPUTE_TITLE,
+  INBOX_NOT_MINE_LABEL,
+  INBOX_REVIEW_TITLE,
+} from "@/features/splits/domain/inboxCopy";
 import {
   classifyShareAction,
   disputeShareAction,
@@ -35,7 +42,7 @@ export function UnclassifiedInbox({ items, categories }: UnclassifiedInboxProps)
             id="inbox-title"
             className="px-4 text-[0.6875rem] font-semibold tracking-[0.14em] text-muted-foreground uppercase"
           >
-            Por clasificar · {toClassify.length}
+            {INBOX_REVIEW_TITLE} · {toClassify.length}
           </h2>
           <ul className="flex flex-col gap-3">
             {toClassify.map((item) => (
@@ -46,25 +53,26 @@ export function UnclassifiedInbox({ items, categories }: UnclassifiedInboxProps)
       ) : null}
       {mine.length > 0 ? (
         <ReviewList
-          title="En revisión"
+          title={INBOX_DISPUTE_TITLE}
           items={mine}
-          actionLabel="Sí lo reconozco"
+          actionLabel="Sí es mío"
+          successMessage="Gasto aceptado"
           onAction={withdrawDisputeAction}
         />
       ) : null}
       {payer.length > 0 ? (
         <section className="flex flex-col gap-2">
           <h2 className="px-4 text-[0.6875rem] font-semibold tracking-[0.14em] text-muted-foreground uppercase">
-            No reconocen un gasto
+            {INBOX_DISPUTE_TITLE}
           </h2>
           <ul className="glass divide-y divide-track overflow-hidden rounded-card border border-border bg-surface shadow-card">
             {payer.map((item) => (
               <li key={item.id} className="px-4 py-3 text-sm text-pretty text-foreground">
-                <span className="font-semibold">{friendName(item.counterpart)}</span> no reconoce{" "}
+                <span className="font-semibold">{friendName(item.counterpart)}</span> dice que no es suyo{" "}
                 <span className="tabular-nums font-semibold">
                   {formatMoneyAmount(item.amount, item.currency)}
                 </span>
-                {item.merchant ? ` de ${item.merchant}` : ""}. La deuda sigue en el saldo, en revisión.
+                {item.merchant ? ` de ${item.merchant}` : ""}. La deuda sigue en el saldo, en disputa.
               </li>
             ))}
           </ul>
@@ -91,6 +99,7 @@ function ClassifyCard({
       category.name.localeCompare(item.categoryNameSnapshot, "es", { sensitivity: "accent" }) === 0,
   );
   const [categoryId, setCategoryId] = useState(suggested?.id ?? "");
+  const [outcome, setOutcome] = useState<"accepted" | "disputed" | null>(null);
   const title = item.merchant?.trim() || item.description?.trim() || "Gasto compartido";
   const payer = friendName(item.counterpart);
 
@@ -100,25 +109,31 @@ function ClassifyCard({
       return;
     }
     setError(null);
+    setOutcome("accepted");
     startTransition(async () => {
       const result = await classifyShareAction(item.id, categoryId);
       if (!result.success) {
+        setOutcome(null);
         setError(result.error);
         return;
       }
+      showToast("Gasto aceptado");
       router.refresh();
     });
   }
 
   function dispute() {
     setError(null);
+    setOutcome("disputed");
     startTransition(async () => {
       const result = await disputeShareAction(item.id);
       if (!result.success) {
+        setOutcome(null);
         setError(result.error);
         return;
       }
       setConfirmOpen(false);
+      showToast("Marcado: no es tuyo");
       router.refresh();
     });
   }
@@ -139,7 +154,7 @@ function ClassifyCard({
         <legend className="text-sm font-semibold text-foreground mb-2">Tu categoría</legend>
         {categories.length === 0 ? (
           <p className="text-sm text-muted-foreground">
-            No tienes categorías de gasto activas. Crea una en Ajustes para clasificarlo.
+            No tienes categorías de gasto activas. Crea una en Ajustes para aceptarlo.
           </p>
         ) : (
           <div className="flex flex-wrap gap-2">
@@ -155,7 +170,7 @@ function ClassifyCard({
                     setCategoryId(category.id);
                     setError(null);
                   }}
-                  className={`h-10 max-w-full truncate rounded-2xl border px-3 text-sm font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-primary/50 ${
+                  className={`inline-flex h-11 max-w-full items-center truncate rounded-2xl border px-3 text-sm font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-primary/50 ${
                     selected
                       ? "border-transparent bg-primary text-primary-foreground"
                       : "border-border bg-surface text-foreground hover:bg-surface-muted"
@@ -174,25 +189,31 @@ function ClassifyCard({
         ) : null}
       </fieldset>
       {error ? <Alert>{error}</Alert> : null}
-      <div className="flex flex-row gap-2">
-        <Button type="button" disabled={pending} onClick={classify} className="flex-1">
-          {pending && !confirmOpen ? "Guardando…" : "Clasificar"}
-        </Button>
-        <Button
-          type="button"
-          variant="secondary"
-          disabled={pending}
-          onClick={() => setConfirmOpen(true)}
-          className="flex-1"
-        >
-          No reconozco esto
-        </Button>
-      </div>
+      {outcome ? (
+        <p className="text-sm font-semibold text-foreground">
+          {outcome === "accepted" ? "Gasto aceptado." : "Marcado: no es tuyo."}
+        </p>
+      ) : (
+        <div className="flex flex-row gap-2">
+          <Button type="button" disabled={pending} onClick={classify} className="flex-1">
+            {pending && !confirmOpen ? "Guardando…" : INBOX_ACCEPT_LABEL}
+          </Button>
+          <Button
+            type="button"
+            variant="secondary"
+            disabled={pending}
+            onClick={() => setConfirmOpen(true)}
+            className="flex-1"
+          >
+            {INBOX_NOT_MINE_LABEL}
+          </Button>
+        </div>
+      )}
       <ConfirmDialog
         open={confirmOpen}
-        title="¿No reconoces este gasto?"
-        description={`${payer} se va a enterar. La deuda queda en revisión y no se puede saldar hasta que la resuelvan.`}
-        confirmLabel="No reconozco esto"
+        title="¿No es tuyo este gasto?"
+        description={`${payer} se va a enterar. La deuda queda en disputa y no se puede saldar hasta que la resuelvan.`}
+        confirmLabel={INBOX_NOT_MINE_LABEL}
         pendingLabel="Marcando…"
         loading={pending && confirmOpen}
         error={null}
@@ -209,15 +230,18 @@ function ReviewList({
   title,
   items,
   actionLabel,
+  successMessage,
   onAction,
 }: {
   title: string;
   items: AttentionShare[];
   actionLabel: string;
+  successMessage: string;
   onAction: (shareId: string) => Promise<{ success: boolean; error?: string }>;
 }) {
   const router = useRouter();
   const [pendingId, setPendingId] = useState<string | null>(null);
+  const [doneIds, setDoneIds] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   return (
@@ -236,26 +260,32 @@ function ReviewList({
                 {formatMoneyAmount(item.amount, item.currency)}
               </span>
             </div>
-            <Button
-              type="button"
-              size="sm"
-              variant="secondary"
-              disabled={pendingId === item.id}
-              onClick={() => {
-                setError(null);
-                setPendingId(item.id);
-                void onAction(item.id).then((result) => {
-                  setPendingId(null);
-                  if (!result.success) {
-                    setError(result.error ?? "No pudimos actualizar el gasto.");
-                    return;
-                  }
-                  router.refresh();
-                });
-              }}
-            >
-              {pendingId === item.id ? "Guardando…" : actionLabel}
-            </Button>
+            {doneIds.includes(item.id) ? (
+              <p className="text-sm font-semibold text-foreground">{successMessage}</p>
+            ) : (
+              <Button
+                type="button"
+                variant="secondary"
+                disabled={pendingId === item.id}
+                onClick={() => {
+                  setError(null);
+                  setPendingId(item.id);
+                  setDoneIds((current) => [...current, item.id]);
+                  void onAction(item.id).then((result) => {
+                    setPendingId(null);
+                    if (!result.success) {
+                      setDoneIds((current) => current.filter((id) => id !== item.id));
+                      setError(result.error ?? "No pudimos actualizar el gasto.");
+                      return;
+                    }
+                    showToast(successMessage);
+                    router.refresh();
+                  });
+                }}
+              >
+                {pendingId === item.id ? "Guardando…" : actionLabel}
+              </Button>
+            )}
           </li>
         ))}
       </ul>
