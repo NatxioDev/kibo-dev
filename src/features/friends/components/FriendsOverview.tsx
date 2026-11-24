@@ -1,6 +1,7 @@
 import { Reveal } from "@/components/motion/Reveal";
 import { ListGroup } from "@/components/ui/ListGroup";
 import { FriendshipListItem } from "@/features/friends/components/FriendshipListItem";
+import { hasPendingBalance } from "@/features/splits/components/balanceLines";
 import type { PersonBalance } from "@/features/splits/domain/models";
 import type {
   Friendship,
@@ -19,6 +20,16 @@ function byName(a: Friendship, b: Friendship) {
   const nameOf = (friendship: Friendship) =>
     friendship.friend.display_name ?? friendship.friend.username ?? "";
   return nameOf(a).localeCompare(nameOf(b), "es");
+}
+
+function byBalanceThenName(balances: PersonBalance[]) {
+  const balanceById = new Map(balances.map((item) => [item.profile.id, item]));
+  return (a: Friendship, b: Friendship) => {
+    const aPending = hasPendingBalance(balanceById.get(a.friend.id));
+    const bPending = hasPendingBalance(balanceById.get(b.friend.id));
+    if (aPending !== bPending) return aPending ? -1 : 1;
+    return byName(a, b);
+  };
 }
 
 export function FriendsOverview({
@@ -47,7 +58,7 @@ export function FriendsOverview({
     {
       key: "friends",
       title: `Amigos${overview.friends.length ? ` · ${overview.friends.length}` : ""}`,
-      items: [...overview.friends].sort(byName),
+      items: [...overview.friends].sort(byBalanceThenName(balances)),
       empty: "Aún no tienes amigos. Búscalos por su @username en Agregar amigos.",
     },
   ];

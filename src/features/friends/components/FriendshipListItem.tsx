@@ -2,7 +2,10 @@
 
 import { Button } from "@/components/ui/Button";
 import { FriendRow, friendName } from "@/features/friends/components/FriendRow";
-import { balanceLines } from "@/features/splits/components/balanceLines";
+import {
+  balanceLines,
+  balanceToneClass,
+} from "@/features/splits/components/balanceLines";
 import type { PersonBalance } from "@/features/splits/domain/models";
 import type { Friendship } from "@/features/friends/domain/models/Friendship";
 import { useFriendshipActions } from "@/features/friends/hooks/useFriendshipActions";
@@ -22,13 +25,7 @@ export function FriendshipListItem({ friendship, balance }: FriendshipListItemPr
       <FriendRow
         profile={friend}
         href={`/friends/${friend.id}`}
-        subtitle={
-          balance?.pendingSettlement
-            ? "Pago por confirmar"
-            : balance
-              ? balanceLines(balance.balances).join(" · ") || (balance.hasHistory ? "Están a mano" : undefined)
-              : undefined
-        }
+        trailing={balance ? <FriendBalance balance={balance} /> : undefined}
       />
     );
   }
@@ -76,5 +73,26 @@ export function FriendshipListItem({ friendship, balance }: FriendshipListItemPr
         </Button>
       }
     />
+  );
+}
+
+function FriendBalance({ balance }: { balance: PersonBalance }) {
+  if (balance.pendingSettlement) {
+    return (
+      <span className="max-w-[10rem] truncate text-right text-sm font-semibold text-foreground">
+        Pago por confirmar
+      </span>
+    );
+  }
+
+  const lines = balanceLines(balance.balances).join(" · ");
+  if (!lines && !balance.hasHistory) return null;
+
+  return (
+    <span
+      className={`max-w-[12rem] truncate text-right font-display text-[0.9375rem] font-bold tabular-nums ${balanceToneClass(balance.balances)}`}
+    >
+      {lines || "Están a mano"}
+    </span>
   );
 }
