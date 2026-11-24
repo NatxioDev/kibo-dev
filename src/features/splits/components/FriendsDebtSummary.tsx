@@ -46,12 +46,14 @@ export function FriendsDebtSummary({ people }: { people: PersonBalance[] }) {
             amount={summary.owedToMe}
             currency={summary.currency}
             accent="income"
+            href={summary.owedToMe > 0 ? "/friends?saldo=te-deben" : undefined}
           />
           <StatCard
             label="Debes"
             amount={summary.iOwe}
             currency={summary.currency}
             accent="expense"
+            href={summary.iOwe > 0 ? "/friends?saldo=debo" : undefined}
           />
         </Reveal>
       ))}

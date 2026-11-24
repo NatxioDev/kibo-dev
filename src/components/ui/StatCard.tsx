@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { ReactNode } from "react";
 import { AnimatedNumber } from "@/components/motion/AnimatedNumber";
 import { Card } from "@/components/ui/Card";
@@ -11,6 +12,7 @@ type StatCardProps = {
   accent?: "default" | "income" | "expense";
   variant?: "default" | "hero";
   footer?: ReactNode;
+  href?: string;
   className?: string;
 };
 
@@ -37,6 +39,7 @@ export function StatCard({
   accent = "default",
   variant = "default",
   footer,
+  href,
   className = "",
 }: StatCardProps) {
   if (variant === "hero") {
@@ -56,8 +59,8 @@ export function StatCard({
     );
   }
 
-  return (
-    <Card className={`flex flex-col gap-2.5 px-4 py-4 ${className}`}>
+  const content = (
+    <>
       <div className="flex items-center gap-2">
         {icon ? (
           <span
@@ -74,6 +77,24 @@ export function StatCard({
         currency={currency}
         className={`block font-display text-xl font-extrabold sm:text-2xl tracking-[-0.035em] break-words tabular-nums ${accentClass[accent]}`}
       />
+    </>
+  );
+
+  if (href) {
+    return (
+      <Link href={href} className="block rounded-card">
+        <Card
+          className={`flex flex-col gap-2.5 px-4 py-4 transition-colors hover:bg-surface-muted ${className}`}
+        >
+          {content}
+        </Card>
+      </Link>
+    );
+  }
+
+  return (
+    <Card className={`flex flex-col gap-2.5 px-4 py-4 ${className}`}>
+      {content}
     </Card>
   );
 }

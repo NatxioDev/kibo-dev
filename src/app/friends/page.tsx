@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation";
 import { PageHeader } from "@/components/PageHeader";
 import { PageShell } from "@/components/PageShell";
 import { Reveal } from "@/components/motion/Reveal";
@@ -26,7 +27,23 @@ function requestsLabel(incoming: number, outgoing: number): string {
   return parts.length > 0 ? `Agregar amigos, ${parts.join(", ")}` : "Agregar amigos";
 }
 
-export default async function FriendsPage() {
+function matchesSaldo(
+  person: { balances: { net: number }[] },
+  saldo: "debo" | "te-deben",
+): boolean {
+  if (saldo === "debo") return person.balances.some((balance) => balance.net < 0);
+  return person.balances.some((balance) => balance.net > 0);
+}
+
+type FriendsPageProps = {
+  searchParams: Promise<{ saldo?: string | string[] }>;
+};
+
+export default async function FriendsPage({ searchParams }: FriendsPageProps) {
+  const { saldo: rawSaldo } = await searchParams;
+  const saldoValue = Array.isArray(rawSaldo) ? rawSaldo[0] : rawSaldo;
+  const saldo =
+    saldoValue === "debo" || saldoValue === "te-deben" ? saldoValue : null;
   const { friendshipRepository, splitRepository, categoryRepository } =
     await createServerDependencies();
   const [result, balances, attention, categories] = await Promise.all([
@@ -43,10 +60,31 @@ export default async function FriendsPage() {
   const incoming = result.success ? result.data.incoming.length : 0;
   const outgoing = result.success ? result.data.outgoing.length : 0;
   const people = balances.success ? balances.data : [];
-  const former = people.filter((person) => !friendIds.has(person.profile.id) && person.hasHistory);
+  const filteredPeople =
+    saldo && balances.success
+      ? people.filter((person) => matchesSaldo(person, saldo))
+      : people;
+  const filteredFriendPeople =
+    saldo && balances.success
+      ? filteredPeople.filter((person) => friendIds.has(person.profile.id))
+      : filteredPeople.filter((person) => friendIds.has(person.profile.id));
+
+  if (
+    saldo &&
+    balances.success &&
+    result.success &&
+    filteredFriendPeople.length === 1
+  ) {
+    redirect(`/friends/${filteredFriendPeople[0].profile.id}`);
+  }
+
+  const former = people.filter(
+    (person) => !friendIds.has(person.profile.id) && person.hasHistory,
+  );
   const expenseCategories = categories.success
     ? categories.data.filter((category) => category.type === "EXPENSE" && category.is_active)
     : [];
+  const friendsTitle = saldo === "debo" ? "A quienes les debes" : saldo === "te-deben" ? "Quienes te deben" : undefined;
 
   return (
     <PageShell>
@@ -83,6 +121,13 @@ export default async function FriendsPage() {
       </Reveal>
 
       {balances.success ? <FriendsDebtSummary people={people} /> : null}
+      {saldo ? (
+        <Reveal>
+          <Button href="/friends" variant="ghost" size="sm" className="self-start">
+            Ver todos
+          </Button>
+        </Reveal>
+      ) : null}
 
       {!balances.success ? (
         <Alert>{balances.error}</Alert>
@@ -99,7 +144,13 @@ export default async function FriendsPage() {
           <Alert>{result.error}</Alert>
         </Reveal>
       ) : (
-        <FriendsOverview overview={result.data} balances={people} sections={["friends"]} />
+        <FriendsOverview
+          overview={result.data}
+          balances={filteredPeople}
+          sections={["friends"]}
+          friendsTitle={friendsTitle}
+          friendsEmpty={saldo ? "No tienes amigos con ese saldo." : undefined}
+        />
       )}
 
       {former.length > 0 ? (

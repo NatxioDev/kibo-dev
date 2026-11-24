@@ -13,6 +13,8 @@ type FriendsOverviewProps = {
   overview: FriendshipOverview;
   balances?: PersonBalance[];
   sections?: FriendsSection[];
+  friendsTitle?: string;
+  friendsEmpty?: string;
 };
 
 function byName(a: Friendship, b: Friendship) {
@@ -25,6 +27,8 @@ export function FriendsOverview({
   overview,
   balances = [],
   sections = ["incoming", "outgoing", "friends"],
+  friendsTitle,
+  friendsEmpty,
 }: FriendsOverviewProps) {
   const groups: {
     key: FriendsSection;
@@ -46,33 +50,49 @@ export function FriendsOverview({
     },
     {
       key: "friends",
-      title: `Amigos${overview.friends.length ? ` · ${overview.friends.length}` : ""}`,
+      title:
+        friendsTitle ??
+        `Amigos${overview.friends.length ? ` · ${overview.friends.length}` : ""}`,
       items: [...overview.friends].sort(byName),
-      empty: "Aún no tienes amigos. Búscalos por su @username en Agregar amigos.",
+      empty:
+        friendsEmpty ??
+        "Aún no tienes amigos. Búscalos por su @username en Agregar amigos.",
     },
   ];
 
   return (
     <>
-      {groups.filter((group) => sections.includes(group.key)).map((group) => (
-        <Reveal key={group.key}>
-          <ListGroup title={group.title}>
-            {group.items.length === 0 ? (
-              <li className="px-4 py-4 text-sm text-muted-foreground">
-                {group.empty}
-              </li>
-            ) : (
-              group.items.map((friendship) => (
-                <FriendshipListItem
-                  key={friendship.id}
-                  friendship={friendship}
-                  balance={balances.find((item) => item.profile.id === friendship.friend.id)}
-                />
-              ))
-            )}
-          </ListGroup>
-        </Reveal>
-      ))}
+      {groups
+        .filter((group) => sections.includes(group.key))
+        .map((group) => {
+          const items =
+            group.key === "friends" && friendsEmpty
+              ? group.items.filter((friendship) =>
+                  balances.some((item) => item.profile.id === friendship.friend.id),
+                )
+              : group.items;
+          return (
+            <Reveal key={group.key}>
+              <ListGroup title={group.title}>
+                {items.length === 0 ? (
+                  <li className="px-4 py-4 text-sm text-muted-foreground">
+                    {group.empty}
+                  </li>
+                ) : (
+                  items.map((friendship) => (
+                    <FriendshipListItem
+                      key={friendship.id}
+                      friendship={friendship}
+                      balance={balances.find(
+                        (item) => item.profile.id === friendship.friend.id,
+                      )}
+                    />
+                  ))
+                )}
+              </ListGroup>
+            </Reveal>
+          );
+        })}
     </>
   );
 }
