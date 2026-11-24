@@ -1,11 +1,21 @@
 import { formatMoneyAmount } from "@/features/transactions/components/formatters";
-import type { CurrencyBalance } from "@/features/splits/domain/models";
+import type {
+  CurrencyBalance,
+  PersonBalance,
+} from "@/features/splits/domain/models";
 import { toCents } from "@/features/splits/domain/splitAmount";
 
 export function balanceToneClass(balances: CurrencyBalance[]): string {
   if (balances.some((balance) => toCents(balance.net) < 0)) return "text-expense";
   if (balances.some((balance) => toCents(balance.net) > 0)) return "text-income";
   return "text-foreground";
+}
+
+export function hasPendingBalance(balance: PersonBalance | undefined): boolean {
+  return Boolean(
+    balance?.pendingSettlement ||
+      balance?.balances.some((item) => toCents(item.net) !== 0),
+  );
 }
 
 export function balanceLines(balances: CurrencyBalance[]): string[] {
