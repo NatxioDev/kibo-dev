@@ -13,6 +13,7 @@ type FriendsOverviewProps = {
   overview: FriendshipOverview;
   balances?: PersonBalance[];
   sections?: FriendsSection[];
+  incomingTitle?: string;
 };
 
 function byName(a: Friendship, b: Friendship) {
@@ -25,6 +26,7 @@ export function FriendsOverview({
   overview,
   balances = [],
   sections = ["incoming", "outgoing", "friends"],
+  incomingTitle = "Solicitudes recibidas",
 }: FriendsOverviewProps) {
   const groups: {
     key: FriendsSection;
@@ -34,7 +36,7 @@ export function FriendsOverview({
   }[] = [
     {
       key: "incoming",
-      title: "Solicitudes recibidas",
+      title: incomingTitle,
       items: overview.incoming,
       empty: "No tienes solicitudes pendientes.",
     },
