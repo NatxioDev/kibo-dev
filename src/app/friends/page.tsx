@@ -99,7 +99,12 @@ export default async function FriendsPage() {
           <Alert>{result.error}</Alert>
         </Reveal>
       ) : (
-        <FriendsOverview overview={result.data} balances={people} sections={["friends"]} />
+        <FriendsOverview
+          overview={result.data}
+          balances={people}
+          sections={incoming > 0 ? ["incoming", "friends"] : ["friends"]}
+          incomingTitle="Te quieren agregar"
+        />
       )}
 
       {former.length > 0 ? (
