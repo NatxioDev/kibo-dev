@@ -116,9 +116,7 @@ export default async function FriendDetailPage({ params }: FriendDetailPageProps
                 key={event.id}
                 href={
                   event.expenseId && event.shareStatus !== "voided"
-                    ? event.iAmPayer
-                      ? `/friends/expenses/${event.expenseId}/edit`
-                      : `/friends/expenses/${event.expenseId}`
+                    ? `/friends/expenses/${event.expenseId}`
                     : undefined
                 }
                 title={historyTitle(event, name)}
