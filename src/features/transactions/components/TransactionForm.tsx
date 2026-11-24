@@ -19,6 +19,7 @@ import { Segmented } from "@/components/ui/Segmented";
 import { Currency } from "@/core/domain/value-objects";
 import { accountIcon } from "@/features/accounts/components/accountIcon";
 import { AmountInput } from "@/features/transactions/components/AmountInput";
+import { CategoryPicker } from "@/features/transactions/components/CategoryPicker";
 import { todayDateInputValue } from "@/features/transactions/components/formatters";
 import { hasExtraDetails } from "@/features/transactions/domain/formDetails";
 import { useTransactionFormWithActions } from "@/features/transactions/hooks/useTransactionFormWithActions";
@@ -325,37 +326,12 @@ export function TransactionForm({
         {loadingOptions ? (
           <ChipSkeleton className="h-20 w-24" />
         ) : (
-          <ChipScroller>
-            <div
-              id="category_id"
-              tabIndex={-1}
-              role="group"
-              aria-label="Categoría"
-              className="flex gap-2"
-            >
-              <ChoiceChip
-                icon="📦"
-                selected={values.category_id === ""}
-                disabled={loading}
-                onSelect={() => updateField("category_id", "")}
-                className="h-20 w-24"
-              >
-                Sin categoría
-              </ChoiceChip>
-              {categories.map((category) => (
-                <ChoiceChip
-                  key={category.id}
-                  icon={category.icon?.trim() || "📦"}
-                  selected={values.category_id === category.id}
-                  disabled={loading}
-                  onSelect={() => updateField("category_id", category.id)}
-                  className="h-20 w-24"
-                >
-                  {category.name}
-                </ChoiceChip>
-              ))}
-            </div>
-          </ChipScroller>
+          <CategoryPicker
+            categories={categories}
+            value={values.category_id}
+            onChange={(categoryId) => updateField("category_id", categoryId)}
+            disabled={loading}
+          />
         )}
       </Field>
 

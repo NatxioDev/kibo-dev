@@ -75,10 +75,18 @@ export default async function FriendDetailPage({ params }: FriendDetailPageProps
 
       <Reveal>
         <Card className="flex flex-col gap-4 px-5 py-5">
-          <p
-            className={`font-display text-3xl font-extrabold tracking-tight text-pretty tabular-nums ${balanceToneClass(balances)}`}
-          >
-            {lines.length > 0 ? lines.join(" · ") : "Están a mano"}
+          <p className="font-display text-3xl font-extrabold tracking-tight text-pretty tabular-nums">
+            {lines.length > 0
+              ? lines.map((line, index) => (
+                  <span
+                    key={balances[index].currency}
+                    className={balanceToneClass(balances[index])}
+                  >
+                    {line}
+                    {index < lines.length - 1 ? " · " : ""}
+                  </span>
+                ))
+              : "Están a mano"}
           </p>
           <SettlementPanel
             profile={profile}

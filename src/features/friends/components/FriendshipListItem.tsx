@@ -38,7 +38,7 @@ export function FriendshipListItem({ friendship, balance }: FriendshipListItemPr
       <FriendRow
         profile={friend}
         error={error}
-        trailing={
+        actions={
           <>
             <Button
               variant="secondary"
@@ -65,7 +65,7 @@ export function FriendshipListItem({ friendship, balance }: FriendshipListItemPr
     <FriendRow
       profile={friend}
       error={error}
-      trailing={
+      actions={
         <Button
           variant="secondary"
           disabled={loading}
